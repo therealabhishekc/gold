@@ -69,7 +69,7 @@ def main():
     else:
         _, col, _ = st.columns([4,3,4,])
         with col:
-            st.image("images\logo.png")
+            st.image("images/logo.png")
             hide_img_fs = '''
             <style>
             button[title="View fullscreen"]{
