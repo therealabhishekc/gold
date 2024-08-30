@@ -1,0 +1,6 @@
+streamlit
+fpdf
+PyPDF2
+beautifulsoup4
+streamlit-option-menu
+streamlit_extras

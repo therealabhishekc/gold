@@ -1,0 +1,37 @@
+.custom-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(45deg, #ff6b6b, #f06595, #845ef7, #5c7cfa, #22b8cf);
+    background-size: 300% 300%;
+    transition: background-position 1s ease;
+}
+.button-red:hover {
+    background-position: right center; /* Change the direction of the gradient on hover */
+    color: white; /* Ensuring the text color stays white */
+}
+.button-red {
+    background-color: red
+}
+.button-blue {
+    background-color: #2196F3;
+}
+.button-green {
+    background-color: #4CAF50;
+}
+.button-orange {
+    background-color: #FF5722;
+}
+.button-purple {
+    background-color: #9C27B0;
+}
+.custom-button:hover {
+    opacity: 0.8;
+}
