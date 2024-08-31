@@ -34,7 +34,7 @@ def displayPDF(file):
     # Embedding PDF in HTML and centering it
     pdf_display = f'''
     <div style="display: flex; justify-content: center;">
-        <embed src="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="800" height="620">
+        <iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="620" type="application/pdf"></iframe>
     </div>
     '''
     # Displaying File
