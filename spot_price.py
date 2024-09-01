@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import pytz
 
 def get_price():
     url = "https://www.kitco.com/"  # Replace with the actual URL
@@ -13,6 +14,8 @@ def get_price():
     text = element.text
     ounce_price = float(text.replace(",", ""))
     gram_price = ounce_price/31.103
-    current_time = datetime.now().strftime("%I:%M %p")
-    current_date = datetime.now().strftime("%B %d, %Y")
+
+    time_zone = pytz.timezone('America/New_York')
+    current_time = datetime.now(time_zone).strftime("%I:%M %p")
+    current_date = datetime.now(time_zone).strftime("%B %d, %Y")
     return round(ounce_price, 2), gram_price, current_time, current_date
