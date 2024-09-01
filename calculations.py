@@ -18,4 +18,19 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place):
             round(trade * float(gold_wt)), 
             marker)
 
-# print(scrap_gold(80.52, "22K", "10", "Govindji's"))
+def gold_bd(price, gold_wt, gold_22k):
+    price, gold_wt = float(price), float(gold_wt)
+    price_pre_tax = round(price / 1.0825)
+    price_duty = round(price_pre_tax * 0.065)
+    price_gold = round(gold_wt * gold_22k)
+
+    remaining = price_pre_tax - price_gold - price_duty
+    temp = round(remaining//2)
+
+    if remaining % 2 == 0:
+        price_labor, price_profit = temp, temp
+    else:
+        price_labor, price_profit = temp+1, temp
+    
+
+    return price_gold, price_labor, price_profit, price_duty, price_pre_tax

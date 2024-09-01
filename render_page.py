@@ -1,5 +1,5 @@
 import streamlit as st
-from generate_pdf import sample_pdf, pdf_scrap_gold
+from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd
 from streamlit_extras.stylable_container import stylable_container
 
 # Function to add widgets
@@ -47,9 +47,15 @@ def delete_widget(index, var):
             st.session_state['hyd_stones_count'] -= 1
             st.session_state['hyd_stones_data'].pop(index)
 
+
 def render_gold_scrap():
     
-    st.write("### Scrap Gold Purchase")
+    colm1, colm2= st.columns([3, 3], vertical_alignment="bottom")
+    with colm1: 
+        st.write("### Scrap Gold Purchase")
+    with colm2:
+        show_calc = st.checkbox("Show Formula")
+
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # Initialize session state for tracking the widgets and their values
@@ -176,8 +182,7 @@ def render_gold_scrap():
                 """
         ):
         if st.button("Generate", key="generate"):
-            print(st.session_state['widget_data'])
-            pdf_scrap_gold(st.session_state['widget_data'])
+            pdf_scrap_gold(st.session_state['widget_data'], show_calc)
             view_pdf = True
     return view_pdf
          
@@ -306,15 +311,20 @@ def render_gold_breakdown():
     st.write("#### Gold Jewellery Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         item_code = st.text_input("Item code")
     
     with col2:
+        price = st.text_input("Price")
+
+    with col3:
         gold_wt = st.text_input("Gross Gold Weight in grams")
 
     view_pdf = False
+
+    st.write("")
 
     # Generate button 
     with stylable_container(
@@ -331,7 +341,7 @@ def render_gold_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
+            pdf_gold_bd(item_code, price, gold_wt)
             view_pdf = True
     return view_pdf
 

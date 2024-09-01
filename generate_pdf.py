@@ -1,13 +1,13 @@
 from fpdf import FPDF
 from PyPDF2 import PdfReader, PdfWriter
 from spot_price import get_price
-from calculations import scrap_gold
+from calculations import scrap_gold, gold_bd
 
 
 # Function to generate the PDF
-def pdf_scrap_gold(data):
+def pdf_scrap_gold(data, show_calc):
 
-    # Step 1: Read the existing PDF
+    #Read the existing PDF
     reader = PdfReader("template.pdf")
     writer = PdfWriter()
 
@@ -22,7 +22,7 @@ def pdf_scrap_gold(data):
     pdf.set_font(family="Helvetica", style="" ,size=9)
     pdf.write(7, "Spot price on")
     pdf.set_text_color(0, 0, 255)
-    pdf.write(7, " kitko.com ", link="https://www.kitco.com/")
+    pdf.write(7, " kitko.com", link="https://www.kitco.com/")
     pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is $")
 
@@ -36,33 +36,48 @@ def pdf_scrap_gold(data):
 
     pdf.ln(6)
 
-    # 24K
-    pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.cell(45, 6, txt=f"24K gold one gram: ${round(gp, 2)} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=9)
-    pdf.cell(0, 6, txt="(1 Troy Ounce = 31.103 grams)", ln=True, border=0)
-    
-    # 22K
-    gold_22k_gov = round(gp*0.916, 2)
-    gold_22k_oth = round(gp*0.8, 2)
-    pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_22k_gov} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=9)
-    pdf.cell(70, 6, txt="(24K gold * 0.916 = 22K gold)", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="", size=10)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_22k_oth} ", ln=True, border=0)
+    if show_calc:
+        # set headers
+        pdf.set_font(family="Helvetica", style="B", size=9)
+        pdf.cell(90, 6, txt=f"Purchased at Govindji's", ln=False)
+        pdf.cell(35, 6, txt=f"Purchased at other jeweller", ln=True)
 
-    # refiner_cost
-    gold_trade_gov = round(gold_22k_gov-4.5, 2)
-    gold_trade_oth = round(gold_22k_oth-4.5, 2)
-    pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_trade_gov} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=9)
-    pdf.cell(70, 6, txt="(after refinery cost)", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="", size=10)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_trade_oth} ", ln=False, border=0)
+        # 24K
+        pdf.set_font(family="Helvetica", style="", size=9)
+        pdf.cell(40, 6, txt=f"24K gold one gram: ${round(gp, 2)} ", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="I", size=8)
+        pdf.cell(50, 6, txt="(1 Troy Ounce = 31.103 grams)", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="", size=9)
+        pdf.cell(40, 6, txt=f"24K gold one gram: ${round(gp, 2)} ", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="I", size=8)
+        pdf.cell(40, 6, txt="(1 Troy Ounce = 31.103 grams)", ln=True, border=0)
+        
+        # 22K
+        gold_22k_gov = round(gp*0.916, 2)
+        gold_22k_oth = round(gp*0.8, 2)
+        pdf.set_font(family="Helvetica", style="", size=9)
+        pdf.cell(40, 6, txt=f"22K gold one gram: ${gold_22k_gov} ", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="I", size=8)
+        pdf.cell(50, 6, txt="(24K gold * 0.916 = 22K gold)", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="", size=9)
+        pdf.cell(40, 6, txt=f"22K gold one gram: ${gold_22k_oth} ", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="I", size=8)
+        pdf.cell(40, 6, txt="(24K gold * 0.8 = 22K gold)", ln=True, border=0)
 
-    pdf.ln(9)
+        # refiner_cost
+        gold_trade_gov = round(gold_22k_gov-4.5, 2)
+        gold_trade_oth = round(gold_22k_oth-4.5, 2)
+        pdf.set_font(family="Helvetica", style="", size=9)
+        pdf.cell(40, 6, txt=f"22K gold one gram: ${gold_trade_gov} ", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="I", size=8)
+        pdf.cell(50, 6, txt="(after refinery cost [-4.5])", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="", size=9)
+        pdf.cell(40, 6, txt=f"22K gold one gram: ${gold_trade_oth} ", ln=False, border=0)
+        pdf.set_font(family="Helvetica", style="I", size=8)
+        pdf.cell(50, 6, txt="(after refinery cost [-4.5])", ln=False, border=0)
+        
+
+        pdf.ln(9)
 
     # Set font for table
     pdf.set_font("Helvetica", "B", size=9)
@@ -105,6 +120,101 @@ def pdf_scrap_gold(data):
     # Write the modified content to a new PDF
     with open("output.pdf", "wb") as output_pdf_file:
         writer.write(output_pdf_file)
+
+
+def pdf_gold_bd(item_code, price, gold_wt):
+
+    #Read the existing PDF
+    reader = PdfReader("template.pdf")
+    writer = PdfWriter()
+
+    # create FPDF object
+    pdf = FPDF('L', 'mm', 'A5')
+    # add page
+    pdf.add_page()
+    pdf.ln(18) 
+
+    pdf.set_font(family="Helvetica", style="B" ,size=12)
+    pdf.cell(70, 9, txt=f"Detailed Breakdown for {item_code.upper()}",
+             border=False,
+             ln=True)
+
+    op, gp, time, date = get_price()
+
+    # disp kitko prices
+    pdf.set_font(family="Helvetica", style="" ,size=9)
+    pdf.write(7, "Spot price on")
+    pdf.set_text_color(0, 0, 255)
+    pdf.write(7, " kitko.com", link="https://www.kitco.com/")
+    pdf.set_text_color(0, 0, 0)
+    pdf.write(7, f" as of {date} on {time} is ")
+    pdf.set_font(family="Helvetica", style="B", size=9)
+    pdf.write(7, f"${round(op, 2)}")
+    pdf.set_font(family="Helvetica", style="", size=9)
+    pdf.write(7, " per Troy Ounce")
+
+    pdf.ln()
+
+    # 24K
+    pdf.set_font(family="Helvetica", style="", size=9)
+    pdf.cell(40, 6, txt=f"24K gold one gram: ${round(gp, 2)} ", ln=False, border=0)
+    pdf.set_font(family="Helvetica", style="I", size=8)
+    pdf.cell(50, 6, txt="(1 Troy Ounce = 31.103 grams)", ln=True, border=0)
+    
+    # 22K
+    gold_22k = round(gp*0.93, 2)
+    pdf.set_font(family="Helvetica", style="B", size=9)
+    pdf.cell(43, 6, txt=f"22K gold one gram: ${gold_22k} ", ln=False, border=0)
+    pdf.set_font(family="Helvetica", style="I", size=8)
+    pdf.cell(50, 6, txt="(24K gold * 0.93 = 22K gold)", ln=True, border=0)
+
+    pdf.ln(4)
+
+    pdf.set_font(family="Helvetica", style="B", size=9)
+    pdf.cell(50, 6, txt=f"Net weight: {gold_wt} grams")
+
+    pdf.ln(11)
+
+    # column headers
+    pdf.cell(25, 8, txt=f"Gold", border=True, align='C')
+    pdf.cell(10, 8)
+    pdf.cell(25, 8, txt=f"Labor", border=True, align='C')
+    pdf.cell(10, 8)
+    pdf.cell(25, 8, txt=f"Profit", border=True, align='C')
+    pdf.cell(10, 8)
+    pdf.cell(25, 8, txt=f"Duty (6.5%)", border=True, align='C', ln=True)
+
+    price_gold, price_labor, price_profit, price_duty, price_pre_tax = gold_bd(price, gold_wt, gold_22k)
+    #actual values
+    pdf.cell(25, 8, txt=f"{price_gold}", border=True, align='C')
+    pdf.cell(10, 8)
+    pdf.cell(25, 8, txt=f"{price_labor}", border=True, align='C')
+    pdf.cell(10, 8)
+    pdf.cell(25, 8, txt=f"{price_profit}", border=True, align='C')
+    pdf.cell(10, 8)
+    pdf.cell(25, 8, txt=f"{price_duty}", border=True, align='C')
+
+    # Save the temporary PDF to a file
+    temp_pdf_path = "temp.pdf"
+    pdf.output(temp_pdf_path)
+
+    # Merge the temporary PDF with the original PDF
+    with open(temp_pdf_path, "rb") as temp_pdf_file:
+        temp_reader = PdfReader(temp_pdf_file)
+        for i, page in enumerate(reader.pages):
+            if i == 0:
+                page.merge_page(temp_reader.pages[0])
+            writer.add_page(page)
+        
+        # Add the extra pages created by the text
+        for j in range(1, len(temp_reader.pages)):
+            writer.add_page(temp_reader.pages[j])
+
+    # Write the modified content to a new PDF
+    with open("output.pdf", "wb") as output_pdf_file:
+        writer.write(output_pdf_file)
+
+
 
 # Function to generate the PDF
 def sample_pdf(prompt1="", prompt2="", prompt3="", prompt4=""):
