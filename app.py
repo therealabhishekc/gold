@@ -11,13 +11,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# if 'update_query' not in st.session_state:
-#     st.session_state.update_query = False
-# def set_flag_and_update_url():
-#     st.session_state.update_query = True
-#     st.query_params.output = True
-#     st.rerun()
-
 
 # Function to load CSS from a file
 def load_css(css_file):
@@ -144,7 +137,6 @@ def main():
                 "View PDF",
                 url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"\
             )
-            #set_flag_and_update_url()
 
 
 if __name__ == "__main__":

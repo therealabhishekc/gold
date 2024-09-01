@@ -14,8 +14,8 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place):
         trade = price - 4.5
         marker = ""
 
-    return (round(cash * float(gold_wt), 2), 
-            round(trade * float(gold_wt), 2), 
+    return (round(cash * float(gold_wt)), 
+            round(trade * float(gold_wt)), 
             marker)
 
 # print(scrap_gold(80.52, "22K", "10", "Govindji's"))
