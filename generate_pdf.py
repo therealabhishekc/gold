@@ -37,6 +37,7 @@ def pdf_scrap_gold(data, show_calc):
     pdf.ln(6)
 
     if show_calc:
+        pdf.ln(1)
         # set headers
         pdf.set_font(family="Helvetica", style="B", size=9)
         pdf.cell(90, 6, txt=f"Purchased at Govindji's", ln=False)
@@ -75,9 +76,11 @@ def pdf_scrap_gold(data, show_calc):
         pdf.cell(40, 6, txt=f"22K gold one gram: ${gold_trade_oth} ", ln=False, border=0)
         pdf.set_font(family="Helvetica", style="I", size=8)
         pdf.cell(50, 6, txt="(after refinery cost [-4.5])", ln=False, border=0)
-        
 
         pdf.ln(9)
+
+    else:
+        pdf.ln(2)
 
     # Set font for table
     pdf.set_font("Helvetica", "B", size=9)
@@ -87,19 +90,29 @@ def pdf_scrap_gold(data, show_calc):
     for col_name in header:
         pdf.cell(38, 8, col_name, border=1, align='C')
     pdf.ln()
+
+    total_cash, total_trade = 0, 0
     
-    pdf.set_font("Helvetica", size=8)
+    pdf.set_font("Helvetica", size=9)
     # Add table rows
     for item in data:
         wt, kt, place = item['gold_wt'], item['gold_kt'], item['gold_pur_place']
         cash, trade, marker = scrap_gold(gp, wt, kt, place)
+        total_cash += cash
+        total_trade += trade
         pdf.cell(38, 8, item['desc']+marker, border=1, align='C')
         pdf.cell(38, 8, wt, border=1, align='C')
         pdf.cell(38, 8, kt, border=1, align='C')
-        pdf.cell(38, 8, str(cash), border=1, align='C')
-        pdf.cell(38, 8, str(trade), border=1, align='C')
+        pdf.cell(38, 8, "$"+str(cash), border=1, align='C')
+        pdf.cell(38, 8, "$"+str(trade), border=1, align='C')
         pdf.ln()
-        
+
+    pdf.set_font("Helvetica", "BI", size=10)
+    pdf.cell(76, 8)        
+    pdf.cell(38, 8, txt=f"Total", align='C', border=0)
+    pdf.cell(38, 8, txt=f"${total_cash}", align='C', border=0)
+    pdf.cell(38, 8, txt=f"${total_trade}", align='C', border=0)
+
 
     # Save the temporary PDF to a file
     temp_pdf_path = "temp.pdf"
@@ -170,10 +183,10 @@ def pdf_gold_bd(item_code, price, gold_wt):
 
     pdf.ln(4)
 
-    pdf.set_font(family="Helvetica", style="B", size=9)
+    pdf.set_font(family="Helvetica", style="B", size=10)
     pdf.cell(50, 6, txt=f"Net weight: {gold_wt} grams")
 
-    pdf.ln(11)
+    pdf.ln(12)
 
     # column headers
     pdf.cell(25, 8, txt=f"Gold", border=True, align='C')
@@ -186,13 +199,23 @@ def pdf_gold_bd(item_code, price, gold_wt):
 
     price_gold, price_labor, price_profit, price_duty, price_pre_tax = gold_bd(price, gold_wt, gold_22k)
     #actual values
-    pdf.cell(25, 8, txt=f"{price_gold}", border=True, align='C')
+    pdf.cell(25, 8, txt=f"${price_gold}", border=True, align='C')
     pdf.cell(10, 8)
-    pdf.cell(25, 8, txt=f"{price_labor}", border=True, align='C')
+    pdf.cell(25, 8, txt=f"${price_labor}", border=True, align='C')
     pdf.cell(10, 8)
-    pdf.cell(25, 8, txt=f"{price_profit}", border=True, align='C')
+    pdf.cell(25, 8, txt=f"${price_profit}", border=True, align='C')
     pdf.cell(10, 8)
-    pdf.cell(25, 8, txt=f"{price_duty}", border=True, align='C')
+    pdf.cell(25, 8, txt=f"${price_duty}", border=True, align='C')
+
+    pdf.ln(16)
+    pdf.cell(105, 8)
+    pdf.cell(25, 8, txt=f"${price_pre_tax}", align='C', border=True)
+    pdf.cell(25, 8, txt=f"     +  Tax (8.25%)")
+
+    pdf.ln(16)
+    pdf.cell(70, 8)
+    pdf.cell(35, 8, txt=f"Final Price:", align='R')
+    pdf.cell(25, 8, txt=f"${price}", align='C', border=True)
 
     # Save the temporary PDF to a file
     temp_pdf_path = "temp.pdf"
