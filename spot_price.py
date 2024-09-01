@@ -15,7 +15,7 @@ def get_price():
     ounce_price = float(text.replace(",", ""))
     gram_price = ounce_price/31.103
 
-    time_zone = pytz.timezone('America/New_York')
+    time_zone = pytz.timezone('America/Chicago')
     current_time = datetime.now(time_zone).strftime("%I:%M %p")
     current_date = datetime.now(time_zone).strftime("%B %d, %Y")
     return round(ounce_price, 2), gram_price, current_time, current_date
