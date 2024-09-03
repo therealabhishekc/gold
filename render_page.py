@@ -2,6 +2,12 @@ import streamlit as st
 from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd
 from streamlit_extras.stylable_container import stylable_container
 
+@st.dialog("Weight less than 10 grams")
+def ten_below():
+    st.write("Any jewellery piece less than 10 grams is sold at \"PIECE PRICE\",")
+    st.write("Please enter a jewellery weight of more than 10 grams to continue.")
+
+
 # Function to add widgets
 def add_widgets(var):
     if var == 'scrap_gold':
@@ -229,8 +235,11 @@ def render_gold_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            pdf_gold_bd(item_code, price, gold_wt)
-            view_pdf = True
+            if gold_wt < 10.00:
+                ten_below()
+            else:
+                pdf_gold_bd(item_code, price, gold_wt)
+                view_pdf = True
     return view_pdf
 
 
@@ -356,8 +365,11 @@ def render_hyd_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
-            view_pdf = True
+            if gold_wt < 10.00:
+                ten_below()
+            else:
+                sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
+                view_pdf = True
     return view_pdf
 
 
@@ -484,8 +496,11 @@ def render_ant_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
-            view_pdf = True
+            if gold_wt < 10.00:
+                ten_below()
+            else:
+                sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
+                view_pdf = True
     return view_pdf
 
 
