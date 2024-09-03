@@ -1,3 +1,7 @@
+import random
+
+
+# scrap gold calculations
 def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place):
     gold_kt = int(gold_kt[:2])
 
@@ -18,6 +22,8 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place):
             round(trade * float(gold_wt)), 
             marker)
 
+
+# gold breakdown calculations
 def gold_bd(price, gold_wt, gold_22k):
     price, gold_wt = float(price), float(gold_wt)
     price_pre_tax = round(price / 1.0825)
@@ -32,5 +38,27 @@ def gold_bd(price, gold_wt, gold_22k):
     else:
         price_labor, price_profit = temp+1, temp
     
-
     return price_gold, price_labor, price_profit, price_duty, price_pre_tax
+
+
+# hyderabadi breakdown calculations
+def hyd_bd(price, net_wt, total_stone_ct, gold_22k):
+    price = float(price)
+    price_pre_tax = round(price / 1.0825)
+    price_duty = round(price_pre_tax * 0.065)
+    price_gold = round(net_wt * gold_22k)
+
+    profit = 7.50
+    while True:
+        price_stones = price_pre_tax - price_gold - price_duty - (2 * (profit/100) * price_pre_tax)
+        price_per_carat = price_stones/total_stone_ct
+        if price_per_carat < 25:
+            price_stones = round(price_stones)
+            break
+        else:
+            profit += 0.05 
+
+    price_labor = round((profit * price_pre_tax)/100)
+    price_profit = price_pre_tax - price_gold - price_duty - price_stones - price_labor
+
+    return price_gold, price_stones, price_labor, price_profit, price_duty, price_pre_tax

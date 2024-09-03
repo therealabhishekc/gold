@@ -1,5 +1,5 @@
 import streamlit as st
-from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd
+from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd, pdf_hyd_db
 from streamlit_extras.stylable_container import stylable_container
 
 @st.dialog("Weight less than 10 grams")
@@ -22,7 +22,7 @@ def add_widgets(var):
         st.session_state['hyd_stones_count'] += 1
         st.session_state['hyd_stones_data'].append({
             'hyd_stone': 'Ruby',
-            'hyd_ct': ''
+            'hyd_ct': 0.0
         })
     elif var == 'ant':
         st.session_state['ant_stones_count'] += 1
@@ -253,7 +253,7 @@ def render_hyd_breakdown():
     if 'hyd_stones_data' not in st.session_state:
         st.session_state['hyd_stones_data'] = [{
             'hyd_stone': 'Ruby',
-            'hyd_ct': ''
+            'hyd_ct': 0.0
         }]  # Start with initial data for one widget
 
     col1, col2, col3 = st.columns([3, 3, 3])
@@ -286,14 +286,15 @@ def render_hyd_breakdown():
                                 key = f'hyd_stone_{i}')
             st.session_state['hyd_stones_data'][i]['hyd_stone'] = hyd_stone
 
-        # gold weight box
+        # stone carat
         with col2:
-            hyd_ct = st.text_input("Stone carat",
-                                    value=st.session_state['hyd_stones_data'][i]['hyd_ct'],
-                                    key=f'hyd_ct_{i}')
-            st.session_state['hyd_stones_data'][i]['hyd_ct'] = hyd_ct
+            hyd_ct = st.number_input("Stone carat",
+                                     value=st.session_state['hyd_stones_data'][i]['hyd_ct'],
+                                     min_value=0.0,
+                                     key=f'hyd_ct_{i}')
+            st.session_state['hyd_stones_data'][i]['hyd_ct'] = round(hyd_ct, 2)
 
-        # gold karat dropdown
+        # delete button
         with col3:
             with stylable_container(
                 key=f'delete_hyd_{i}',
@@ -368,7 +369,10 @@ def render_hyd_breakdown():
             if gold_wt < 10.00:
                 ten_below()
             else:
-                sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
+                pdf_hyd_db(item_code, 
+                           price, 
+                           gold_wt, 
+                           st.session_state['hyd_stones_data'])
                 view_pdf = True
     return view_pdf
 
