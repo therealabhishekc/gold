@@ -27,7 +27,7 @@ def displayPDF(file):
     # Embedding PDF in HTML and centering it
     pdf_display = f'''
     <div style="display: flex; justify-content: center;">
-        <iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="620" type="application/pdf"></iframe>
+        <iframe src="data:application/pdf;base64,{base64_pdf}#zoom=150" width="1300" height="1020" type="application/pdf"></iframe>
     </div>
     '''
     # Displaying File
@@ -135,8 +135,8 @@ def main():
         if view_pdf:
             st.link_button(
                 "View PDF",
-                #url=f"http://localhost:8501/?output={view_pdf}"
-                url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
+                url=f"http://localhost:8501/?output={view_pdf}"
+                #url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
             )
 
 

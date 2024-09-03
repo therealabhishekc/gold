@@ -8,7 +8,7 @@ def add_widgets(var):
         st.session_state['widget_count'] += 1
         st.session_state['widget_data'].append({
             'desc': '',
-            'gold_wt': '',
+            'gold_wt': 0.0,
             'gold_kt': '10K',
             'gold_pur_place' : "Govindji's"
         })
@@ -50,24 +50,27 @@ def delete_widget(index, var):
 
 def render_gold_scrap():
     
-    colm1, colm2= st.columns([3, 3], vertical_alignment="bottom")
-    with colm1: 
-        st.write("### Scrap Gold Purchase")
-    with colm2:
-        show_calc = st.checkbox("Show Formula")
-
-    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
-
     # Initialize session state for tracking the widgets and their values
     if 'widget_count' not in st.session_state:
         st.session_state['widget_count'] = 1  # Start with at least one widget
     if 'widget_data' not in st.session_state:
         st.session_state['widget_data'] = [{
             'desc': '',
-            'gold_wt': '',
+            'gold_wt': 0.0,
             'gold_kt': '10K',
             'gold_pur_place' : "Govindji's"
         }]  # Start with initial data for one widget
+    if 'show_calc' not in st.session_state:
+        st.session_state['show_calc'] = False
+    
+    colm1, colm2= st.columns([3, 3], vertical_alignment="bottom")
+    with colm1: 
+        st.write("### Scrap Gold Purchase")
+    with colm2:
+        st.session_state['show_calc'] = st.checkbox("Show Formula",
+                                                    value=st.session_state['show_calc'])
+
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # Display and update the widgets
     for i in range(st.session_state['widget_count']):
@@ -97,7 +100,8 @@ def render_gold_scrap():
                         st.rerun()
 
         # Use columns to place text inputs side by side
-        col1, col2, col3, col4 = st.columns([4,4,4,4], vertical_alignment="bottom")
+        col1, col2, col3, col4 = st.columns([4,4,4,4], 
+                                            vertical_alignment="bottom")
         # description box
         with col1:
             desc = st.text_input("Description",
@@ -107,9 +111,10 @@ def render_gold_scrap():
 
         # gold weight box
         with col2:
-            gold_wt = st.text_input("Gold Weight in grams",
-                                    value=st.session_state['widget_data'][i]['gold_wt'],
-                                    key=f'gold_wt_{i}')
+            gold_wt = st.number_input("Gold Weight in grams",
+                                      value=st.session_state['widget_data'][i]['gold_wt'],
+                                      key=f'gold_wt_{i}',
+                                      min_value=0.0)
             st.session_state['widget_data'][i]['gold_wt'] = gold_wt
 
         # gold karat dropdown
@@ -182,10 +187,52 @@ def render_gold_scrap():
                 """
         ):
         if st.button("Generate", key="generate"):
-            pdf_scrap_gold(st.session_state['widget_data'], show_calc)
+            pdf_scrap_gold(st.session_state['widget_data'], 
+                           st.session_state['show_calc'])
             view_pdf = True
     return view_pdf
          
+
+def render_gold_breakdown():
+    st.write("#### Gold Jewellery Breakdown")
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        item_code = st.text_input("Item code")
+    
+    with col2:
+        price = st.number_input("Price",
+                                min_value=0)
+
+    with col3:
+        gold_wt = st.number_input("Gross Gold Weight in grams",
+                                  min_value=0.0)
+
+    view_pdf = False
+
+    st.write("")
+
+    # Generate button 
+    with stylable_container(
+            key='generate',
+            css_styles="""
+                button{
+                    background: linear-gradient(to right, #005C97 ,#363795);
+                    color: white;
+                    border-radius: 7px;
+                    height: 50px !important;
+                    min-height: 35px !important;
+                    max-height: 35px !important;
+                }
+                """
+        ):
+        if st.button("Generate", key="generate"):
+            pdf_gold_bd(item_code, price, gold_wt)
+            view_pdf = True
+    return view_pdf
+
 
 def render_hyd_breakdown():
     st.write("#### Hyderabadi Jewellery Breakdown")
@@ -200,23 +247,30 @@ def render_hyd_breakdown():
             'hyd_ct': ''
         }]  # Start with initial data for one widget
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
         item_code = st.text_input("Item code")
     
     with col2:
-        gold_wt = st.text_input("Gross Gold Weight in grams")
+        price = st.number_input("Price",
+                                min_value=0)
 
+    with col3:
+        gold_wt = st.number_input("Gross Gold Weight in grams",
+                                  min_value=0.0)
+
+    st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
+                unsafe_allow_html=True)
     # Display and update the widgets
     for i in range(st.session_state['hyd_stones_count']):
 
         # Use columns to place text inputs side by side
-        col1, col2, col3 = st.columns([3.2,3.2,1], vertical_alignment="bottom")
+        col1, col2, col3, _ = st.columns([3,3,1,2], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone']
-            index = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone']
+            options = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+            index = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
             hyd_stone = st.selectbox("Select Stone", 
                                 options = options,
                                 index = index.index(st.session_state['hyd_stones_data'][i]['hyd_stone']),
@@ -307,45 +361,6 @@ def render_hyd_breakdown():
     return view_pdf
 
 
-def render_gold_breakdown():
-    st.write("#### Gold Jewellery Breakdown")
-    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        item_code = st.text_input("Item code")
-    
-    with col2:
-        price = st.text_input("Price")
-
-    with col3:
-        gold_wt = st.text_input("Gross Gold Weight in grams")
-
-    view_pdf = False
-
-    st.write("")
-
-    # Generate button 
-    with stylable_container(
-            key='generate',
-            css_styles="""
-                button{
-                    background: linear-gradient(to right, #005C97 ,#363795);
-                    color: white;
-                    border-radius: 7px;
-                    height: 50px !important;
-                    min-height: 35px !important;
-                    max-height: 35px !important;
-                }
-                """
-        ):
-        if st.button("Generate", key="generate"):
-            pdf_gold_bd(item_code, price, gold_wt)
-            view_pdf = True
-    return view_pdf
-
-
 def render_ant_breakdown():
     st.write("#### Antique Jewellery Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
@@ -359,23 +374,31 @@ def render_ant_breakdown():
             'ant_ct': ''
         }]  # Start with initial data for one widget
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
         item_code = st.text_input("Item code")
     
     with col2:
-        gold_wt = st.text_input("Gross Gold Weight in grams")
+        price = st.number_input("Price",
+                                min_value=0)
+
+    with col3:
+        gold_wt = st.number_input("Gross Gold Weight in grams",
+                                  min_value=0.0)
+
+    st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
+                unsafe_allow_html=True)
 
     # Display and update the widgets
     for i in range(st.session_state['ant_stones_count']):
 
         # Use columns to place text inputs side by side
-        col1, col2, col3 = st.columns([3.2,3.2,1], vertical_alignment="bottom")
+        col1, col2, col3, _ = st.columns([3,3,1,2], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone']
-            index = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone']
+            options = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+            index = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
             ant_stone = st.selectbox("Select Stone", 
                                 options = options,
                                 index = index.index(st.session_state['ant_stones_data'][i]['ant_stone']),

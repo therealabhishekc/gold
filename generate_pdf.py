@@ -101,8 +101,8 @@ def pdf_scrap_gold(data, show_calc):
         total_cash += cash
         total_trade += trade
         pdf.cell(38, 8, item['desc']+marker, border=1, align='C')
-        pdf.cell(38, 8, wt, border=1, align='C')
-        pdf.cell(38, 8, kt, border=1, align='C')
+        pdf.cell(38, 8, str(wt), border=1, align='C')
+        pdf.cell(38, 8, str(kt), border=1, align='C')
         pdf.cell(38, 8, "$"+str(cash), border=1, align='C')
         pdf.cell(38, 8, "$"+str(trade), border=1, align='C')
         pdf.ln()
@@ -177,7 +177,7 @@ def pdf_gold_bd(item_code, price, gold_wt):
     # 22K
     gold_22k = round(gp*0.93, 2)
     pdf.set_font(family="Helvetica", style="B", size=9)
-    pdf.cell(43, 6, txt=f"22K gold one gram: ${gold_22k} ", ln=False, border=0)
+    pdf.cell(42, 6, txt=f"22K gold one gram: ${gold_22k} ", ln=False, border=0)
     pdf.set_font(family="Helvetica", style="I", size=8)
     pdf.cell(50, 6, txt="(24K gold * 0.93 = 22K gold)", ln=True, border=0)
 
