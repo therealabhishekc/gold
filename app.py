@@ -27,7 +27,7 @@ def displayPDF(file):
     # Embedding PDF in HTML and centering it
     pdf_display = f'''
     <div style="display: flex; justify-content: center;">
-        <iframe src="data:application/pdf;base64,{base64_pdf}#zoom=150" width="1300" height="1020" type="application/pdf"></iframe>
+        <iframe src="data:application/pdf;base64,{base64_pdf}#zoom=140" width="1300" height="1020" type="application/pdf"></iframe>
     </div>
     '''
     # Displaying File
@@ -80,7 +80,7 @@ def main():
 
         # Initialize selected3 in session_state if not already set
         if 'selected_option' not in st.session_state:
-            st.session_state['selected_option'] = 0
+            st.session_state.selected_option = 0
 
         options_list = ["Scrap\nGold", "Gold\nBreakdown", "Hyderabadi\nBreakdown", "Antique\nBreakdown", "Diamond\nBreakdown"]
 
@@ -89,7 +89,7 @@ def main():
             options=options_list, 
             icons=[None, None, None, None],
             menu_icon=None, 
-            default_index=st.session_state['selected_option'], 
+            default_index=st.session_state.selected_option, 
             orientation="horizontal",
             styles={
                 "container": {"padding": "0!important", 
@@ -113,19 +113,19 @@ def main():
         )
 
         #Update session_state with the new selection
-        if st.session_state['selected_option'] != options_list.index(selected3):
-            st.session_state['selected_option'] = options_list.index(selected3)
+        if st.session_state.selected_option != options_list.index(selected3):
+            st.session_state.selected_option = options_list.index(selected3)
             st.rerun()
-         
-        if selected3 == "Scrap\nGold":
+
+        if st.session_state.selected_option == 0:
             st.session_state.selected_page = "scrap_gold"
-        if selected3 == "Gold\nBreakdown":
+        if st.session_state.selected_option == 1:
             st.session_state.selected_page = "gold_breakdown"
-        if selected3 == "Hyderabadi\nBreakdown":
+        if st.session_state.selected_option == 2:
             st.session_state.selected_page = "hyd_breakdown"
-        if selected3 == "Antique\nBreakdown":
+        if st.session_state.selected_option == 3:
             st.session_state.selected_page = "ant_breakdown"
-        if selected3 == "Diamond\nBreakdown":
+        if st.session_state.selected_option == 4:
             st.session_state.selected_page = "dia_breakdown"
 
         # Render the page based on the session state

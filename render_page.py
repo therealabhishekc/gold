@@ -1,11 +1,11 @@
 import streamlit as st
-from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd, pdf_hyd_db
+from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd, pdf_hyd_bd, pdf_ant_bd
 from streamlit_extras.stylable_container import stylable_container
 
 @st.dialog("Weight less than 10 grams")
 def ten_below():
-    st.write("Any jewellery piece less than 10 grams is sold at \"PIECE PRICE\",")
-    st.write("Please enter a jewellery weight of more than 10 grams to continue.")
+    st.error("Any jewellery piece less than 10 grams is sold at \"PIECE PRICE\",")
+    st.warning("Please enter a jewellery weight of more than 10 grams to continue.")
 
 
 # Function to add widgets
@@ -27,8 +27,8 @@ def add_widgets(var):
     elif var == 'ant':
         st.session_state['ant_stones_count'] += 1
         st.session_state['ant_stones_data'].append({
-            'ant_stone': 'Ruby',
-            'ant_ct': ''
+            'ant_stone': 'Polki Diamond',
+            'ant_ct': 0.0
         })
     elif var == 'dia':
         pass
@@ -206,14 +206,14 @@ def render_gold_breakdown():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        item_code = st.text_input("Item code")
+        item_code_g = st.text_input("Item code")
     
     with col2:
-        price = st.number_input("Price",
+        price_g = st.number_input("Price",
                                 min_value=0)
 
     with col3:
-        gold_wt = st.number_input("Gross Gold Weight in grams",
+        gold_wt_g = st.number_input("Gross Gold Weight in grams",
                                   min_value=0.0)
 
     view_pdf = False
@@ -235,10 +235,10 @@ def render_gold_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            if gold_wt < 10.00:
+            if gold_wt_g < 10.00:
                 ten_below()
             else:
-                pdf_gold_bd(item_code, price, gold_wt)
+                pdf_gold_bd(item_code_g, price_g, gold_wt_g)
                 view_pdf = True
     return view_pdf
 
@@ -259,14 +259,14 @@ def render_hyd_breakdown():
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code = st.text_input("Item code")
+        item_code_h = st.text_input("Item code")
     
     with col2:
-        price = st.number_input("Price",
+        price_h = st.number_input("Price",
                                 min_value=0)
 
     with col3:
-        gold_wt = st.number_input("Gross Gold Weight in grams",
+        gold_wt_h = st.number_input("Gross Gold Weight in grams",
                                   min_value=0.0)
 
     st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
@@ -366,12 +366,12 @@ def render_hyd_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            if gold_wt < 10.00:
+            if gold_wt_h < 10.00:
                 ten_below()
             else:
-                pdf_hyd_db(item_code, 
-                           price, 
-                           gold_wt, 
+                pdf_hyd_bd(item_code_h, 
+                           price_h, 
+                           gold_wt_h, 
                            st.session_state['hyd_stones_data'])
                 view_pdf = True
     return view_pdf
@@ -386,21 +386,21 @@ def render_ant_breakdown():
         st.session_state['ant_stones_count'] = 1  # Start with at least one widget
     if 'ant_stones_data' not in st.session_state:
         st.session_state['ant_stones_data'] = [{
-            'ant_stone': 'Ruby',
-            'ant_ct': ''
+            'ant_stone': 'Polki Diamond',
+            'ant_ct': 0.0
         }]  # Start with initial data for one widget
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code = st.text_input("Item code")
+        item_code_a = st.text_input("Item code")
     
     with col2:
-        price = st.number_input("Price",
+        price_a = st.number_input("Price",
                                 min_value=0)
 
     with col3:
-        gold_wt = st.number_input("Gross Gold Weight in grams",
+        gold_wt_a = st.number_input("Gross Gold Weight in grams",
                                   min_value=0.0)
 
     st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
@@ -413,8 +413,8 @@ def render_ant_breakdown():
         col1, col2, col3, _ = st.columns([3,3,1,2], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
-            index = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Polki Diamond', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+            options = ['Polki Diamond', 'Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+            index = ['Polki Diamond', 'Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
             ant_stone = st.selectbox("Select Stone", 
                                 options = options,
                                 index = index.index(st.session_state['ant_stones_data'][i]['ant_stone']),
@@ -423,9 +423,10 @@ def render_ant_breakdown():
 
         # gold weight box
         with col2:
-            ant_ct = st.text_input("Stone carat",
+            ant_ct = st.number_input("Stone carat",
                                     value=st.session_state['ant_stones_data'][i]['ant_ct'],
-                                    key=f'ant_ct_{i}')
+                                    key=f'ant_ct_{i}',
+                                    min_value=0.0)
             st.session_state['ant_stones_data'][i]['ant_ct'] = ant_ct
 
         # gold karat dropdown
@@ -500,10 +501,13 @@ def render_ant_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            if gold_wt < 10.00:
+            if gold_wt_a < 10.00:
                 ten_below()
             else:
-                sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
+                pdf_ant_bd(item_code_a, 
+                           price_a, 
+                           gold_wt_a, 
+                           st.session_state['ant_stones_data'])
                 view_pdf = True
     return view_pdf
 

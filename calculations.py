@@ -1,6 +1,3 @@
-import random
-
-
 # scrap gold calculations
 def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place):
     gold_kt = int(gold_kt[:2])
@@ -48,7 +45,7 @@ def hyd_bd(price, net_wt, total_stone_ct, gold_22k):
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(net_wt * gold_22k)
 
-    profit = 7.50
+    profit = 8.00
     while True:
         price_stones = price_pre_tax - price_gold - price_duty - (2 * (profit/100) * price_pre_tax)
         price_per_carat = price_stones/total_stone_ct
