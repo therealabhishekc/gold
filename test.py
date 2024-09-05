@@ -318,8 +318,8 @@
 
 
 
-import streamlit as st
-from streamlit_option_menu import option_menu
+# import streamlit as st
+# from streamlit_option_menu import option_menu
 
 # # 1. as sidebar menu
 # with st.sidebar:
@@ -359,13 +359,42 @@ from streamlit_option_menu import option_menu
 # selected4
 
 # 5. Add on_change callback
-def on_change(key):
-    selection = st.session_state[key]
-    st.write(f"Selection changed to {selection}")
+# def on_change(key):
+#     selection = st.session_state[key]
+#     st.write(f"Selection changed to {selection}")
     
-selected5 = option_menu(None, ["Homee", "Uploade", "Tasksee", 'Settingse'],
-                        icons=['house', 'cloud-upload', "list-task", 'gear'],
-                        on_change=on_change, 
-                        key='menu_5', 
-                        orientation="horizontal")
-selected5
+# selected5 = option_menu(None, ["Homee", "Uploade", "Tasksee", 'Settingse'],
+#                         icons=['house', 'cloud-upload', "list-task", 'gear'],
+#                         on_change=on_change, 
+#                         key='menu_5', 
+#                         orientation="horizontal")
+# selected5
+
+
+
+
+import streamlit as st
+
+# Initialize selectbox count in session state if not already present
+if 'selectbox_count' not in st.session_state:
+    st.session_state.selectbox_count = 0
+
+# Callback to increase selectbox count and show a custom message
+def add_callback(increment, message):
+    st.session_state.selectbox_count += increment
+    st.write(message)
+
+# Display selectboxes dynamically
+for i in range(st.session_state.selectbox_count):
+    st.selectbox(f"Options {i + 1}:", ("a", "b", "c"))
+
+# Add the button at the bottom, passing two arguments to the callback
+add_clicked = st.button(
+    "Add", 
+    on_click=add_callback, 
+    args=(1, "A new selectbox has been added!"),  # Passing 1 and a custom message
+    help="Add a new test", 
+    key="Add"
+)
+
+

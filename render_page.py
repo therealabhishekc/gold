@@ -8,11 +8,6 @@ def ten_below():
     st.warning("Please enter a jewellery weight of more than 10 grams to continue.")
 
 
-# on_change callback
-def on_change1():
-    pass
-
-
 # Function to add widgets
 def add_widgets(var):
     if var == 'scrap_gold':
@@ -41,6 +36,50 @@ def add_widgets(var):
 
 # Function to delete a widget
 def delete_widget(index, var):
+    if var == 'scrap_gold':
+        if st.session_state['widget_count'] > 1:  # Ensure at least one widget remains
+            st.session_state['widget_count'] -= 1
+            st.session_state['widget_data'].pop(index)
+    elif var == 'hyd':
+        if st.session_state['hyd_stones_count'] > 1:
+            st.session_state['hyd_stones_count'] -= 1
+            st.session_state['hyd_stones_data'].pop(index)
+    elif var == 'ant':
+        if st.session_state['ant_stones_count'] > 1:
+            st.session_state['ant_stones_count'] -= 1
+            st.session_state['ant_stones_data'].pop(index)
+    elif var == 'dia':
+        if st.session_state['hyd_stones_count'] > 1:
+            st.session_state['hyd_stones_count'] -= 1
+            st.session_state['hyd_stones_data'].pop(index)
+
+
+def add_callback(var):
+    if var == 'scrap_gold':
+        st.session_state['widget_count'] += 1
+        st.session_state['widget_data'].append({
+            'desc': '',
+            'gold_wt': 0.0,
+            'gold_kt': '10K',
+            'gold_pur_place' : "Govindji's"
+        })
+    elif var == 'hyd':
+        st.session_state['hyd_stones_count'] += 1
+        st.session_state['hyd_stones_data'].append({
+            'hyd_stone': 'Ruby',
+            'hyd_ct': 0.0
+        })
+    elif var == 'ant':
+        st.session_state['ant_stones_count'] += 1
+        st.session_state['ant_stones_data'].append({
+            'ant_stone': 'Polki Diamond',
+            'ant_ct': 0.0
+        })
+    elif var == 'dia':
+        pass
+
+
+def del_callback(index, var):
     if var == 'scrap_gold':
         if st.session_state['widget_count'] > 1:  # Ensure at least one widget remains
             st.session_state['widget_count'] -= 1
@@ -106,10 +145,14 @@ def render_gold_scrap():
             
             with col2:
                 if st.session_state['widget_count'] > 1:
-                    if st.button(f"Delete", 
-                                 key=f'delete_{i}'):
-                        delete_widget(i, 'scrap_gold')
-                        st.rerun()
+                    # if st.button(f"Delete", 
+                    #              key=f'delete_{i}'):
+                    #     delete_widget(i, 'scrap_gold')
+                    #     st.rerun()
+                    st.button("Delete",
+                              key=f'delete_{i}',
+                              on_click=del_callback,
+                              args=(i, 'scrap_gold'))
 
         # Use columns to place text inputs side by side
         col1, col2, col3, col4 = st.columns([4,4,4,4], 
@@ -178,10 +221,14 @@ def render_gold_scrap():
                         }
                         """,
                 ):
-                    if st.button("Add Items", 
-                                 key="add"):
-                        add_widgets('scrap_gold')
-                        st.rerun()
+                    # if st.button("Add Items", 
+                    #              key="add"):
+                    #     add_widgets('scrap_gold')
+                    #     st.rerun()
+                    st.button("Add items",
+                              on_click=add_callback,
+                              args=('scrap_gold',),
+                              key='add_scrp')
 
     view_pdf = False
 
@@ -318,9 +365,13 @@ def render_hyd_breakdown():
                     """
             ):
                 if st.session_state['hyd_stones_count'] > 1:
-                    if st.button(f"Delete", key=f'delete_hyd_{i}'):
-                        delete_widget(i, 'hyd')
-                        st.rerun()         
+                    # if st.button(f"Delete", key=f'delete_hyd_{i}'):
+                    #     delete_widget(i, 'hyd')
+                    #     st.rerun() 
+                    st.button("Delete",
+                              key=f'delete_hyd_{i}',
+                              on_click=del_callback,
+                              args=(i, 'hyd'))        
 
     # Button to trigger adding of widgets
     with stylable_container(
@@ -351,9 +402,13 @@ def render_hyd_breakdown():
                         }
                         """,
                 ):
-                    if st.button("Add Stone", key="add"):
-                        add_widgets('hyd')
-                        st.rerun()
+                    # if st.button("Add Stone", key="add"):
+                    #     add_widgets('hyd')
+                    #     st.rerun()
+                    st.button("Add Gems",
+                              on_click=add_callback,
+                              args=('hyd',),
+                              key='add_hyd')
 
 
     view_pdf = False
@@ -453,9 +508,13 @@ def render_ant_breakdown():
                     """
             ):
                 if st.session_state['ant_stones_count'] > 1:
-                    if st.button(f"Delete", key=f'delete_ant_{i}'):
-                        delete_widget(i, 'ant')
-                        st.rerun()         
+                    # if st.button(f"Delete", key=f'delete_ant_{i}'):
+                    #     delete_widget(i, 'ant')
+                    #     st.rerun()         
+                    st.button("Delete",
+                              key=f'delete_ant_{i}',
+                              on_click=del_callback,
+                              args=(i, 'ant'))
 
     # Button to trigger adding of widgets
     with stylable_container(
@@ -486,9 +545,13 @@ def render_ant_breakdown():
                         }
                         """,
                 ):
-                    if st.button("Add Stone", key="add"):
-                        add_widgets('ant')
-                        st.rerun()
+                    # if st.button("Add Stone", key="add"):
+                    #     add_widgets('ant')
+                    #     st.rerun()
+                    st.button("Add Gems",
+                              on_click=add_callback,
+                              args=('ant',),
+                              key='add_ant')
 
 
     view_pdf = False
