@@ -27,7 +27,7 @@ def displayPDF(file):
     # Embedding PDF in HTML and centering it
     pdf_display = f'''
     <div style="display: flex; justify-content: center;">
-        <embed src="data:application/pdf;base64,{base64_pdf}#zoom=140" width="1300" height="1020" type="application/pdf"></embed>
+        <iframe src="data:application/pdf;base64,{base64_pdf}#zoom=140" width="1300" height="1020" type="application/pdf"></iframe>
     </div>
     '''
     # Displaying File
