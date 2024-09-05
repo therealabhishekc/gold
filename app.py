@@ -25,15 +25,24 @@ def displayPDF(file):
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
     # Embedding PDF in HTML and centering it
+    # pdf_display = f'''
+    # <div style="display: flex; justify-content: center;">
+    #     <iframe 
+    #         src="data:application/pdf;base64,{base64_pdf}#zoom=140" 
+    #         width="1300" 
+    #         height="1020" 
+    #         type="application/pdf">
+    #     </iframe>
+    # </div>
+    # '''
     pdf_display = f'''
-    <div style="display: flex; justify-content: center;">
-        <iframe 
-            src="data:application/pdf;base64,{base64_pdf}#zoom=140" 
+    <body>
+        <embed 
+            src="output.pdf" 
             width="1300" 
-            height="1020" 
-            type="application/pdf">
-        </iframe>
-    </div>
+            height="1020" >
+        </embed>
+    </body>
     '''
     # Displaying File
     st.markdown(pdf_display, unsafe_allow_html=True)
