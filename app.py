@@ -37,7 +37,7 @@ def displayPDF(file):
     # '''
     pdf_display = f'''
         <object 
-            data=file" 
+            data={file} 
             width="1300" 
             height="1020" 
             type="application/pdf">
