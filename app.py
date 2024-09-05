@@ -25,24 +25,15 @@ def displayPDF(file):
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
     # Embedding PDF in HTML and centering it
-    # pdf_display = f'''
-    # <div style="display: flex; justify-content: center;">
-    #     <iframe 
-    #         src="data:application/pdf;base64,{base64_pdf}#zoom=140" 
-    #         width="1300" 
-    #         height="1020" 
-    #         type="application/pdf">
-    #     </iframe>
-    # </div>
-    # '''
     pdf_display = f'''
-    <body>
-        <embed 
-            src="output.pdf" 
+    <div style="display: flex; justify-content: center;">
+        <iframe 
+            src="data:application/pdf;base64,{base64_pdf}#zoom=140" 
             width="1300" 
-            height="1020" >
-        </embed>
-    </body>
+            height="1020" 
+            type="application/pdf">
+        </iframe>
+    </div>
     '''
     # Displaying File
     st.markdown(pdf_display, unsafe_allow_html=True)
@@ -60,7 +51,12 @@ def render_page(page_name):
         return render_ant_breakdown()
     elif page_name == "dia_breakdown":
         return render_dia_breakdown()
-    
+
+
+# 5. Add on_change callback
+def on_change(key):
+    pass
+
 
 # Main function to set up the Streamlit app
 def main():
@@ -74,7 +70,7 @@ def main():
         displayPDF('output.pdf')
 
     else:
-        _, col, _ = st.columns([4,3,4,])
+        _, col, _ = st.columns([4,3,4])
         with col:
             st.image("images/logo.png")
             hide_img_fs = '''
@@ -87,8 +83,8 @@ def main():
             st.write("")
 
         # Initialize session state for the selected page
-        if 'selected_page' not in st.session_state:
-            st.session_state.selected_page = "scrap_gold"
+        # if 'selected_page' not in st.session_state:
+        #     st.session_state.selected_page = "scrap_gold"
 
         view_pdf = False
 
@@ -98,6 +94,55 @@ def main():
 
         options_list = ["Scrap\nGold", "Gold\nBreakdown", "Hyderabadi\nBreakdown", "Antique\nBreakdown", "Diamond\nBreakdown"]
 
+        # selected3 = option_menu(
+        #     menu_title=None,
+        #     options=options_list, 
+        #     icons=[None, None, None, None],
+        #     menu_icon=None, 
+        #     default_index=st.session_state.selected_option, 
+        #     orientation="horizontal",
+        #     styles={
+        #         "container": {"padding": "0!important", 
+        #                       "background-color": "#fafafa"},
+        #         "icon": {"display": "none"}, 
+        #         "nav-link": {"font-size": "15px", 
+        #                      "font-family": "sans-serif",
+        #                      "text-align": "center", 
+        #                      "margin":"2px", 
+        #                      "white-space": "pre-wrap",
+        #                      "border-radius" : "10px",
+        #                      "--hover-color": "#eee",
+        #                      "padding" : "7px"
+        #         },
+        #         "nav-link-selected": {
+        #             "background": "linear-gradient(to right, #005C97 , #363795)", 
+        #             "font-weight": "bold", 
+        #             "color": "white" 
+        #         },
+        #     }
+        # )
+
+        # #Update session_state with the new selection
+        # if st.session_state.selected_option != options_list.index(selected3):
+        #     st.session_state.selected_option = options_list.index(selected3)
+        #     st.rerun()
+
+
+        # if st.session_state.selected_option == 0:
+        #     st.session_state.selected_page = "scrap_gold"
+        # if st.session_state.selected_option == 1:
+        #     st.session_state.selected_page = "gold_breakdown"
+        # if st.session_state.selected_option == 2:
+        #     st.session_state.selected_page = "hyd_breakdown"
+        # if st.session_state.selected_option == 3:
+        #     st.session_state.selected_page = "ant_breakdown"
+        # if st.session_state.selected_option == 4:
+        #     st.session_state.selected_page = "dia_breakdown"
+
+        # # Render the page based on the session state
+        # view_pdf = render_page(st.session_state.selected_page)
+        #st.rerun()
+
         selected3 = option_menu(
             menu_title=None,
             options=options_list, 
@@ -105,6 +150,8 @@ def main():
             menu_icon=None, 
             default_index=st.session_state.selected_option, 
             orientation="horizontal",
+            on_change=on_change,
+            key='nav_bar',
             styles={
                 "container": {"padding": "0!important", 
                               "background-color": "#fafafa"},
@@ -126,25 +173,18 @@ def main():
             }
         )
 
-        #Update session_state with the new selection
-        if st.session_state.selected_option != options_list.index(selected3):
-            st.session_state.selected_option = options_list.index(selected3)
-            st.rerun()
+        st.session_state.selected_option = options_list.index(selected3)
 
         if st.session_state.selected_option == 0:
-            st.session_state.selected_page = "scrap_gold"
+            view_pdf = render_page('scrap_gold')
         if st.session_state.selected_option == 1:
-            st.session_state.selected_page = "gold_breakdown"
+            view_pdf = render_page('gold_breakdown')
         if st.session_state.selected_option == 2:
-            st.session_state.selected_page = "hyd_breakdown"
+            view_pdf = render_page('hyd_breakdown')
         if st.session_state.selected_option == 3:
-            st.session_state.selected_page = "ant_breakdown"
+            view_pdf = render_page('ant_breakdown')
         if st.session_state.selected_option == 4:
-            st.session_state.selected_page = "dia_breakdown"
-
-        # Render the page based on the session state
-        view_pdf = render_page(st.session_state.selected_page)
-        #st.rerun()
+            view_pdf = render_page('dia_breakdown')
 
         if view_pdf:
             st.link_button(

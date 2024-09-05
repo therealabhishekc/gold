@@ -119,164 +119,101 @@
 
 
 
-from fpdf import FPDF
-from PyPDF2 import PdfReader, PdfWriter
-from spot_price import get_price
-from calculations import scrap_gold
-
-
-# Function to generate the PDF
-def pdf_scrap_gold(data=""):
-
-    # Step 1: Read the existing PDF
-    reader = PdfReader("template.pdf")
-    writer = PdfWriter()
-
-    # create FPDF object
-    pdf = FPDF('L', 'mm', 'A5')
-    # add page
-    pdf.add_page()
-    pdf.ln(18) 
-
-    op, gp, time, date = get_price()
-
-    pdf.set_font(family="Helvetica", style="" ,size=9)
-    pdf.write(7, "Spot price on")
-    pdf.set_text_color(0, 0, 255)
-    pdf.write(7, " kitko.com ", link="https://www.kitco.com/")
-    pdf.set_text_color(0, 0, 0)
-    pdf.write(7, f" as of {date} on {time} is $")
-
-    # Set font to Helvetica (bold) for the price
-    pdf.set_font(family="Helvetica", style="B", size=9)
-    pdf.write(7, f"{op}")
-
-    # Switch back to regular style for the rest of the text
-    pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.write(7, " per Troy Ounce")
-
-    pdf.ln(6)
-
-    # 24K
-    pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.cell(45, 6, txt=f"24K gold one gram: ${gp} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=9)
-    pdf.cell(0, 6, txt="(1 Troy Ounce = 31.103 grams)", ln=True, border=0)
-    
-    # 22K
-    gold_22k_gov = round(gp*0.916, 2)
-    gold_22k_oth = round(gp*0.8, 2)
-    pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_22k_gov} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=9)
-    pdf.cell(70, 6, txt="(24K gold * 0.916 = 22K gold)", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="", size=10)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_22k_oth} ", ln=True, border=0)
-
-    # refiner_cost
-    gold_trade_gov = round(gold_22k_gov-4.5, 2)
-    gold_trade_oth = round(gold_22k_oth-4.5, 2)
-    pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_trade_gov} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=9)
-    pdf.cell(70, 6, txt="(after refinery cost)", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="", size=10)
-    pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_trade_oth} ", ln=False, border=0)
-
-    pdf.ln(9)
-
-    # Set font for table
-    pdf.set_font("Helvetica", "B", size=9)
-
-    # Add table header
-    header = ['Description', 'Weight', 'Gold Karat', 'Cash Value', 'Trade-in Value']
-    for col_name in header:
-        pdf.cell(38, 8, col_name, border=1, align='C')
-    pdf.ln()
-
-    data = [
-        {'desc': 'Gold Necklace', 'gold_wt': '20.9', 'gold_kt': '22K', 'gold_pur_place': "Tanishq"},
-        {'desc': 'Gold Ring', 'gold_wt': '5.9', 'gold_kt': '18K', 'gold_pur_place': "Malabar Gold"},
-        {'desc': 'Gold Bracelet', 'gold_wt': '15.9', 'gold_kt': '14K', 'gold_pur_place': "Kalyan Jewellers"},
-        {'desc': 'Gold Earrings', 'gold_wt': '8.9', 'gold_kt': '10K', 'gold_pur_place': "Joyalukkas"},
-        {'desc': 'Gold Chain', 'gold_wt': '12.9', 'gold_kt': '24K', 'gold_pur_place': "PC Jeweller"},
-    ]
-    
-    pdf.set_font("Helvetica", size=8)
-    # Add table rows
-    for item in data:
-        wt, kt, place = item['gold_wt'], item['gold_kt'], item['gold_pur_place']
-        cash, trade, marker = scrap_gold(gp, wt, kt, place)
-        pdf.cell(38, 8, item['desc']+marker, border=1, align='C')
-        pdf.cell(38, 8, wt, border=1, align='C')
-        pdf.cell(38, 8, kt, border=1, align='C')
-        pdf.cell(38, 8, str(cash), border=1, align='C')
-        pdf.cell(38, 8, str(trade), border=1, align='C')
-        pdf.ln()
-        
-
-    # Save the temporary PDF to a file
-    temp_pdf_path = "temp.pdf"
-    pdf.output(temp_pdf_path)
-
-    # Merge the temporary PDF with the original PDF
-    with open(temp_pdf_path, "rb") as temp_pdf_file:
-        temp_reader = PdfReader(temp_pdf_file)
-        for i, page in enumerate(reader.pages):
-            if i == 0:
-                page.merge_page(temp_reader.pages[0])
-            writer.add_page(page)
-        
-        # Add the extra pages created by the text
-        for j in range(1, len(temp_reader.pages)):
-            writer.add_page(temp_reader.pages[j])
-
-    # Write the modified content to a new PDF
-    with open("output1.pdf", "wb") as output_pdf_file:
-        writer.write(output_pdf_file)
-    
-pdf_scrap_gold()
-
-
-
-
-
-
-
-# from PyPDF2 import PdfReader, PdfWriter
 # from fpdf import FPDF
+# from PyPDF2 import PdfReader, PdfWriter
+# from spot_price import get_price
+# from calculations import scrap_gold
 
-# def add_text_to_pdf(text, start_page=0):
+
+# # Function to generate the PDF
+# def pdf_scrap_gold(data=""):
+
 #     # Step 1: Read the existing PDF
 #     reader = PdfReader("template.pdf")
 #     writer = PdfWriter()
 
-#     # Create a temporary PDF with the text overlay
+#     # create FPDF object
 #     pdf = FPDF('L', 'mm', 'A5')
-#     pdf.set_font("Arial", size=12)
-    
-#     # Split the text into lines
-#     lines = text.split('\n')
-#     line_height = pdf.font_size * 2.5
-#     max_lines_per_page = int((148 - 10) / line_height)  # A4 size: 210x297mm
+#     # add page
+#     pdf.add_page()
+#     pdf.ln(18) 
 
-#     current_page = start_page
-#     line_counter = 0
-#     flag = True
-#     while line_counter < len(lines):
-#         pdf.add_page()
-#         if flag:
-#             pdf.ln(10)
-#             flag = False
+#     op, gp, time, date = get_price()
+
+#     pdf.set_font(family="Helvetica", style="" ,size=9)
+#     pdf.write(7, "Spot price on")
+#     pdf.set_text_color(0, 0, 255)
+#     pdf.write(7, " kitko.com ", link="https://www.kitco.com/")
+#     pdf.set_text_color(0, 0, 0)
+#     pdf.write(7, f" as of {date} on {time} is $")
+
+#     # Set font to Helvetica (bold) for the price
+#     pdf.set_font(family="Helvetica", style="B", size=9)
+#     pdf.write(7, f"{op}")
+
+#     # Switch back to regular style for the rest of the text
+#     pdf.set_font(family="Helvetica", style="", size=9)
+#     pdf.write(7, " per Troy Ounce")
+
+#     pdf.ln(6)
+
+#     # 24K
+#     pdf.set_font(family="Helvetica", style="", size=9)
+#     pdf.cell(45, 6, txt=f"24K gold one gram: ${gp} ", ln=False, border=0)
+#     pdf.set_font(family="Helvetica", style="I", size=9)
+#     pdf.cell(0, 6, txt="(1 Troy Ounce = 31.103 grams)", ln=True, border=0)
+    
+#     # 22K
+#     gold_22k_gov = round(gp*0.916, 2)
+#     gold_22k_oth = round(gp*0.8, 2)
+#     pdf.set_font(family="Helvetica", style="", size=9)
+#     pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_22k_gov} ", ln=False, border=0)
+#     pdf.set_font(family="Helvetica", style="I", size=9)
+#     pdf.cell(70, 6, txt="(24K gold * 0.916 = 22K gold)", ln=False, border=0)
+#     pdf.set_font(family="Helvetica", style="", size=10)
+#     pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_22k_oth} ", ln=True, border=0)
+
+#     # refiner_cost
+#     gold_trade_gov = round(gold_22k_gov-4.5, 2)
+#     gold_trade_oth = round(gold_22k_oth-4.5, 2)
+#     pdf.set_font(family="Helvetica", style="", size=9)
+#     pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_trade_gov} ", ln=False, border=0)
+#     pdf.set_font(family="Helvetica", style="I", size=9)
+#     pdf.cell(70, 6, txt="(after refinery cost)", ln=False, border=0)
+#     pdf.set_font(family="Helvetica", style="", size=10)
+#     pdf.cell(45, 6, txt=f"22K gold one gram: ${gold_trade_oth} ", ln=False, border=0)
+
+#     pdf.ln(9)
+
+#     # Set font for table
+#     pdf.set_font("Helvetica", "B", size=9)
+
+#     # Add table header
+#     header = ['Description', 'Weight', 'Gold Karat', 'Cash Value', 'Trade-in Value']
+#     for col_name in header:
+#         pdf.cell(38, 8, col_name, border=1, align='C')
+#     pdf.ln()
+
+#     data = [
+#         {'desc': 'Gold Necklace', 'gold_wt': '20.9', 'gold_kt': '22K', 'gold_pur_place': "Tanishq"},
+#         {'desc': 'Gold Ring', 'gold_wt': '5.9', 'gold_kt': '18K', 'gold_pur_place': "Malabar Gold"},
+#         {'desc': 'Gold Bracelet', 'gold_wt': '15.9', 'gold_kt': '14K', 'gold_pur_place': "Kalyan Jewellers"},
+#         {'desc': 'Gold Earrings', 'gold_wt': '8.9', 'gold_kt': '10K', 'gold_pur_place': "Joyalukkas"},
+#         {'desc': 'Gold Chain', 'gold_wt': '12.9', 'gold_kt': '24K', 'gold_pur_place': "PC Jeweller"},
+#     ]
+    
+#     pdf.set_font("Helvetica", size=8)
+#     # Add table rows
+#     for item in data:
+#         wt, kt, place = item['gold_wt'], item['gold_kt'], item['gold_pur_place']
+#         cash, trade, marker = scrap_gold(gp, wt, kt, place)
+#         pdf.cell(38, 8, item['desc']+marker, border=1, align='C')
+#         pdf.cell(38, 8, wt, border=1, align='C')
+#         pdf.cell(38, 8, kt, border=1, align='C')
+#         pdf.cell(38, 8, str(cash), border=1, align='C')
+#         pdf.cell(38, 8, str(trade), border=1, align='C')
+#         pdf.ln()
         
-#         # Write lines to the current page
-#         for i in range(max_lines_per_page):
-#             if line_counter >= len(lines):
-#                 break
-#             pdf.text(10, 10 + i * line_height, lines[line_counter])
-#             line_counter += 1
-        
-#         current_page += 1
 
 #     # Save the temporary PDF to a file
 #     temp_pdf_path = "temp.pdf"
@@ -286,7 +223,7 @@ pdf_scrap_gold()
 #     with open(temp_pdf_path, "rb") as temp_pdf_file:
 #         temp_reader = PdfReader(temp_pdf_file)
 #         for i, page in enumerate(reader.pages):
-#             if i == start_page:
+#             if i == 0:
 #                 page.merge_page(temp_reader.pages[0])
 #             writer.add_page(page)
         
@@ -297,13 +234,8 @@ pdf_scrap_gold()
 #     # Write the modified content to a new PDF
 #     with open("output1.pdf", "wb") as output_pdf_file:
 #         writer.write(output_pdf_file)
-
-# # Example usage:
-# input_pdf = "template.pdf"
-# text = "This is a very long ahh text...\n" * 100  # Example long text
-# add_text_to_pdf(text, start_page=0)
-
-
+    
+# pdf_scrap_gold()
 
 
 
@@ -385,3 +317,55 @@ pdf_scrap_gold()
 
 
 
+
+import streamlit as st
+from streamlit_option_menu import option_menu
+
+# # 1. as sidebar menu
+# with st.sidebar:
+#     selected = option_menu("Main Menu", ["Home", 'Settings'], 
+#         icons=['house', 'gear'], menu_icon="cast", default_index=1)
+#     selected
+
+# # 2. horizontal menu
+# selected2 = option_menu(None, ["Home", "Upload", "Tasks", 'Settings'], 
+#     icons=['house', 'cloud-upload', "list-task", 'gear'], 
+#     menu_icon="cast", default_index=0, orientation="horizontal")
+# selected2
+
+# # 3. CSS style definitions
+# selected3 = option_menu(None, ["Home", "Upload",  "Tasks", 'Settings'], 
+#     icons=['house', 'cloud-upload', "list-task", 'gear'], 
+#     menu_icon="cast", default_index=0, orientation="horizontal",
+#     styles={
+#         "container": {"padding": "0!important", "background-color": "#fafafa"},
+#         "icon": {"color": "orange", "font-size": "25px"}, 
+#         "nav-link": {"font-size": "25px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+#         "nav-link-selected": {"background-color": "green"},
+#     }
+# )
+
+# # 4. Manual item selection
+# if st.session_state.get('switch_button', False):
+#     st.session_state['menu_option'] = (st.session_state.get('menu_option', 0) + 1) % 4
+#     manual_select = st.session_state['menu_option']
+# else:
+#     manual_select = None
+    
+# selected4 = option_menu(None, ["Home", "Upload", "Tasks", 'Settings'], 
+#     icons=['house', 'cloud-upload', "list-task", 'gear'], 
+#     orientation="horizontal", manual_select=manual_select, key='menu_4')
+# st.button(f"Move to Next {st.session_state.get('menu_option', 1)}", key='switch_button')
+# selected4
+
+# 5. Add on_change callback
+def on_change(key):
+    selection = st.session_state[key]
+    st.write(f"Selection changed to {selection}")
+    
+selected5 = option_menu(None, ["Homee", "Uploade", "Tasksee", 'Settingse'],
+                        icons=['house', 'cloud-upload', "list-task", 'gear'],
+                        on_change=on_change, 
+                        key='menu_5', 
+                        orientation="horizontal")
+selected5
