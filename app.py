@@ -36,14 +36,12 @@ def displayPDF(file):
     # </div>
     # '''
     pdf_display = f'''
-    <div style="display: flex; justify-content: center;">
         <object 
             data=file" 
             width="1300" 
             height="1020" 
             type="application/pdf">
         </object>
-    </div>
     '''
     # Displaying File
     st.markdown(pdf_display, unsafe_allow_html=True)
