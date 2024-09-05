@@ -53,7 +53,7 @@ def render_page(page_name):
         return render_dia_breakdown()
 
 
-# 5. Add on_change callback
+# on_change callback
 def on_change(key):
     pass
 

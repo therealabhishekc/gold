@@ -8,6 +8,11 @@ def ten_below():
     st.warning("Please enter a jewellery weight of more than 10 grams to continue.")
 
 
+# on_change callback
+def on_change1():
+    pass
+
+
 # Function to add widgets
 def add_widgets(var):
     if var == 'scrap_gold':
@@ -32,7 +37,7 @@ def add_widgets(var):
         })
     elif var == 'dia':
         pass
-    
+
 
 # Function to delete a widget
 def delete_widget(index, var):
@@ -101,7 +106,8 @@ def render_gold_scrap():
             
             with col2:
                 if st.session_state['widget_count'] > 1:
-                    if st.button(f"Delete", key=f'delete_{i}'):
+                    if st.button(f"Delete", 
+                                 key=f'delete_{i}'):
                         delete_widget(i, 'scrap_gold')
                         st.rerun()
 
@@ -172,7 +178,8 @@ def render_gold_scrap():
                         }
                         """,
                 ):
-                    if st.button("Add Items", key="add"):
+                    if st.button("Add Items", 
+                                 key="add"):
                         add_widgets('scrap_gold')
                         st.rerun()
 
