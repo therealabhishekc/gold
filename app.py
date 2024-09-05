@@ -25,9 +25,24 @@ def displayPDF(file):
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
     # Embedding PDF in HTML and centering it
+    # pdf_display = f'''
+    # <div style="display: flex; justify-content: center;">
+    #     <iframe 
+    #         src="data:application/pdf;base64,{base64_pdf}#zoom=140" 
+    #         width="1300" 
+    #         height="1020" 
+    #         type="application/pdf">
+    #     </iframe>
+    # </div>
+    # '''
     pdf_display = f'''
     <div style="display: flex; justify-content: center;">
-        <iframe src="data:application/pdf;base64,{base64_pdf}#zoom=140" width="1300" height="1020" type="application/pdf"></iframe>
+        <object 
+            data=file" 
+            width="1300" 
+            height="1020" 
+            type="application/pdf">
+        </object>
     </div>
     '''
     # Displaying File
@@ -136,7 +151,7 @@ def main():
             st.link_button(
                 "View PDF",
                 #url=f"http://localhost:8501/?output={view_pdf}"
-                url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}&igu=1"
+                url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
             )
 
 
