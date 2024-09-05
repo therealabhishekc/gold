@@ -29,8 +29,8 @@ def displayPDF(file):
     <div style="display: flex; justify-content: center;">
         <iframe 
             src="data:application/pdf;base64,{base64_pdf}#zoom=140" 
-            width="90%" 
-            height="90%" 
+            width="1300" 
+            height="1020" 
             type="application/pdf">
         </iframe>
     </div>
