@@ -15,10 +15,6 @@ def pdf_scrap_gold(data, show_calc):
     pdf = FPDF('L', 'mm', 'A5')
     # add page
     pdf.add_page()
-
-    # set background color (RGB format)
-    pdf.set_fill_color(184, 231, 199)  # Light blue background color
-    pdf.rect(0, 0, 210, 148, 'F')  # Fills the entire A5 landscape page
     
     pdf.ln(18) 
 
@@ -149,8 +145,14 @@ def pdf_gold_bd(item_code, price, gold_wt):
 
     # create FPDF object
     pdf = FPDF('L', 'mm', 'A5')
+    
     # add page
     pdf.add_page()
+    
+    # set background color (RGB format)
+    pdf.set_fill_color(184, 231, 199)  # Light blue background color
+    pdf.rect(0, 0, 210, 148, 'F')  # Fills the entire A5 landscape page
+    
     pdf.ln(18) 
 
     pdf.set_font(family="Helvetica", style="B" ,size=12)
