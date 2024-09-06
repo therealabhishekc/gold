@@ -220,17 +220,18 @@ def pdf_gold_bd(item_code, price, gold_wt):
     pdf.cell(10, 8)
     pdf.cell(25, 8, txt=f"6.5%", border=0, align='C')
 
-    pdf.ln(8)
+    pdf.ln(10)
 
-    pdf.set_font(family="Helvetica", style="B", size=10)
+    pdf.set_font(family="Helvetica", style="", size=10)
     pdf.cell(105, 8)
-    pdf.cell(25, 8, txt=f"${price_pre_tax}", align='C', border=True)
-    pdf.cell(25, 8, txt=f"     +  Tax (8.25%)")
+    pdf.cell(25, 8, txt=f"${price_pre_tax}", align='C', border=0)
+    pdf.cell(25, 8, txt=f"  +  Tax (8.25%)")
 
-    pdf.ln(15)
+    pdf.ln(13)
+    pdf.set_font(family="Helvetica", style="B", size=10)
     pdf.cell(70, 8)
     pdf.cell(35, 8, txt=f"Final Price:", align='R')
-    pdf.cell(25, 8, txt=f"${price}", align='C', border=True)
+    pdf.cell(25, 8, txt=f"${price}", align='C', border=1)
 
     # Save the temporary PDF to a file
     temp_pdf_path = "temp.pdf"
@@ -418,6 +419,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, stones):
         writer.write(output_pdf_file)
 
 
+# Function to generate the antique breakdown PDF
 def pdf_ant_bd(item_code, price, gross_wt, stones):
 
     #Read the existing PDF
@@ -567,12 +569,13 @@ def pdf_ant_bd(item_code, price, gross_wt, stones):
     pdf.cell(22, 8, txt=f"6.5%", border=0, align='C')
 
     pdf.ln(8)
-    pdf.set_font(family="Helvetica", style="B", size=10)
+    pdf.set_font(family="Helvetica", style="", size=9)
     pdf.cell(120, 8)
-    pdf.cell(22, 8, txt=f"${price_pre_tax}", align='C', border=True)
+    pdf.cell(22, 8, txt=f"${price_pre_tax}", align='C', border=0)
     pdf.cell(25, 8, txt=f"     +  Tax (8.25%)")
 
     pdf.ln(16)
+    pdf.set_font(family="Helvetica", style="B", size=10)
     pdf.cell(90, 8)
     pdf.cell(30, 8, txt=f"Final Price:", align='R')
     pdf.cell(22, 8, txt=f"${price}", align='C', border=True)

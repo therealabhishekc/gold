@@ -373,28 +373,64 @@
 
 
 
-import streamlit as st
+# import streamlit as st
 
-# Initialize selectbox count in session state if not already present
-if 'selectbox_count' not in st.session_state:
-    st.session_state.selectbox_count = 0
+# # Initialize selectbox count in session state if not already present
+# if 'selectbox_count' not in st.session_state:
+#     st.session_state.selectbox_count = 0
 
-# Callback to increase selectbox count and show a custom message
-def add_callback(increment, message):
-    st.session_state.selectbox_count += increment
-    st.write(message)
+# # Callback to increase selectbox count and show a custom message
+# def add_callback(increment, message):
+#     st.session_state.selectbox_count += increment
+#     st.write(message)
 
-# Display selectboxes dynamically
-for i in range(st.session_state.selectbox_count):
-    st.selectbox(f"Options {i + 1}:", ("a", "b", "c"))
+# # Display selectboxes dynamically
+# for i in range(st.session_state.selectbox_count):
+#     st.selectbox(f"Options {i + 1}:", ("a", "b", "c"))
 
-# Add the button at the bottom, passing two arguments to the callback
-add_clicked = st.button(
-    "Add", 
-    on_click=add_callback, 
-    args=(1, "A new selectbox has been added!"),  # Passing 1 and a custom message
-    help="Add a new test", 
-    key="Add"
-)
+# # Add the button at the bottom, passing two arguments to the callback
+# add_clicked = st.button(
+#     "Add", 
+#     on_click=add_callback, 
+#     args=(1, "A new selectbox has been added!"),  # Passing 1 and a custom message
+#     help="Add a new test", 
+#     key="Add"
+# )
 
 
+
+
+from fpdf import FPDF
+
+def template():
+
+    # create FPDF object
+    pdf = FPDF('L', 'mm', 'A5')
+
+    # add page
+    pdf.add_page()
+
+    # set font (font, styles(B, U, I, BU, ''))
+    # title logo
+    page_width = pdf.w
+    x_position = (page_width - 40) / 2
+    pdf.image("images\logo.png", x=x_position, y=10, w=40)
+    # pdf.set_font(family="Arial", style="B" ,size=20)
+    # pdf.cell(0, 9, txt="Govindji's", ln=True, align="C", border=0)
+    # address 
+    pdf.set_font(family="Arial", style="" ,size=7)
+    pdf.ln(8)
+    pdf.cell(0, 3, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", ln=True, border=0, align="C")
+    pdf.ln(0.7)
+    # phone
+    pdf.cell(0, 3, txt=f"Phone: 972-231 6776   Facsimile: 972-231 3232", ln=True, border=0, align="C")
+
+    # Draw line
+    start_x = 10   
+    end_x = 200    
+    y_position = 27  
+    pdf.line(start_x, y_position, end_x, y_position)
+
+    pdf.output("test.pdf")
+
+template()
