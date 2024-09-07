@@ -9,49 +9,49 @@ def ten_below():
 
 
 # Function to add widgets
-def add_widgets(var):
-    if var == 'scrap_gold':
-        st.session_state['widget_count'] += 1
-        st.session_state['widget_data'].append({
-            'desc': '',
-            'gold_wt': 0.0,
-            'gold_kt': '10K',
-            'gold_pur_place' : "Govindji's"
-        })
-    elif var == 'hyd':
-        st.session_state['hyd_stones_count'] += 1
-        st.session_state['hyd_stones_data'].append({
-            'hyd_stone': 'Ruby',
-            'hyd_ct': 0.0
-        })
-    elif var == 'ant':
-        st.session_state['ant_stones_count'] += 1
-        st.session_state['ant_stones_data'].append({
-            'ant_stone': 'Polki Diamond',
-            'ant_ct': 0.0
-        })
-    elif var == 'dia':
-        pass
+# def add_widgets(var):
+#     if var == 'scrap_gold':
+#         st.session_state['widget_count'] += 1
+#         st.session_state['widget_data'].append({
+#             'desc': '',
+#             'gold_wt': 0.0,
+#             'gold_kt': '10K',
+#             'gold_pur_place' : "Govindji's"
+#         })
+#     elif var == 'hyd':
+#         st.session_state['hyd_stones_count'] += 1
+#         st.session_state['hyd_stones_data'].append({
+#             'hyd_stone': 'Ruby',
+#             'hyd_ct': 0.0
+#         })
+#     elif var == 'ant':
+#         st.session_state['ant_stones_count'] += 1
+#         st.session_state['ant_stones_data'].append({
+#             'ant_stone': 'Polki Diamond',
+#             'ant_ct': 0.0
+#         })
+#     elif var == 'dia':
+#         pass
 
 
-# Function to delete a widget
-def delete_widget(index, var):
-    if var == 'scrap_gold':
-        if st.session_state['widget_count'] > 1:  # Ensure at least one widget remains
-            st.session_state['widget_count'] -= 1
-            st.session_state['widget_data'].pop(index)
-    elif var == 'hyd':
-        if st.session_state['hyd_stones_count'] > 1:
-            st.session_state['hyd_stones_count'] -= 1
-            st.session_state['hyd_stones_data'].pop(index)
-    elif var == 'ant':
-        if st.session_state['ant_stones_count'] > 1:
-            st.session_state['ant_stones_count'] -= 1
-            st.session_state['ant_stones_data'].pop(index)
-    elif var == 'dia':
-        if st.session_state['hyd_stones_count'] > 1:
-            st.session_state['hyd_stones_count'] -= 1
-            st.session_state['hyd_stones_data'].pop(index)
+# # Function to delete a widget
+# def delete_widget(index, var):
+#     if var == 'scrap_gold':
+#         if st.session_state['widget_count'] > 1:  # Ensure at least one widget remains
+#             st.session_state['widget_count'] -= 1
+#             st.session_state['widget_data'].pop(index)
+#     elif var == 'hyd':
+#         if st.session_state['hyd_stones_count'] > 1:
+#             st.session_state['hyd_stones_count'] -= 1
+#             st.session_state['hyd_stones_data'].pop(index)
+#     elif var == 'ant':
+#         if st.session_state['ant_stones_count'] > 1:
+#             st.session_state['ant_stones_count'] -= 1
+#             st.session_state['ant_stones_data'].pop(index)
+#     elif var == 'dia':
+#         if st.session_state['hyd_stones_count'] > 1:
+#             st.session_state['hyd_stones_count'] -= 1
+#             st.session_state['hyd_stones_data'].pop(index)
 
 
 def add_callback(var):
@@ -254,21 +254,22 @@ def render_gold_scrap():
          
 
 def render_gold_breakdown():
-    st.write("#### Gold Jewellery Breakdown")
+    st.write("#### Gold Jewelry Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        item_code_g = st.text_input("Item code")
+        item_code_g = st.text_input("Item code", key='item_code_g')
     
     with col2:
-        price_g = st.number_input("Price",
-                                min_value=0)
+        price_g = st.number_input("Price", min_value=0,
+                                  key='price_g')
 
     with col3:
         gold_wt_g = st.number_input("Gross Gold Weight in grams",
-                                  min_value=0.0)
+                                    min_value=0.0,
+                                    key='gold_wt_g')
 
     view_pdf = False
 
@@ -298,7 +299,7 @@ def render_gold_breakdown():
 
 
 def render_hyd_breakdown():
-    st.write("#### Hyderabadi Jewellery Breakdown")
+    st.write("#### Hyderabadi Jewelry Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
         # Initialize session state for tracking the widgets and their values
@@ -313,15 +314,18 @@ def render_hyd_breakdown():
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code_h = st.text_input("Item code")
+        item_code_h = st.text_input("Item code",
+                                    key='item_code_h')
     
     with col2:
         price_h = st.number_input("Price",
-                                min_value=0)
+                                  min_value=0,
+                                  key='price_h')
 
     with col3:
         gold_wt_h = st.number_input("Gross Gold Weight in grams",
-                                  min_value=0.0)
+                                    min_value=0.0,
+                                    key='gold_wt_h')
 
     st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
                 unsafe_allow_html=True)
@@ -329,11 +333,11 @@ def render_hyd_breakdown():
     for i in range(st.session_state['hyd_stones_count']):
 
         # Use columns to place text inputs side by side
-        col1, col2, col3, _ = st.columns([3,3,1,2], vertical_alignment="bottom")
+        col1, col2, col3, _ = st.columns([3,3,1.5,1.5], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
-            index = ['Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+            options = ['Ruby', 'Emerald', 'Sapphire','Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
+            index = ['Ruby', 'Emerald', 'Sapphire', 'Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
             hyd_stone = st.selectbox("Select Stone", 
                                 options = options,
                                 index = index.index(st.session_state['hyd_stones_data'][i]['hyd_stone']),
@@ -365,9 +369,6 @@ def render_hyd_breakdown():
                     """
             ):
                 if st.session_state['hyd_stones_count'] > 1:
-                    # if st.button(f"Delete", key=f'delete_hyd_{i}'):
-                    #     delete_widget(i, 'hyd')
-                    #     st.rerun() 
                     st.button("Delete",
                               key=f'delete_hyd_{i}',
                               on_click=del_callback,
@@ -440,7 +441,7 @@ def render_hyd_breakdown():
 
 
 def render_ant_breakdown():
-    st.write("#### Antique Jewellery Breakdown")
+    st.write("#### Antique Jewelry Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
         # Initialize session state for tracking the widgets and their values
@@ -455,15 +456,18 @@ def render_ant_breakdown():
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code_a = st.text_input("Item code")
+        item_code_a = st.text_input("Item code",
+                                    key='item_code_a')
     
     with col2:
         price_a = st.number_input("Price",
-                                min_value=0)
+                                  min_value=0,
+                                  key='price_a')
 
     with col3:
         gold_wt_a = st.number_input("Gross Gold Weight in grams",
-                                  min_value=0.0)
+                                    min_value=0.0,
+                                    key='gold_wt_a')
 
     st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
                 unsafe_allow_html=True)
@@ -583,7 +587,7 @@ def render_ant_breakdown():
 
 
 def render_dia_breakdown():
-    st.write("#### Diamond Jewellery Breakdown")
+    st.write("#### Diamond Jewelry Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # Use columns to place text inputs side by side

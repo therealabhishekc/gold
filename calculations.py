@@ -38,6 +38,17 @@ def gold_bd(price, gold_wt, gold_22k):
     return price_gold, price_labor, price_profit, price_duty, price_pre_tax
 
 
+# unique profit for each item_code
+def get_profit(s, min_value=8.99, max_value=9.21):
+    hash_value = hash(s)
+    
+    normalized_value = float(hash_value)
+    
+    scaled_value = min_value + (normalized_value % (max_value - min_value))
+    
+    return scaled_value
+
+
 # hyderabadi breakdown calculations
 def hyd_bd(price, net_wt, total_stone_ct, gold_22k):
     price = float(price)
@@ -45,7 +56,7 @@ def hyd_bd(price, net_wt, total_stone_ct, gold_22k):
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(net_wt * gold_22k)
 
-    profit = 8.00
+    profit = 8.50
     while True:
         price_stones = price_pre_tax - price_gold - price_duty - (2 * (profit/100) * price_pre_tax)
         price_per_carat = price_stones/total_stone_ct

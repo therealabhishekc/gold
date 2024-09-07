@@ -411,22 +411,22 @@ def template():
     pdf.add_page()
 
     # set background color (RGB format)
-    # pdf.set_fill_color(184, 231, 199)  # Light blue background color
-    # pdf.rect(0, 0, 210, 148, 'F')  # Fills the entire A5 landscape page
+    pdf.set_fill_color(184, 231, 199)  # Light blue background color
+    pdf.rect(0, 0, 210, 148, 'F')  # Fills the entire A5 landscape page
 
     # set font (font, styles(B, U, I, BU, ''))
     # title logo
     page_width = pdf.w
-    x_position = (page_width - 60) / 2
-    pdf.image("images\logo.png", x=x_position, y=10, w=60)
+    x_position = (page_width - 50) / 2
+    pdf.image("images\logo.png", x=x_position, y=10, w=50)
     # pdf.set_font(family="Arial", style="B" ,size=20)
     # pdf.cell(0, 9, txt="Govindji's", ln=True, align="C", border=0)
     # address 
     pdf.set_font(family="Arial", style="" ,size=7)
     pdf.ln(11)
-    pdf.cell(70, 3, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", border=0, align="C")
-    pdf.cell(50, 3, txt=f"", border=0, align="C")
-    pdf.cell(70, 3, txt=f"Phone: 972-231 6776   Facsimile: 972-231 3232", border=0, align="C")
+    pdf.cell(65, 3, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", border=0, align="R")
+    pdf.cell(60, 3, txt=f"", border=0, align="C")
+    pdf.cell(65, 3, txt=f"Phone: 972-231 6776   www.govindjis.com", border=0, align="L")
 
     # Draw line
     start_x = 10   

@@ -21,9 +21,9 @@ def pdf_scrap_gold(data, show_calc):
 
     pdf.set_font(family="Helvetica", style="" ,size=9)
     pdf.write(7, "Spot price on")
-    pdf.set_text_color(0, 0, 255)
+    #pdf.set_text_color(0, 0, 255)
     pdf.write(7, " kitko.com", link="https://www.kitco.com/")
-    pdf.set_text_color(0, 0, 0)
+    #pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is $")
 
     # Set font to Helvetica (bold) for the price
@@ -158,9 +158,9 @@ def pdf_gold_bd(item_code, price, gold_wt):
     # disp kitko prices
     pdf.set_font(family="Helvetica", style="" ,size=9)
     pdf.write(7, "Spot price on")
-    pdf.set_text_color(0, 0, 255)
+    #pdf.set_text_color(0, 0, 255)
     pdf.write(7, " kitko.com", link="https://www.kitco.com/")
-    pdf.set_text_color(0, 0, 0)
+    #pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is ")
     pdf.set_font(family="Helvetica", style="B", size=9)
     pdf.write(7, f"${round(op, 2)}")
@@ -194,7 +194,7 @@ def pdf_gold_bd(item_code, price, gold_wt):
     pdf.cell(10, 8)
     pdf.cell(25, 8, txt=f"Labor", border=True, align='C')
     pdf.cell(10, 8)
-    pdf.cell(25, 8, txt=f"Profit", border=True, align='C')
+    pdf.cell(25, 8, txt=f"Margin", border=True, align='C')
     pdf.cell(10, 8)
     pdf.cell(25, 8, txt=f"Duty", border=True, align='C', ln=True)
 
@@ -267,7 +267,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, stones):
     pdf.add_page()
     pdf.ln(18) 
 
-    pdf.set_font(family="Helvetica", style="B" ,size=12)
+    pdf.set_font(family="Helvetica", style="B" ,size=11.5)
     pdf.cell(70, 7, txt=f"Detailed Breakdown for {item_code.upper()}",
              border=False,
              ln=True)
@@ -275,42 +275,42 @@ def pdf_hyd_bd(item_code, price, gross_wt, stones):
     op, gp, time, date = get_price()
 
     # disp kitko prices
-    pdf.set_font(family="Helvetica", style="" ,size=9)
+    pdf.set_font(family="Helvetica", style="" ,size=8)
     pdf.write(7, "Spot price on")
-    pdf.set_text_color(0, 0, 255)
+    #pdf.set_text_color(0, 0, 255)
     pdf.write(7, " kitko.com", link="https://www.kitco.com/")
-    pdf.set_text_color(0, 0, 0)
+    #pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is ")
-    pdf.set_font(family="Helvetica", style="B", size=9)
+    pdf.set_font(family="Helvetica", style="B", size=8)
     pdf.write(7, f"${round(op, 2)}")
-    pdf.set_font(family="Helvetica", style="", size=9)
+    pdf.set_font(family="Helvetica", style="", size=8)
     pdf.write(7, " per Troy Ounce")
 
     pdf.ln(4.6)
 
     # 24K
-    pdf.set_font(family="Helvetica", style="", size=9)
+    pdf.set_font(family="Helvetica", style="", size=8)
     pdf.cell(40, 6, txt=f"24K gold one gram: ${round(gp, 2)} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=8)
+    pdf.set_font(family="Helvetica", style="I", size=7)
     pdf.cell(50, 6, txt="(1 Troy Ounce = 31.103 grams)", ln=True, border=0)
     
     pdf.ln(-1.8)
 
     # 22K
     gold_22k = round(gp*0.93, 2)
-    pdf.set_font(family="Helvetica", style="B", size=9)
-    pdf.cell(42, 6, txt=f"22K gold one gram: ${gold_22k} ", ln=False, border=0)
-    pdf.set_font(family="Helvetica", style="I", size=8)
+    pdf.set_font(family="Helvetica", style="B", size=8)
+    pdf.cell(40, 6, txt=f"22K gold one gram: ${gold_22k} ", ln=False, border=0)
+    pdf.set_font(family="Helvetica", style="I", size=7)
     pdf.cell(50, 6, txt="(24K gold * 0.93 = 22K gold)", ln=True, border=0)
 
     pdf.ln(2)
 
     stone_ls, total_stone_ct = [], 0
     disp_stones = []
-
+    
     # go through each stone and make it into a set of 3 for displaying
     for stone in stones:
-        string = str(stone['hyd_stone']) + ': ' + str(stone['hyd_ct']) + 'ct '
+        string = stone['hyd_stone'] + ': ' + str(stone['hyd_ct']) + 'ct '
         disp_stones.append(string)
         total_stone_ct += stone['hyd_ct']
     
@@ -355,7 +355,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, stones):
     pdf.cell(8, 8)
     pdf.cell(22, 8, txt=f"Labor", border=True, align='C')
     pdf.cell(8, 8)
-    pdf.cell(22, 8, txt=f"Profit", border=True, align='C')
+    pdf.cell(22, 8, txt=f"Margin", border=True, align='C')
     pdf.cell(8, 8)
     pdf.cell(22, 8, txt=f"Duty", border=True, align='C', ln=True)
 
@@ -530,7 +530,7 @@ def pdf_ant_bd(item_code, price, gross_wt, stones):
     pdf.cell(8, 8)
     pdf.cell(22, 8, txt=f"Labor", border=True, align='C')
     pdf.cell(8, 8)
-    pdf.cell(22, 8, txt=f"Profit", border=True, align='C')
+    pdf.cell(22, 8, txt=f"Margin", border=True, align='C')
     pdf.cell(8, 8)
     pdf.cell(22, 8, txt=f"Duty", border=True, align='C')
     if polki_flag:

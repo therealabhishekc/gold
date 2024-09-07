@@ -82,10 +82,6 @@ def main():
             st.markdown(hide_img_fs, unsafe_allow_html=True)
             st.write("")
 
-        # Initialize session state for the selected page
-        # if 'selected_page' not in st.session_state:
-        #     st.session_state.selected_page = "scrap_gold"
-
         view_pdf = False
 
         # Initialize selected3 in session_state if not already set
@@ -93,55 +89,6 @@ def main():
             st.session_state.selected_option = 0
 
         options_list = ["Scrap\nGold", "Gold\nBreakdown", "Hyderabadi\nBreakdown", "Antique\nBreakdown", "Diamond\nBreakdown"]
-
-        # selected3 = option_menu(
-        #     menu_title=None,
-        #     options=options_list, 
-        #     icons=[None, None, None, None],
-        #     menu_icon=None, 
-        #     default_index=st.session_state.selected_option, 
-        #     orientation="horizontal",
-        #     styles={
-        #         "container": {"padding": "0!important", 
-        #                       "background-color": "#fafafa"},
-        #         "icon": {"display": "none"}, 
-        #         "nav-link": {"font-size": "15px", 
-        #                      "font-family": "sans-serif",
-        #                      "text-align": "center", 
-        #                      "margin":"2px", 
-        #                      "white-space": "pre-wrap",
-        #                      "border-radius" : "10px",
-        #                      "--hover-color": "#eee",
-        #                      "padding" : "7px"
-        #         },
-        #         "nav-link-selected": {
-        #             "background": "linear-gradient(to right, #005C97 , #363795)", 
-        #             "font-weight": "bold", 
-        #             "color": "white" 
-        #         },
-        #     }
-        # )
-
-        # #Update session_state with the new selection
-        # if st.session_state.selected_option != options_list.index(selected3):
-        #     st.session_state.selected_option = options_list.index(selected3)
-        #     st.rerun()
-
-
-        # if st.session_state.selected_option == 0:
-        #     st.session_state.selected_page = "scrap_gold"
-        # if st.session_state.selected_option == 1:
-        #     st.session_state.selected_page = "gold_breakdown"
-        # if st.session_state.selected_option == 2:
-        #     st.session_state.selected_page = "hyd_breakdown"
-        # if st.session_state.selected_option == 3:
-        #     st.session_state.selected_page = "ant_breakdown"
-        # if st.session_state.selected_option == 4:
-        #     st.session_state.selected_page = "dia_breakdown"
-
-        # # Render the page based on the session state
-        # view_pdf = render_page(st.session_state.selected_page)
-        #st.rerun()
 
         selected3 = option_menu(
             menu_title=None,
