@@ -4,54 +4,8 @@ from streamlit_extras.stylable_container import stylable_container
 
 @st.dialog("Weight less than 10 grams")
 def ten_below():
-    st.error("Any jewellery piece less than 10 grams is sold at \"PIECE PRICE\",")
-    st.warning("Please enter a jewellery weight of more than 10 grams to continue.")
-
-
-# Function to add widgets
-# def add_widgets(var):
-#     if var == 'scrap_gold':
-#         st.session_state['widget_count'] += 1
-#         st.session_state['widget_data'].append({
-#             'desc': '',
-#             'gold_wt': 0.0,
-#             'gold_kt': '10K',
-#             'gold_pur_place' : "Govindji's"
-#         })
-#     elif var == 'hyd':
-#         st.session_state['hyd_stones_count'] += 1
-#         st.session_state['hyd_stones_data'].append({
-#             'hyd_stone': 'Ruby',
-#             'hyd_ct': 0.0
-#         })
-#     elif var == 'ant':
-#         st.session_state['ant_stones_count'] += 1
-#         st.session_state['ant_stones_data'].append({
-#             'ant_stone': 'Polki Diamond',
-#             'ant_ct': 0.0
-#         })
-#     elif var == 'dia':
-#         pass
-
-
-# # Function to delete a widget
-# def delete_widget(index, var):
-#     if var == 'scrap_gold':
-#         if st.session_state['widget_count'] > 1:  # Ensure at least one widget remains
-#             st.session_state['widget_count'] -= 1
-#             st.session_state['widget_data'].pop(index)
-#     elif var == 'hyd':
-#         if st.session_state['hyd_stones_count'] > 1:
-#             st.session_state['hyd_stones_count'] -= 1
-#             st.session_state['hyd_stones_data'].pop(index)
-#     elif var == 'ant':
-#         if st.session_state['ant_stones_count'] > 1:
-#             st.session_state['ant_stones_count'] -= 1
-#             st.session_state['ant_stones_data'].pop(index)
-#     elif var == 'dia':
-#         if st.session_state['hyd_stones_count'] > 1:
-#             st.session_state['hyd_stones_count'] -= 1
-#             st.session_state['hyd_stones_data'].pop(index)
+    st.error("Any jewelry piece less than 10 grams is sold at \"PIECE PRICE\".")
+    st.info("Please talk with the Manager before proceeding.")
 
 
 def add_callback(var):
@@ -269,7 +223,8 @@ def render_gold_breakdown():
     with col3:
         gold_wt_g = st.number_input("Gross Gold Weight in grams",
                                     min_value=0.0,
-                                    key='gold_wt_g')
+                                    key='gold_wt_g',
+                                    format="%0.001f")
 
     view_pdf = False
 
@@ -292,9 +247,9 @@ def render_gold_breakdown():
         if st.button("Generate", key="generate"):
             if gold_wt_g < 10.00:
                 ten_below()
-            else:
-                pdf_gold_bd(item_code_g, price_g, gold_wt_g)
-                view_pdf = True
+                with st.spinner('Preparing Report!'):
+                    pdf_gold_bd(item_code_g, price_g, gold_wt_g)
+            view_pdf = True
     return view_pdf
 
 
