@@ -19,6 +19,8 @@ def pdf_scrap_gold(data, show_calc):
     pdf.ln(18) 
 
     op, gp, time, date = get_price()
+    op = op - 1
+    gp = round(op/31.105, 2)
 
     pdf.set_font(family="Helvetica", style="" ,size=9)
     pdf.write(7, "Spot price on")

@@ -72,7 +72,8 @@ def render_gold_scrap():
         st.write("### Scrap Gold Purchase")
     with colm2:
         st.session_state['show_calc'] = st.checkbox("Show Formula",
-                                                    value=st.session_state['show_calc'])
+                                                    value=st.session_state['show_calc'],
+                                                    disabled=True)
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
@@ -201,8 +202,9 @@ def render_gold_scrap():
                 """
         ):
         if st.button("Generate", key="generate"):
-            pdf_scrap_gold(st.session_state['widget_data'], 
-                           st.session_state['show_calc'])
+            with st.spinner('Preparing Report!'):
+                pdf_scrap_gold(st.session_state['widget_data'], 
+                            st.session_state['show_calc'])
             view_pdf = True
     return view_pdf
          
@@ -247,8 +249,8 @@ def render_gold_breakdown():
         if st.button("Generate", key="generate"):
             if gold_wt_g < 10.00:
                 ten_below()
-                with st.spinner('Preparing Report!'):
-                    pdf_gold_bd(item_code_g, price_g, gold_wt_g)
+            with st.spinner('Preparing Report!'):
+                pdf_gold_bd(item_code_g, price_g, gold_wt_g)
             view_pdf = True
     return view_pdf
 
@@ -358,9 +360,6 @@ def render_hyd_breakdown():
                         }
                         """,
                 ):
-                    # if st.button("Add Stone", key="add"):
-                    #     add_widgets('hyd')
-                    #     st.rerun()
                     st.button("Add Gems",
                               on_click=add_callback,
                               args=('hyd',),
@@ -386,12 +385,12 @@ def render_hyd_breakdown():
         if st.button("Generate", key="generate"):
             if gold_wt_h < 10.00:
                 ten_below()
-            else:
+            with st.spinner('Preparing Report!'):
                 pdf_hyd_bd(item_code_h, 
-                           price_h, 
-                           gold_wt_h, 
-                           st.session_state['hyd_stones_data'])
-                view_pdf = True
+                        price_h, 
+                        gold_wt_h, 
+                        st.session_state['hyd_stones_data'])
+            view_pdf = True
     return view_pdf
 
 
@@ -466,10 +465,7 @@ def render_ant_breakdown():
                     }
                     """
             ):
-                if st.session_state['ant_stones_count'] > 1:
-                    # if st.button(f"Delete", key=f'delete_ant_{i}'):
-                    #     delete_widget(i, 'ant')
-                    #     st.rerun()         
+                if st.session_state['ant_stones_count'] > 1:     
                     st.button("Delete",
                               key=f'delete_ant_{i}',
                               on_click=del_callback,
@@ -504,9 +500,6 @@ def render_ant_breakdown():
                         }
                         """,
                 ):
-                    # if st.button("Add Stone", key="add"):
-                    #     add_widgets('ant')
-                    #     st.rerun()
                     st.button("Add Gems",
                               on_click=add_callback,
                               args=('ant',),
@@ -532,12 +525,12 @@ def render_ant_breakdown():
         if st.button("Generate", key="generate"):
             if gold_wt_a < 10.00:
                 ten_below()
-            else:
+            with st.spinner('Preparing Report!'):
                 pdf_ant_bd(item_code_a, 
                            price_a, 
                            gold_wt_a, 
                            st.session_state['ant_stones_data'])
-                view_pdf = True
+            view_pdf = True
     return view_pdf
 
 
