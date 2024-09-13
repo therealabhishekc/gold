@@ -247,9 +247,9 @@ def render_gold_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            if gold_wt_g < 10.00:
-                ten_below()
             with st.spinner('Preparing Report!'):
+                if gold_wt_g < 10.00:
+                    ten_below()
                 pdf_gold_bd(item_code_g, price_g, gold_wt_g)
             view_pdf = True
     return view_pdf
