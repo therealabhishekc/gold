@@ -387,9 +387,9 @@ def render_hyd_breakdown():
                 ten_below()
             with st.spinner('Preparing Report!'):
                 pdf_hyd_bd(item_code_h, 
-                        price_h, 
-                        gold_wt_h, 
-                        st.session_state['hyd_stones_data'])
+                           price_h, 
+                           gold_wt_h, 
+                           st.session_state['hyd_stones_data'])
             view_pdf = True
     return view_pdf
 

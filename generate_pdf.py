@@ -260,7 +260,37 @@ def pdf_gold_bd(item_code, price, gold_wt):
 
 
 # Function to generate the hyderabadi breakdown PDF
-def pdf_hyd_bd(item_code, price, gross_wt, stones):
+def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
+
+    total_stone_ct = 0
+    disp_stones = []
+    stones = {}
+    
+    # go through each stone 
+    for stone in hyd_stones:
+        stones[stone['hyd_stone']] = stone['hyd_ct']
+        total_stone_ct += stone['hyd_ct']
+    
+    total_stone_ct = round(total_stone_ct, 2)
+    disp_stones.append('Total: ' + str(total_stone_ct) + 'ct')
+    disp_stones = [disp_stones[i:i + 3] for i in range(0, len(disp_stones), 3)]
+    combined_list = [" ".join(group) for group in disp_stones]
+
+    total_stone_wt = round(total_stone_ct/5, 2)
+    net_wt = gross_wt - total_stone_wt
+
+    op, gp, time, date = get_price()
+    gold_22k = round(gp*0.93, 2)
+
+    price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
+        hyd_bd(item_code, price, net_wt, gold_22k, stones)
+    
+    # print('############################################################')
+    # print(stones)
+    # print('############################################################')
+    # print('############################################################')
+    # print(price_per_stone)
+    # print('############################################################')
 
     #Read the existing PDF
     reader = PdfReader("template.pdf")
@@ -276,8 +306,6 @@ def pdf_hyd_bd(item_code, price, gross_wt, stones):
     pdf.cell(70, 7, txt=f"Detailed Breakdown for {item_code.upper()}",
              border=False,
              ln=True)
-
-    op, gp, time, date = get_price()
 
     # disp kitko prices
     pdf.set_font(family="Helvetica", style="" ,size=8)
@@ -302,30 +330,12 @@ def pdf_hyd_bd(item_code, price, gross_wt, stones):
     pdf.ln(-1.8)
 
     # 22K
-    gold_22k = round(gp*0.93, 2)
     pdf.set_font(family="Helvetica", style="B", size=8)
     pdf.cell(40, 6, txt=f"22K gold one gram: ${gold_22k} ", ln=False, border=0)
     pdf.set_font(family="Helvetica", style="I", size=7)
     pdf.cell(50, 6, txt="(24K gold * 0.93 = 22K gold)", ln=True, border=0)
 
     pdf.ln(2)
-
-    stone_ls, total_stone_ct = [], 0
-    disp_stones = []
-    
-    # go through each stone and make it into a set of 3 for displaying
-    for stone in stones:
-        string = stone['hyd_stone'] + ': ' + str(stone['hyd_ct']) + 'ct '
-        disp_stones.append(string)
-        total_stone_ct += stone['hyd_ct']
-    
-    total_stone_ct = round(total_stone_ct, 2)
-    disp_stones.append('Total: ' + str(total_stone_ct) + 'ct')
-    disp_stones = [disp_stones[i:i + 3] for i in range(0, len(disp_stones), 3)]
-    combined_list = [" ".join(group) for group in disp_stones]
-
-    total_stone_wt = round(total_stone_ct/5, 2)
-    net_wt = gross_wt - total_stone_wt
 
     pdf.set_font(family="Helvetica", style="B", size=10)
     pdf.cell(50, 6, txt=f"Gross weight: {gross_wt} grams", border=0, ln=True)
@@ -363,9 +373,6 @@ def pdf_hyd_bd(item_code, price, gross_wt, stones):
     pdf.cell(22, 8, txt=f"Margin", border=True, align='C')
     pdf.cell(8, 8)
     pdf.cell(22, 8, txt=f"Duty", border=True, align='C', ln=True)
-
-    price_gold, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
-        hyd_bd(price, net_wt, total_stone_ct, gold_22k)
     
     #actual values
     pdf.cell(22, 7, txt=f"${price_gold}", border=True, align='C')
