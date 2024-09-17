@@ -86,7 +86,7 @@ class CustomError(Exception):
 
 
 # gets profit bases on the itemcode
-def random_profit(s, min_value=8.75, max_value=8.99):
+def random_profit(s, min_value=8.99, max_value=9.16):
     '''
     s: item code
     '''
@@ -119,13 +119,19 @@ def inc_stones_price(price_stones, condition):
              'Pearl':'prl',
              'Coral':'crl',
              'Navratna':'nav',
-             'Cubic Zirconia':'czp',
-             'South Sea Pearls':'ssp'}
+             'Cubic Zirconia':'cz',
+             'South Sea Pearls':'ssp',
+             'Ruby/Emerald': 're',
+             'Other/All stones': 'oth'}
     for stone in price_stones.keys():
         code = abbre[stone]
         if code in condition:
             continue
-        inc = random.uniform(0.09, 0.11)
+        if stone in ('Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 
+                     'Navratna', 'South Sea Pearls', 'Other/All stones'):
+            inc = random.uniform(0.09, 0.11)
+        else:
+            inc = random.uniform(0.04, 0.06)
         price_stones[stone] = round(price_stones[stone]+inc, 2)
     return price_stones
 
@@ -154,6 +160,10 @@ def check_stones_price(price_stones):
             res.append('ssp')
         if stone[0] == ('Coral') and stone[1] > 15.0:
             res.append('crl')
+        if stone[0] == ('Ruby/Emerald') and stone[1] > 29.0:
+            res.append('re')
+        if stone[0] == ('Other/All stones') and stone[1] > 29.0:
+            res.append('oth')
     return [] if len(res) == 0 else res
 
 
@@ -166,7 +176,9 @@ def initial_stone_price(stones):
                     'Coral':5.0,
                     'Navratna':14.0,
                     'Cubic Zirconia':3.0,
-                    'South Sea Pearls':14.0}
+                    'South Sea Pearls':14.0,
+                    'Ruby/Emerald': 11.0,
+                    'Other/All stones': 11.0}
     init_stones = {}
     for stone in stones.keys():
         init_stones[stone] = price_stones[stone]
@@ -182,8 +194,10 @@ def get_codes(stones):
              'Pearl':'prl',
              'Coral':'crl',
              'Navratna':'nav',
-             'Cubic Zirconia':'czp',
-             'South Sea Pearls':'ssp'}
+             'Cubic Zirconia':'cz',
+             'South Sea Pearls':'ssp',
+             'Ruby/Emerald': 're',
+             'Other/All stones': 'oth'}
     codes = set()
     for stone in stones.keys():
         codes.add(abbre[stone])
@@ -215,7 +229,7 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
         rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2)
         if rem>0:
             if profit_perc < 10.99:
-                profit_perc += 0.008
+                profit_perc += 0.01
             condition = check_stones_price(price_stones)
             if len(condition) < leng:
                 inc_stones_price(price_stones, condition)

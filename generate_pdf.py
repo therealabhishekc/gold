@@ -285,13 +285,6 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
     price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
         hyd_bd(item_code, price, net_wt, gold_22k, stones)
     
-    # print('############################################################')
-    # print(stones)
-    # print('############################################################')
-    # print('############################################################')
-    # print(price_per_stone)
-    # print('############################################################')
-
     #Read the existing PDF
     reader = PdfReader("template.pdf")
     writer = PdfWriter()
@@ -345,20 +338,29 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
 
     pdf.ln(5)
 
-    flag = True
+    cnt = 0
+    formula = ["Net weight = Gross weight - Total Gems weight",
+               "Total Gems Weight = Total Gems Carat / 5",
+               "5 carats = 1 gram"]
 
-    for disp in combined_list:
+    for stone in stones.keys():
         pdf.set_font(family="Helvetica", style="", size=7)
-        pdf.cell(65, 5, txt=f"{disp}", border=0)
-        if flag:
+        pdf.cell(20, 5, txt=f"{stone} : ", border=0, align='R')
+        pdf.cell(12, 5, txt=f"{stones[stone]}ct", border=0, align='L')
+        pdf.cell(33, 5, txt=f"PPC: ${price_per_stone[stone]}", border=0, align='L')
+        if cnt<2:
             pdf.set_font(family="Helvetica", style="I", size=7)
-            pdf.cell(65, 5, txt=f"(Net weight = Gross weight - Total Gems weight)", border=0)
-            flag = False
+            pdf.cell(65, 5, txt=f"{formula[cnt]}", border=0)
+            cnt += 1
         pdf.ln(2.8)
 
+    pdf.set_font(family="Helvetica", style="BI", size=7)
+    pdf.ln(0.8)
+    pdf.cell(20, 5, txt=f"Total Carat : ", border=0, align='R')
+    pdf.cell(12, 5, txt=f"{total_stone_ct}ct", border=0, align='L')
+    pdf.cell(12, 5, txt=f"${price_stones}", border=0, align='L')
     pdf.set_font(family="Helvetica", style="I", size=7)
-    pdf.cell(65, 5, txt=f"(5 carats = 1 grams; Total carat / 5 = Weight in grams)")
-
+    
     pdf.ln(7)
 
     pdf.set_font(family="Helvetica", style="B", size=10)
@@ -391,7 +393,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
     lbr = round((price_labor/price_pre_tax)*100, 2)
     prf = round((price_labor/price_pre_tax)*100, 2)
     pdf.cell(30, 7)
-    pdf.cell(22, 7, txt=f"({ppc}/ct)", border=0, align='C')
+    pdf.cell(22, 7, txt=f"(Avg: {ppc}/ct)", border=0, align='C')
     pdf.cell(8, 7)
     pdf.cell(22, 7, txt=f"({lbr}%)", border=0, align='C')
     pdf.cell(8, 7)

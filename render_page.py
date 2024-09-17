@@ -293,8 +293,8 @@ def render_hyd_breakdown():
         col1, col2, col3, _ = st.columns([3,3,1.5,1.5], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Ruby', 'Emerald', 'Sapphire','Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
-            index = ['Ruby', 'Emerald', 'Sapphire', 'Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
+            options = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire','Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
+            index = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
             hyd_stone = st.selectbox("Select Stone", 
                                 options = options,
                                 index = index.index(st.session_state['hyd_stones_data'][i]['hyd_stone']),
