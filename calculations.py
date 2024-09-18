@@ -247,3 +247,51 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
         price_labor, price_profit = temp+1, temp
 
     return price_gold, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax
+
+
+# hyderabadi breakdown calculations
+def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct):
+
+    # the easy part
+    price = float(price)
+    price_pre_tax = round(price / 1.0825)
+    price_duty = round(price_pre_tax * 0.065)
+    price_gold = round(net_wt * gold_22k)
+    price_polki = 0
+    if polki_flag:
+        price_polki = round(polki_ct * 295)
+
+    # initial profit
+    profit_perc = random_profit(item_code)
+    
+    # initializing stones value
+    price_stones = initial_stone_price(stones)
+
+    # getting codes
+    leng = get_codes(stones)
+
+    # finding prices
+    while True:
+        s_price = get_stones_price(stones, price_stones)
+        price_profit = round(profit_perc*price_pre_tax/100)
+        rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_polki
+        if rem>0:
+            if profit_perc < 10.99:
+                profit_perc += 0.01
+            condition = check_stones_price(price_stones)
+            if len(condition) < leng:
+                inc_stones_price(price_stones, condition)
+            if profit_perc > 10.99 and len(condition) == leng:
+                raise CustomError("Unable to calculate, exceeds limits")
+        else:
+            break
+    
+    remaining = price_pre_tax - price_gold - s_price - price_duty - price_polki
+    temp = round(remaining//2)
+
+    if remaining % 2 == 0:
+        price_labor, price_profit = temp, temp
+    else:
+        price_labor, price_profit = temp+1, temp
+
+    return price_gold, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax, price_polki

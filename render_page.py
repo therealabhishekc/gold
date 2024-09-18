@@ -8,6 +8,11 @@ def ten_below():
     st.info("Please talk with the Manager before proceeding.")
 
 
+@st.dialog("No Response from kitco.com")
+def kitco_down():
+    st.warning("Kitco.com is not responding. Unable to fetch gold prices.")
+
+
 def add_callback(var):
     if var == 'scrap_gold':
         st.session_state['widget_count'] += 1
@@ -293,8 +298,10 @@ def render_hyd_breakdown():
         col1, col2, col3, _ = st.columns([3,3,1.5,1.5], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire','Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
-            index = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Pearl', 'Coral', 'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
+            options = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire','Pearl', 'Coral', 
+                       'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
+            index = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Pearl', 'Coral', 
+                     'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
             hyd_stone = st.selectbox("Select Stone", 
                                 options = options,
                                 index = index.index(st.session_state['hyd_stones_data'][i]['hyd_stone']),
@@ -386,10 +393,12 @@ def render_hyd_breakdown():
             if gold_wt_h < 10.00:
                 ten_below()
             with st.spinner('Preparing Report!'):
-                pdf_hyd_bd(item_code_h, 
-                           price_h, 
-                           gold_wt_h, 
-                           st.session_state['hyd_stones_data'])
+                val = pdf_hyd_bd(item_code_h, 
+                                 price_h, 
+                                 gold_wt_h, 
+                                 st.session_state['hyd_stones_data'])
+                if val == 'kitco_down':
+                    return kitco_down()
             view_pdf = True
     return view_pdf
 
@@ -433,8 +442,10 @@ def render_ant_breakdown():
         col1, col2, col3, _ = st.columns([3,3,1,2], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Polki Diamond', 'Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
-            index = ['Polki Diamond', 'Ruby', 'Emerald', 'Pearls', 'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+            options = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearls', 
+                       'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+            index = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearls', 
+                     'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
             ant_stone = st.selectbox("Select Stone", 
                                 options = options,
                                 index = index.index(st.session_state['ant_stones_data'][i]['ant_stone']),
@@ -526,10 +537,12 @@ def render_ant_breakdown():
             if gold_wt_a < 10.00:
                 ten_below()
             with st.spinner('Preparing Report!'):
-                pdf_ant_bd(item_code_a, 
-                           price_a, 
-                           gold_wt_a, 
-                           st.session_state['ant_stones_data'])
+                val = pdf_ant_bd(item_code_a, 
+                                price_a, 
+                                gold_wt_a, 
+                                st.session_state['ant_stones_data'])
+                if val == 'kitco_down':
+                    return kitco_down()
             view_pdf = True
     return view_pdf
 
