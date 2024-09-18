@@ -1,7 +1,7 @@
 from fpdf import FPDF
 from PyPDF2 import PdfReader, PdfWriter
 from spot_price import get_price, CustomError
-from calculations import scrap_gold, gold_bd, hyd_bd, ant_bd
+from calculations import scrap_gold, gold_bd, hyd_bd, ant_bd, CustomErrorBD
 
 
 # Function to generate the Scrap gold purhcase PDF
@@ -287,8 +287,11 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
         return "kitco_down"
     gold_22k = round(gp*0.93, 2)
 
-    price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
-        hyd_bd(item_code, price, net_wt, gold_22k, stones)
+    try:
+        price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
+            hyd_bd(item_code, price, net_wt, gold_22k, stones)
+    except CustomErrorBD as e:
+        return "no_calc"
     
     #Read the existing PDF
     reader = PdfReader("template.pdf")
@@ -474,8 +477,11 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
         return "kitco_down"
     gold_22k = round(gp*0.93, 2)
 
-    price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax, price_polki = \
-        ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct)
+    try:
+        price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax, price_polki = \
+            ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct)
+    except CustomErrorBD as e:
+        return "no_calc"
     
     #Read the existing PDF
     reader = PdfReader("template.pdf")

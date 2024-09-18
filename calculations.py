@@ -81,7 +81,7 @@ def get_profit(s, min_value=8.99, max_value=9.21):
 
 
 # custom error class
-class CustomError(Exception):
+class CustomErrorBD(Exception):
     pass
 
 
@@ -234,7 +234,7 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
             if len(condition) < leng:
                 inc_stones_price(price_stones, condition)
             if profit_perc > 10.99 and len(condition) == leng:
-                raise CustomError("Unable to calculate, exceeds limits")
+                raise CustomErrorBD("Unable to calculate, exceeds limits")
         else:
             break
     
@@ -282,7 +282,7 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct):
             if len(condition) < leng:
                 inc_stones_price(price_stones, condition)
             if profit_perc > 10.99 and len(condition) == leng:
-                raise CustomError("Unable to calculate, exceeds limits")
+                raise CustomErrorBD("Unable to calculate, exceeds limits")
         else:
             break
     

@@ -13,6 +13,12 @@ def kitco_down():
     st.warning("Kitco.com is not responding. Unable to fetch gold prices.")
 
 
+@st.dialog("Unable to Calculate")
+def no_calc():
+    st.warning("Price per carat and the Profit Margin is exceeding predefined limits.")
+    st.info("Please ask the manager for the breakdown.")
+
+
 def add_callback(var):
     if var == 'scrap_gold':
         st.session_state['widget_count'] += 1
@@ -399,6 +405,8 @@ def render_hyd_breakdown():
                                  st.session_state['hyd_stones_data'])
                 if val == 'kitco_down':
                     return kitco_down()
+                if val == "no_calc":
+                    return no_calc()
             view_pdf = True
     return view_pdf
 
@@ -543,6 +551,8 @@ def render_ant_breakdown():
                                 st.session_state['ant_stones_data'])
                 if val == 'kitco_down':
                     return kitco_down()
+                if val == "no_calc":
+                    return no_calc()
             view_pdf = True
     return view_pdf
 
