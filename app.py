@@ -45,6 +45,11 @@ def displayPDF(file):
     # Displaying File
     st.markdown(pdf_display, unsafe_allow_html=True)
 
+    st.write("")
+    # download button
+    with open("output.pdf", "rb") as f:
+        st.download_button("Download Report", f, "output.pdf")
+
 
 # Function to render the content on each page
 def render_page(page_name):
@@ -142,9 +147,9 @@ def main():
 
         if view_pdf:
             st.link_button(
-                "View Report",
-                url=f"http://localhost:8501/?output={view_pdf}"
-                #url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
+                "View PDF",
+                #url=f"http://localhost:8501/?output={view_pdf}"
+                url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
             )
 
 
