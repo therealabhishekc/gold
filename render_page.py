@@ -15,7 +15,7 @@ def kitco_down():
 
 @st.dialog("Unable to Calculate")
 def no_calc():
-    st.warning("Price per carat and the Profit Margin is exceeding predefined limits.")
+    st.warning("Price Per Carat and the Profit Margin is exceeding predefined limits.")
     st.info("Please ask the manager for the breakdown.")
 
 
