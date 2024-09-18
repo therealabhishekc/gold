@@ -20,6 +20,13 @@ def load_css(css_file):
 
 
 def displayPDF(file):
+
+    # download button
+    with open("output.pdf", "rb") as f:
+        st.download_button("Download Report", f, "output.pdf")
+
+    st.write()
+
     # Opening file from file path
     with open(file, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
@@ -37,11 +44,6 @@ def displayPDF(file):
     '''
     # Displaying File
     st.markdown(pdf_display, unsafe_allow_html=True)
-
-    st.write("")
-    # download button
-    with open("output.pdf", "rb") as f:
-        st.download_button("Download Report", f, "output.pdf")
 
 
 # Function to render the content on each page
