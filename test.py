@@ -400,43 +400,43 @@
 
 
 
-# from fpdf import FPDF
+from fpdf import FPDF
 
-# def template():
+def template():
 
-#     # create FPDF object
-#     pdf = FPDF('L', 'mm', 'A5')
+    # create FPDF object
+    pdf = FPDF('L', 'mm', 'A5')
 
-#     # add page
-#     pdf.add_page()
+    # add page
+    pdf.add_page()
 
-#     # set background color (RGB format)
-#     pdf.set_fill_color(184, 231, 199)  # Light blue background color
-#     pdf.rect(0, 0, 210, 148, 'F')  # Fills the entire A5 landscape page
+    # set background color (RGB format)
+    pdf.set_fill_color(198, 234, 211)  # Light blue background color
+    pdf.rect(0, 0, 210, 148, 'F')  # Fills the entire A5 landscape page
 
-#     # set font (font, styles(B, U, I, BU, ''))
-#     # title logo
-#     page_width = pdf.w
-#     x_position = (page_width - 50) / 2
-#     pdf.image("images\logo.png", x=x_position, y=10, w=50)
-#     # pdf.set_font(family="Arial", style="B" ,size=20)
-#     # pdf.cell(0, 9, txt="Govindji's", ln=True, align="C", border=0)
-#     # address 
-#     pdf.set_font(family="Arial", style="" ,size=7)
-#     pdf.ln(11)
-#     pdf.cell(65, 3, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", border=0, align="R")
-#     pdf.cell(60, 3, txt=f"", border=0, align="C")
-#     pdf.cell(65, 3, txt=f"Phone: 972-231 6776   www.govindjis.com", border=0, align="L")
+    # set font (font, styles(B, U, I, BU, ''))
+    # title logo
+    page_width = pdf.w
+    x_position = (page_width - 50) / 2
+    pdf.image("images\logo.png", x=x_position, y=10, w=50)
+    # pdf.set_font(family="Arial", style="B" ,size=20)
+    # pdf.cell(0, 9, txt="Govindji's", ln=True, align="C", border=0)
+    # address 
+    pdf.set_font(family="Arial", style="" ,size=7)
+    pdf.ln(11)
+    pdf.cell(65, 3, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", border=0, align="R")
+    pdf.cell(60, 3, txt=f"", border=0, align="C")
+    pdf.cell(65, 3, txt=f"Phone: 972-231 6776   www.govindjis.com", border=0, align="L")
 
-#     # Draw line
-#     start_x = 10   
-#     end_x = 200    
-#     y_position = 27  
-#     pdf.line(start_x, y_position, end_x, y_position)
+    # Draw line
+    start_x = 10   
+    end_x = 200    
+    y_position = 27  
+    pdf.line(start_x, y_position, end_x, y_position)
 
-#     pdf.output("template.pdf")
+    pdf.output("template.pdf")
 
-# template()
+template()
 
 
 
@@ -458,10 +458,16 @@ def update_y():
     st.session_state.x = 100 - st.session_state.y
 
 # Slider for x with a callback to update y
-st.slider("Select the value of x", min_value=0, max_value=100, value=st.session_state.x, key="x", on_change=update_x)
+st.slider("Select the value of x", 
+          min_value=0, max_value=100, 
+          value=st.session_state.x, 
+          key="x", on_change=update_x)
 
 # Slider for y with a callback to update x
-st.slider("Select the value of y", min_value=0, max_value=100, value=st.session_state.y, key="y", on_change=update_y)
+st.slider("Select the value of y", 
+          min_value=0, max_value=100, 
+          value=st.session_state.y, 
+          key="y", on_change=update_y)
 
 # Display the current values of x and y
 st.write(f"Current value of x: {st.session_state.x}")

@@ -447,7 +447,7 @@ def render_ant_breakdown():
     for i in range(st.session_state['ant_stones_count']):
 
         # Use columns to place text inputs side by side
-        col1, col2, col3, _ = st.columns([3,3,1,2], vertical_alignment="bottom")
+        col1, col2, col3, _ = st.columns([3,3,1.5,1.5], vertical_alignment="bottom")
         # stone selection box
         with col1:
             options = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearls', 

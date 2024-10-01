@@ -22,8 +22,8 @@ def load_css(css_file):
 def displayPDF(file):
 
     # download button
-    with open("output.pdf", "rb") as f:
-        st.download_button("Download Report", f, "output.pdf")
+    with open(file, "rb") as f:
+        st.download_button("Download Report", f, file)
 
     st.write()
 
@@ -31,10 +31,10 @@ def displayPDF(file):
     with open(file, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
-    # Embedding PDF in HTML and centering it
+    #Embedding PDF in HTML and centering it
     pdf_display = f'''
     <div style="display: flex; justify-content: center;">
-        <iframe 
+        <iframe
             src="data:application/pdf;base64,{base64_pdf}#zoom=145" 
             width="1300" 
             height="1020" 
@@ -142,9 +142,9 @@ def main():
 
         if view_pdf:
             st.link_button(
-                "View PDF",
-                #url=f"http://localhost:8501/?output={view_pdf}"
-                url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
+                "View Report",
+                url=f"http://localhost:8501/?output={view_pdf}"
+                #url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
             )
 
 

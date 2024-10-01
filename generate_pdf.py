@@ -28,7 +28,7 @@ def pdf_scrap_gold(data, show_calc):
     pdf.set_font(family="Helvetica", style="" ,size=9)
     pdf.write(7, "Spot price on")
     #pdf.set_text_color(0, 0, 255)
-    pdf.write(7, " kitko.com", link="https://www.kitco.com/")
+    pdf.write(7, " kitco.com", link="https://www.kitco.com/")
     #pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is $")
 
@@ -170,7 +170,7 @@ def pdf_gold_bd(item_code, price, gold_wt):
     pdf.set_font(family="Helvetica", style="" ,size=9)
     pdf.write(7, "Spot price on")
     #pdf.set_text_color(0, 0, 255)
-    pdf.write(7, " kitko.com", link="https://www.kitco.com/")
+    pdf.write(7, " kitco.com", link="https://www.kitco.com/")
     #pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is ")
     pdf.set_font(family="Helvetica", style="B", size=9)
@@ -312,7 +312,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
     pdf.set_font(family="Helvetica", style="" ,size=8)
     pdf.write(7, "Spot price on")
     #pdf.set_text_color(0, 0, 255)
-    pdf.write(7, " kitko.com", link="https://www.kitco.com/")
+    pdf.write(7, " kitco.com", link="https://www.kitco.com/")
     #pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is ")
     pdf.set_font(family="Helvetica", style="B", size=8)
@@ -502,7 +502,7 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     pdf.set_font(family="Helvetica", style="" ,size=8)
     pdf.write(7, "Spot price on")
     #pdf.set_text_color(0, 0, 255)
-    pdf.write(7, " kitko.com", link="https://www.kitco.com/")
+    pdf.write(7, " kitco.com", link="https://www.kitco.com/")
     #pdf.set_text_color(0, 0, 0)
     pdf.write(7, f" as of {date} on {time} is ")
     pdf.set_font(family="Helvetica", style="B", size=8)
@@ -647,7 +647,6 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     # Write the modified content to a new PDF
     with open("output.pdf", "wb") as output_pdf_file:
         writer.write(output_pdf_file)
-
 
 
 # Function to generate the PDF
