@@ -2,3 +2,6 @@
 base = "light"
 primaryColor="black"
 font="sans serif"
+
+[ui]
+hideTopBar = true

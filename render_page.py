@@ -4,7 +4,7 @@ from streamlit_extras.stylable_container import stylable_container
 
 @st.dialog("Weight less than 10 grams")
 def ten_below():
-    st.error("Any jewelry piece less than 10 grams is sold at \"PIECE PRICE\".")
+    st.warning("Any jewelry piece less than 10 grams is sold at \"PIECE PRICE\".")
     st.info("Please talk with the Manager before proceeding.")
 
 
@@ -19,12 +19,17 @@ def no_calc():
     st.info("Please ask the manager for the breakdown.")
 
 
+@st.dialog("Invalid Input")
+def invalid_input():
+    st.error("Please enter a valid Numeric Value")
+
+
 def add_callback(var):
     if var == 'scrap_gold':
-        st.session_state['widget_count'] += 1
-        st.session_state['widget_data'].append({
+        st.session_state['scrap_gold_count'] += 1
+        st.session_state['scrap_gold_data'].append({
             'desc': '',
-            'gold_wt': 0.0,
+            'gold_wt': 0.00,
             'gold_kt': '10K',
             'gold_pur_place' : "Govindji's"
         })
@@ -32,13 +37,13 @@ def add_callback(var):
         st.session_state['hyd_stones_count'] += 1
         st.session_state['hyd_stones_data'].append({
             'hyd_stone': 'Ruby',
-            'hyd_ct': 0.0
+            'hyd_ct': 0.00
         })
     elif var == 'ant':
         st.session_state['ant_stones_count'] += 1
         st.session_state['ant_stones_data'].append({
             'ant_stone': 'Polki Diamond',
-            'ant_ct': 0.0
+            'ant_ct': 0.00
         })
     elif var == 'dia':
         pass
@@ -46,9 +51,9 @@ def add_callback(var):
 
 def del_callback(index, var):
     if var == 'scrap_gold':
-        if st.session_state['widget_count'] > 1:  # Ensure at least one widget remains
-            st.session_state['widget_count'] -= 1
-            st.session_state['widget_data'].pop(index)
+        if st.session_state['scrap_gold_count'] > 1:  # Ensure at least one widget remains
+            st.session_state['scrap_gold_count'] -= 1
+            st.session_state['scrap_gold_data'].pop(index)
     elif var == 'hyd':
         if st.session_state['hyd_stones_count'] > 1:
             st.session_state['hyd_stones_count'] -= 1
@@ -63,15 +68,45 @@ def del_callback(index, var):
             st.session_state['hyd_stones_data'].pop(index)
 
 
+# updating the session state of scrap gold values
+def update_scrap_gold(i, field):
+    if field == 'desc':
+        st.session_state['scrap_gold_data'][i]['desc'] = st.session_state[f'desc_{i}']
+    elif field == 'gold_wt':
+        st.session_state['scrap_gold_data'][i]['gold_wt'] = st.session_state[f'gold_wt_{i}']
+    elif field == 'gold_kt':
+        st.session_state['scrap_gold_data'][i]['gold_kt'] = st.session_state[f'gold_kt_{i}']
+    elif field == 'gold_pur_place':
+        st.session_state['scrap_gold_data'][i]['gold_pur_place'] = st.session_state[f'gold_pur_place_{i}']
+
+
+def update_gold_breakdown(field):
+    if field == "item_code":
+        st.session_state['ss_item_code_g'] = st.session_state['item_code_g']
+    elif field == "price":
+        st.session_state['ss_price_g'] = st.session_state['price_g']
+    elif field == "gold_wt":
+        st.session_state['ss_gold_wt_g'] = st.session_state['gold_wt_g']
+
+
+def update_hyd_breakdown(field):
+    if field == "item_code":
+        st.session_state['ss_item_code_h'] = st.session_state['item_code_h']
+    elif field == "price":
+        st.session_state['ss_price_h'] = st.session_state['price_h']
+    elif field == "gold_wt":
+        st.session_state['ss_gold_wt_h'] = st.session_state['gold_wt_h']
+
+
 def render_gold_scrap():
     
     # Initialize session state for tracking the widgets and their values
-    if 'widget_count' not in st.session_state:
-        st.session_state['widget_count'] = 1  # Start with at least one widget
-    if 'widget_data' not in st.session_state:
-        st.session_state['widget_data'] = [{
+    if 'scrap_gold_count' not in st.session_state:
+        st.session_state['scrap_gold_count'] = 1  # Start with at least one widget
+    if 'scrap_gold_data' not in st.session_state:
+        st.session_state['scrap_gold_data'] = [{
             'desc': '',
-            'gold_wt': 0.0,
+            'gold_wt': 0.00,
             'gold_kt': '10K',
             'gold_pur_place' : "Govindji's"
         }]  # Start with initial data for one widget
@@ -89,7 +124,7 @@ def render_gold_scrap():
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # Display and update the widgets
-    for i in range(st.session_state['widget_count']):
+    for i in range(st.session_state['scrap_gold_count']):
         # st.write(f"##### Item {i+1}")
         # Use columns to place text inputs side by side
         with stylable_container(
@@ -110,11 +145,7 @@ def render_gold_scrap():
                 st.write(f"##### Item {i+1}")
             
             with col2:
-                if st.session_state['widget_count'] > 1:
-                    # if st.button(f"Delete", 
-                    #              key=f'delete_{i}'):
-                    #     delete_widget(i, 'scrap_gold')
-                    #     st.rerun()
+                if st.session_state['scrap_gold_count'] > 1:
                     st.button("Delete",
                               key=f'delete_{i}',
                               on_click=del_callback,
@@ -125,38 +156,47 @@ def render_gold_scrap():
                                             vertical_alignment="bottom")
         # description box
         with col1:
-            desc = st.text_input("Description",
-                                value=st.session_state['widget_data'][i]['desc'],
-                                key=f'desc_{i}')
-            st.session_state['widget_data'][i]['desc'] = desc
+            st.text_input("Description",
+                            value=st.session_state['scrap_gold_data'][i]['desc'],
+                            key=f'desc_{i}',
+                            on_change=update_scrap_gold,
+                            args=(i, 'desc'))
 
         # gold weight box
         with col2:
-            gold_wt = st.number_input("Gold Weight in grams",
-                                      value=st.session_state['widget_data'][i]['gold_wt'],
-                                      key=f'gold_wt_{i}',
-                                      min_value=0.0)
-            st.session_state['widget_data'][i]['gold_wt'] = gold_wt
+            st.text_input("Gold Weight in grams",
+                            value=st.session_state['scrap_gold_data'][i]['gold_wt'],
+                            key=f'gold_wt_{i}',
+                            on_change=update_scrap_gold,
+                            args=(i, 'gold_wt'))
+            
+        try:
+            val = float(st.session_state['scrap_gold_data'][i]['gold_wt'])
+        except ValueError:
+            invalid_input()
 
         # gold karat dropdown
         with col3:
-            gold_kt = st.selectbox("Select Gold Karat", 
-                                options = ["10K", "14K", "18K", "21K", "22K", "24K"],
-                                index = ["10K", "14K", "18K", "21K", "22K", "24K"].index(st.session_state['widget_data'][i]['gold_kt']),
-                                key = f'gold_kt_{i}')
-            st.session_state['widget_data'][i]['gold_kt'] = gold_kt
+            st.selectbox("Select Gold Karat", 
+                            options = ["10K", "14K", "18K", "21K", "22K", "24K"],
+                            index = ["10K", "14K", "18K", "21K", "22K", "24K"].index(st.session_state['scrap_gold_data'][i]['gold_kt']),
+                            key = f'gold_kt_{i}',
+                            on_change=update_scrap_gold,
+                            args=(i, 'gold_kt'))
 
         # jewellery purchase dropdown
         with col4:
-            gold_pur_place = st.selectbox("Gold Purchased at?", 
-                                        options = ["Govindji's", "Other jeweller"],
-                                        index = ["Govindji's", "Other jeweller"].index(st.session_state['widget_data'][i]['gold_pur_place']),
-                                        key = f'gold_pur_place_{i}')
-            st.session_state['widget_data'][i]['gold_pur_place'] = gold_pur_place
+            st.selectbox("Gold Purchased at?", 
+                            options = ["Govindji's", "Other jeweller"],
+                            index = ["Govindji's", "Other jeweller"].index(st.session_state['scrap_gold_data'][i]['gold_pur_place']),
+                            key = f'gold_pur_place_{i}',
+                            on_change=update_scrap_gold,
+                            args=(i, 'gold_pur_place'))
 
 
         # Divider
-        st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)            
+        st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)       
+
 
     # Button to trigger adding of widgets
     with stylable_container(
@@ -187,10 +227,6 @@ def render_gold_scrap():
                         }
                         """,
                 ):
-                    # if st.button("Add Items", 
-                    #              key="add"):
-                    #     add_widgets('scrap_gold')
-                    #     st.rerun()
                     st.button("Add items",
                               on_click=add_callback,
                               args=('scrap_gold',),
@@ -214,7 +250,7 @@ def render_gold_scrap():
         ):
         if st.button("Generate", key="generate"):
             with st.spinner('Preparing Report!'):
-                pdf_scrap_gold(st.session_state['widget_data'], 
+                pdf_scrap_gold(st.session_state['scrap_gold_data'], 
                             st.session_state['show_calc'])
             view_pdf = True
     return view_pdf
@@ -224,20 +260,45 @@ def render_gold_breakdown():
     st.write("#### Gold Jewelry Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
+    if 'ss_item_code_g' not in st.session_state:
+        st.session_state['ss_item_code_g'] = ''
+    if 'ss_price_g' not in st.session_state:
+        st.session_state['ss_price_g'] = 0
+    if 'ss_gold_wt_g' not in st.session_state:
+        st.session_state['ss_gold_wt_g'] = 0.0
+
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        item_code_g = st.text_input("Item code", key='item_code_g')
+        item_code_g = st.text_input("Item code", 
+                                    key='item_code_g',
+                                    value=st.session_state['ss_item_code_g'],
+                                    on_change=update_gold_breakdown,
+                                    args=('item_code',))
     
     with col2:
-        price_g = st.number_input("Price", min_value=0,
-                                  key='price_g')
+        price_g = st.text_input("Price", 
+                                key='price_g',
+                                value=st.session_state['ss_price_g'],
+                                on_change=update_gold_breakdown,
+                                args=('price',))  
+
+    try:
+        price_g = float(st.session_state['ss_price_g'])
+    except ValueError:
+        invalid_input()
 
     with col3:
-        gold_wt_g = st.number_input("Gross Gold Weight in grams",
-                                    min_value=0.0,
+        gold_wt_g = st.text_input("Gross Gold Weight in grams",
                                     key='gold_wt_g',
-                                    format="%0.001f")
+                                    value=st.session_state['ss_gold_wt_g'],
+                                    on_change=update_gold_breakdown,
+                                    args=('gold_wt',))
+
+    try:
+        gold_wt_g = float(st.session_state['ss_gold_wt_g'])
+    except ValueError:
+        invalid_input()
 
     view_pdf = False
 
@@ -279,21 +340,45 @@ def render_hyd_breakdown():
             'hyd_ct': 0.0
         }]  # Start with initial data for one widget
 
+    if 'ss_item_code_h' not in st.session_state:
+        st.session_state['ss_item_code_h'] = ''
+    if 'ss_price_h' not in st.session_state:
+        st.session_state['ss_price_h'] = 0
+    if 'ss_gold_wt_h' not in st.session_state:
+        st.session_state['ss_gold_wt_h'] = 0.0
+
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
         item_code_h = st.text_input("Item code",
-                                    key='item_code_h')
+                                    key='item_code_h',
+                                    value=st.session_state['ss_item_code_h'],
+                                    on_change=update_hyd_breakdown,
+                                    args=("item_code",))
     
     with col2:
-        price_h = st.number_input("Price",
-                                  min_value=0,
-                                  key='price_h')
+        price_h = st.text_input("Price",
+                                  key='price_h',
+                                  value=st.session_state['ss_price_h'],
+                                  on_change=update_hyd_breakdown,
+                                  args=("price",))
+        
+    try:
+        price_h = float(st.session_state['ss_price_h'])
+    except ValueError:
+        invalid_input()
 
     with col3:
-        gold_wt_h = st.number_input("Gross Gold Weight in grams",
-                                    min_value=0.0,
-                                    key='gold_wt_h')
+        gold_wt_h = st.text_input("Gross Gold Weight in grams",
+                                    key='gold_wt_h',
+                                    value=st.session_state['ss_gold_wt_h'],
+                                    on_change=update_hyd_breakdown,
+                                    args=("gold_wt",))
+        
+    try:
+        gold_wt_h = float(st.session_state['ss_gold_wt_h'])
+    except ValueError:
+        invalid_input()
 
     st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
                 unsafe_allow_html=True)
@@ -594,6 +679,6 @@ def render_dia_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            sample_pdf(st.session_state['widget_data'], 'gold_pur_place', 'gold_wt', "")
+            sample_pdf(st.session_state['scrap_gold_data'], 'gold_pur_place', 'gold_wt', "")
             view_pdf = True
     return view_pdf

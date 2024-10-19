@@ -7,7 +7,7 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place):
     if gold_kt == 24:
         cash = gold_24k * 0.97
         trade = gold_24k
-        marker = ""
+        marker = " " 
 
     else:
         if gold_pur_place == "Govindji's":

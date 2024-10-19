@@ -465,9 +465,9 @@ st.slider("Select the value of x",
 
 # Slider for y with a callback to update x
 st.slider("Select the value of y", 
-          min_value=0, max_value=100, 
+            min_value=0, max_value=100, 
           value=st.session_state.y, 
-          key="y", on_change=update_y)
+                key="y", on_change=update_y)
 
 # Display the current values of x and y
 st.write(f"Current value of x: {st.session_state.x}")
