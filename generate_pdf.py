@@ -264,6 +264,130 @@ def pdf_gold_bd(item_code, price, gold_wt):
     with open("output.pdf", "wb") as output_pdf_file:
         writer.write(output_pdf_file)
 
+# # Function to generate the gold breakdown PDF in A4 landscape mode
+# def pdf_gold_bd(item_code, price, gold_wt):
+
+#     # Read the existing PDF
+#     reader = PdfReader("template.pdf")
+#     writer = PdfWriter()
+
+#     # create FPDF object for A4 landscape
+#     pdf = FPDF('L', 'mm', 'A4')
+    
+#     # add page
+#     pdf.add_page()
+    
+#     pdf.ln(25)  # Adjusted line spacing for A4
+
+#     pdf.set_font(family="Helvetica", style="B", size=14)
+#     pdf.cell(100, 12, txt=f"Detailed Breakdown for {item_code.upper()}",
+#              border=False,
+#              ln=True)
+
+#     try:
+#         op, gp, time, date = get_price()
+#     except CustomError as e:
+#         return "kitco_down"
+
+#     # Display kitco prices
+#     pdf.set_font(family="Helvetica", style="", size=11)
+#     pdf.write(9, "Spot price on")
+#     pdf.write(9, " kitco.com", link="https://www.kitco.com/")
+#     pdf.write(9, f" as of {date} on {time} is ")
+#     pdf.set_font(family="Helvetica", style="B", size=11)
+#     pdf.write(9, f"${round(op, 2)}")
+#     pdf.set_font(family="Helvetica", style="", size=11)
+#     pdf.write(9, " per Troy Ounce")
+
+#     pdf.ln()
+
+#     # 24K
+#     pdf.set_font(family="Helvetica", style="", size=11)
+#     pdf.cell(60, 8, txt=f"24K gold one gram: ${round(gp, 2)} ", ln=False, border=0)
+#     pdf.set_font(family="Helvetica", style="I", size=10)
+#     pdf.cell(80, 8, txt="(1 Troy Ounce = 31.103 grams)", ln=True, border=0)
+    
+#     # 22K
+#     gold_22k = round(gp * 0.93, 2)
+#     pdf.set_font(family="Helvetica", style="B", size=11)
+#     pdf.cell(62, 8, txt=f"22K gold one gram: ${gold_22k} ", ln=False, border=0)
+#     pdf.set_font(family="Helvetica", style="I", size=10)
+#     pdf.cell(80, 8, txt="(24K gold * 0.93 = 22K gold)", ln=True, border=0)
+
+#     pdf.ln(6)
+
+#     pdf.set_font(family="Helvetica", style="B", size=12)
+#     pdf.cell(60, 8, txt=f"Net weight: {gold_wt} grams")
+
+#     pdf.ln(15)
+
+#     # Column headers
+#     pdf.set_font(family="Helvetica", style="B", size=11)
+#     pdf.cell(35, 10, txt=f"Gold", border=True, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"Labor", border=True, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"Margin", border=True, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"Duty", border=True, align='C', ln=True)
+
+#     price_gold, price_labor, price_profit, price_duty, price_pre_tax = gold_bd(price, gold_wt, gold_22k)
+
+#     # Actual values
+#     pdf.set_font(family="Helvetica", size=11)
+#     pdf.cell(35, 10, txt=f"${price_gold}", border=True, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"${price_labor}", border=True, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"${price_profit}", border=True, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"${price_duty}", border=True, align='C', ln=True)
+
+#     # Percentages
+#     pdf.set_font(family="Helvetica", style="I", size=9)
+#     lbr = round((price_labor / price_pre_tax) * 100, 2)
+#     prf = round((price_profit / price_pre_tax) * 100, 2)
+#     pdf.cell(45, 10)
+#     pdf.cell(35, 10, txt=f"{lbr}%", border=0, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"{prf}%", border=0, align='C')
+#     pdf.cell(15, 10)
+#     pdf.cell(35, 10, txt=f"6.5%", border=0, align='C')
+
+#     pdf.ln(12)
+
+#     # Pre-tax and tax details
+#     pdf.set_font(family="Helvetica", style="", size=10)
+#     pdf.cell(145, 10)
+#     pdf.cell(35, 10, txt=f"${price_pre_tax}", align='C', border=0)
+#     pdf.cell(35, 10, txt=f"  +  Tax (8.25%)")
+
+#     pdf.ln(15)
+#     pdf.set_font(family="Helvetica", style="B", size=12)
+#     pdf.cell(100, 10)
+#     pdf.cell(50, 10, txt=f"Final Price:", align='R')
+#     pdf.cell(35, 10, txt=f"${price}", align='C', border=1)
+
+#     # Save the temporary PDF to a file
+#     temp_pdf_path = "temp.pdf"
+#     pdf.output(temp_pdf_path)
+
+#     # Merge the temporary PDF with the original PDF
+#     with open(temp_pdf_path, "rb") as temp_pdf_file:
+#         temp_reader = PdfReader(temp_pdf_file)
+#         for i, page in enumerate(reader.pages):
+#             if i == 0:
+#                 page.merge_page(temp_reader.pages[0])
+#             writer.add_page(page)
+
+#         # Add the extra pages created by the text
+#         for j in range(1, len(temp_reader.pages)):
+#             writer.add_page(temp_reader.pages[j])
+
+#     # Write the modified content to a new PDF
+#     with open("output.pdf", "wb") as output_pdf_file:
+#         writer.write(output_pdf_file)
+
 
 # Function to generate the hyderabadi breakdown PDF
 def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
@@ -549,12 +673,12 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
         pdf.cell(12, 5, txt=f"{stones[stone]}ct", border=0, align='L')
         pdf.cell(33, 5, txt=f"PPC: ${price_per_stone[stone]}", border=0, align='L')
         if cnt<2:
+            cnt += 1
             pdf.set_font(family="Helvetica", style="I", size=7)
             pdf.cell(65, 5, txt=f"{formula[cnt]}", border=0)
-            if polki_flag:
+            if polki_flag and cnt == 1:
                 pdf.set_font(family="Helvetica", style="BI", size=7)
                 pdf.cell(65, 5, txt=f"Polki Diamond/ct: $295", border=0)
-            cnt += 1
         pdf.ln(2.8)
 
     pdf.set_font(family="Helvetica", style="BI", size=7)

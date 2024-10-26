@@ -439,36 +439,77 @@ def template():
 template()
 
 
+# from fpdf import FPDF
+
+# def template_a4():
+
+#     # create FPDF object for A4 landscape
+#     pdf = FPDF('L', 'mm', 'A4')
+
+#     # add page
+#     pdf.add_page()
+
+#     # set background color (RGB format)
+#     pdf.set_fill_color(198, 234, 211)  # Light blue background color
+#     pdf.rect(0, 0, 297, 210, 'F')  # Fills the entire A4 landscape page
+
+#     # set font (font, styles(B, U, I, BU, ''))
+#     # title logo
+#     page_width = pdf.w
+#     x_position = (page_width - 50) / 2  # Adjust for A4 width
+#     pdf.image("images\logo.png", x=x_position, y=10, w=50)
+
+#     # address
+#     pdf.set_font(family="Arial", style="", size=9)  # Increased font size for A4
+#     pdf.ln(15)  # Increased line spacing for A4
+#     pdf.cell(100, 5, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", border=0, align="R")
+#     pdf.cell(80, 5, txt=f"", border=0, align="C")
+#     pdf.cell(100, 5, txt=f"Phone: 972-231 6776   www.govindjis.com", border=0, align="L")
+
+#     # Draw line
+#     start_x = 10  # Starting x-position of the line
+#     end_x = 287  # Ending x-position of the line for A4 landscape width
+#     y_position = 35  # Adjusted y-position for A4
+#     pdf.line(start_x, y_position, end_x, y_position)
+
+#     # Save the PDF
+#     pdf.output("template.pdf")
+
+# # Call the function to create the template
+# template_a4()
 
 
-import streamlit as st
 
-# Initialize session state variables for x and y
-if "x" not in st.session_state:
-    st.session_state.x = 50
 
-if "y" not in st.session_state:
-    st.session_state.y = 50
 
-# Callback functions to update x and y based on the equation x + y = 100
-def update_x():
-    st.session_state.y = 100 - st.session_state.x
+# import streamlit as st
 
-def update_y():
-    st.session_state.x = 100 - st.session_state.y
+# # Initialize session state variables for x and y
+# if "x" not in st.session_state:
+#     st.session_state.x = 50
 
-# Slider for x with a callback to update y
-st.slider("Select the value of x", 
-          min_value=0, max_value=100, 
-          value=st.session_state.x, 
-          key="x", on_change=update_x)
+# if "y" not in st.session_state:
+#     st.session_state.y = 50
 
-# Slider for y with a callback to update x
-st.slider("Select the value of y", 
-            min_value=0, max_value=100, 
-          value=st.session_state.y, 
-                key="y", on_change=update_y)
+# # Callback functions to update x and y based on the equation x + y = 100
+# def update_x():
+#     st.session_state.y = 100 - st.session_state.x
 
-# Display the current values of x and y
-st.write(f"Current value of x: {st.session_state.x}")
-st.write(f"Current value of y: {st.session_state.y}")
+# def update_y():
+#     st.session_state.x = 100 - st.session_state.y
+
+# # Slider for x with a callback to update y
+# st.slider("Select the value of x", 
+#           min_value=0, max_value=100, 
+#           value=st.session_state.x, 
+#           key="x", on_change=update_x)
+
+# # Slider for y with a callback to update x
+# st.slider("Select the value of y", 
+#             min_value=0, max_value=100, 
+#           value=st.session_state.y, 
+#                 key="y", on_change=update_y)
+
+# # Display the current values of x and y
+# st.write(f"Current value of x: {st.session_state.x}")
+# st.write(f"Current value of y: {st.session_state.y}")

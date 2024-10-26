@@ -98,6 +98,7 @@ def update_hyd_breakdown(field):
         st.session_state['ss_gold_wt_h'] = st.session_state['gold_wt_h']
 
 
+# rendering the actual page
 def render_gold_scrap():
     
     # Initialize session state for tracking the widgets and their values
@@ -250,8 +251,10 @@ def render_gold_scrap():
         ):
         if st.button("Generate", key="generate"):
             with st.spinner('Preparing Report!'):
-                pdf_scrap_gold(st.session_state['scrap_gold_data'], 
-                            st.session_state['show_calc'])
+                val = pdf_scrap_gold(st.session_state['scrap_gold_data'], 
+                                     st.session_state['show_calc'])
+                if val == 'kitco_down':
+                    return kitco_down()
             view_pdf = True
     return view_pdf
          
@@ -322,7 +325,9 @@ def render_gold_breakdown():
             with st.spinner('Preparing Report!'):
                 if gold_wt_g < 10.00:
                     ten_below()
-                pdf_gold_bd(item_code_g, price_g, gold_wt_g)
+                val = pdf_gold_bd(item_code_g, price_g, gold_wt_g)
+                if val == 'kitco_down':
+                    return kitco_down()
             view_pdf = True
     return view_pdf
 
@@ -535,9 +540,9 @@ def render_ant_breakdown():
         col1, col2, col3, _ = st.columns([3,3,1.5,1.5], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearls', 
+            options = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
                        'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
-            index = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearls', 
+            index = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
                      'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
             ant_stone = st.selectbox("Select Stone", 
                                 options = options,
