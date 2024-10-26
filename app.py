@@ -144,7 +144,7 @@ def main():
             st.link_button(
                 "View PDF",
                 #url=f"http://localhost:8501/?output={view_pdf}"
-                url=f"https://cu4k7r7zzzwfe8ru8skepo.streamlit.app/?output={view_pdf}"
+                url=f"https://govindjis.streamlit.app/?output={view_pdf}"
             )
 
 
