@@ -125,6 +125,7 @@ def inc_stones_price(price_stones, condition):
              'Cubic Zirconia':'cz',
              'South Sea Pearls':'ssp',
              'Ruby/Emerald': 're',
+             'Kundan': 'kun',
              'Other/All stones': 'oth'}
     for stone in price_stones.keys():
         code = abbre[stone]
@@ -132,7 +133,7 @@ def inc_stones_price(price_stones, condition):
             continue
         if stone in ('Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 
                      'Navratna', 'South Sea Pearls', 'Other/All stones'):
-            inc = random.uniform(0.09, 0.11)
+            inc = random.uniform(0.08, 0.12)
         else:
             inc = random.uniform(0.04, 0.06)
         price_stones[stone] = round(price_stones[stone]+inc, 2)
@@ -165,6 +166,8 @@ def check_stones_price(price_stones):
             res.append('crl')
         if stone[0] == ('Ruby/Emerald') and stone[1] > 29.0:
             res.append('re')
+        if stone[0] == ('Kundan') and stone[1] > 15.0:
+            res.append('kun')
         if stone[0] == ('Other/All stones') and stone[1] > 29.0:
             res.append('oth')
     return [] if len(res) == 0 else res
@@ -181,6 +184,7 @@ def initial_stone_price(stones):
                     'Cubic Zirconia':3.0,
                     'South Sea Pearls':14.0,
                     'Ruby/Emerald': 11.0,
+                    'Kundan': 8.0,
                     'Other/All stones': 11.0}
     init_stones = {}
     for stone in stones.keys():
@@ -200,6 +204,7 @@ def get_codes(stones):
              'Cubic Zirconia':'cz',
              'South Sea Pearls':'ssp',
              'Ruby/Emerald': 're',
+             'Kundan': 'kun',
              'Other/All stones': 'oth'}
     codes = set()
     for stone in stones.keys():

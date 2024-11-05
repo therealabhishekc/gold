@@ -585,9 +585,9 @@ def render_ant_breakdown():
         # stone selection box
         with col1:
             options = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                       'Coral', 'Navaratna', 'Cubic Zirconia', 'Other/All stones']
+                       'Coral', 'Navaratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
             index = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                     'Coral', 'Navaratna', 'Cubic Zirconia', 'Other/All stones']
+                     'Coral', 'Navaratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
             st.selectbox("Select Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_ant_stones'][i]['ant_stone']),

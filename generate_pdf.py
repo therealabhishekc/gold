@@ -693,7 +693,7 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     pdf.ln(0.8)
     pdf.cell(20, 5, txt=f"Total Carat : ", border=0, align='R')
     pdf.cell(12, 5, txt=f"{total_stone_ct}ct", border=0, align='L')
-    pdf.cell(33, 5, txt=f"${price_stones}", border=0, align='L')
+    pdf.cell(33, 5, txt=f"         ${price_stones}", border=0, align='L')
     pdf.set_font(family="Helvetica", style="I", size=7)
     if cnt<2:
         pdf.set_font(family="Helvetica", style="I", size=7)
