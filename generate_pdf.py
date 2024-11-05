@@ -673,9 +673,9 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
         pdf.cell(12, 5, txt=f"{stones[stone]}ct", border=0, align='L')
         pdf.cell(33, 5, txt=f"PPC: ${price_per_stone[stone]}", border=0, align='L')
         if cnt<2:
-            cnt += 1
             pdf.set_font(family="Helvetica", style="I", size=7)
             pdf.cell(65, 5, txt=f"{formula[cnt]}", border=0)
+            cnt += 1
             if polki_flag and cnt == 1:
                 pdf.set_font(family="Helvetica", style="BI", size=7)
                 pdf.cell(65, 5, txt=f"Polki Diamond/ct: $295", border=0)

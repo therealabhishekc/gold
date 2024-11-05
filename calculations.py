@@ -249,7 +249,16 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
     return price_gold, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax
 
 
-# hyderabadi breakdown calculations
+# ans = hyd_bd('qwer', 1234, 10, 83.4, {'Ruby':10.2})
+# print(ans)
+
+
+
+
+
+
+
+# antique breakdown calculations
 def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct):
 
     # the easy part

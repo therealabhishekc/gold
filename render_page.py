@@ -35,16 +35,8 @@ def add_callback(var):
         })
     elif var == 'hyd':
         st.session_state['hyd_stones_count'] += 1
-        st.session_state['hyd_stones_data'].append({
-            'hyd_stone': 'Ruby',
-            'hyd_ct': 0.00
-        })
     elif var == 'ant':
         st.session_state['ant_stones_count'] += 1
-        st.session_state['ant_stones_data'].append({
-            'ant_stone': 'Polki Diamond',
-            'ant_ct': 0.00
-        })
     elif var == 'dia':
         pass
 
@@ -57,18 +49,14 @@ def del_callback(index, var):
     elif var == 'hyd':
         if st.session_state['hyd_stones_count'] > 1:
             st.session_state['hyd_stones_count'] -= 1
-            st.session_state['hyd_stones_data'].pop(index)
     elif var == 'ant':
         if st.session_state['ant_stones_count'] > 1:
             st.session_state['ant_stones_count'] -= 1
-            st.session_state['ant_stones_data'].pop(index)
     elif var == 'dia':
-        if st.session_state['hyd_stones_count'] > 1:
-            st.session_state['hyd_stones_count'] -= 1
-            st.session_state['hyd_stones_data'].pop(index)
+        pass
 
 
-# updating the session state of scrap gold values
+# updating the session state of the sections
 def update_scrap_gold(i, field):
     if field == 'desc':
         st.session_state['scrap_gold_data'][i]['desc'] = st.session_state[f'desc_{i}']
@@ -89,13 +77,36 @@ def update_gold_breakdown(field):
         st.session_state['ss_gold_wt_g'] = st.session_state['gold_wt_g']
 
 
-def update_hyd_breakdown(field):
+def update_hyd_breakdown(field, i):
     if field == "item_code":
         st.session_state['ss_item_code_h'] = st.session_state['item_code_h']
     elif field == "price":
         st.session_state['ss_price_h'] = st.session_state['price_h']
     elif field == "gold_wt":
         st.session_state['ss_gold_wt_h'] = st.session_state['gold_wt_h']
+    elif field == "hyd_stone":
+        st.session_state['ss_hyd_stones'][i]['hyd_stone'] = st.session_state[f'hyd_stone_{i}']
+    elif field == "hyd_ct":
+        try:
+            st.session_state['ss_hyd_stones'][i]['hyd_ct'] = float(st.session_state[f'hyd_ct_{i}'])
+        except ValueError:
+            invalid_input()
+
+
+def update_ant_breakdown(field, i):
+    if field == "item_code":
+        st.session_state['ss_item_code_a'] = st.session_state['item_code_a']
+    elif field == "price":
+        st.session_state['ss_price_a'] = st.session_state['price_a']
+    elif field == "gold_wt":
+        st.session_state['ss_gold_wt_a'] = st.session_state['gold_wt_a']
+    elif field == "ant_stone":
+        st.session_state['ss_ant_stones'][i]['ant_stone'] = st.session_state[f'ant_stone_{i}']
+    elif field == "ant_ct":
+        try:
+            st.session_state['ss_ant_stones'][i]['ant_ct'] = float(st.session_state[f'ant_ct_{i}'])
+        except ValueError:
+            invalid_input()
 
 
 # rendering the actual page
@@ -339,18 +350,16 @@ def render_hyd_breakdown():
         # Initialize session state for tracking the widgets and their values
     if 'hyd_stones_count' not in st.session_state:
         st.session_state['hyd_stones_count'] = 1  # Start with at least one widget
-    if 'hyd_stones_data' not in st.session_state:
-        st.session_state['hyd_stones_data'] = [{
-            'hyd_stone': 'Ruby',
-            'hyd_ct': 0.0
-        }]  # Start with initial data for one widget
 
+    # intializing sessions states for all the fields
     if 'ss_item_code_h' not in st.session_state:
         st.session_state['ss_item_code_h'] = ''
     if 'ss_price_h' not in st.session_state:
         st.session_state['ss_price_h'] = 0
     if 'ss_gold_wt_h' not in st.session_state:
         st.session_state['ss_gold_wt_h'] = 0.0
+    if 'ss_hyd_stones' not in st.session_state:
+        st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': 0} for _ in range(10)]
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
@@ -359,15 +368,15 @@ def render_hyd_breakdown():
                                     key='item_code_h',
                                     value=st.session_state['ss_item_code_h'],
                                     on_change=update_hyd_breakdown,
-                                    args=("item_code",))
+                                    args=("item_code", 0))
     
     with col2:
         price_h = st.text_input("Price",
-                                  key='price_h',
-                                  value=st.session_state['ss_price_h'],
-                                  on_change=update_hyd_breakdown,
-                                  args=("price",))
-        
+                                key='price_h',
+                                value=st.session_state['ss_price_h'],
+                                on_change=update_hyd_breakdown,
+                                args=("price", 0))
+
     try:
         price_h = float(st.session_state['ss_price_h'])
     except ValueError:
@@ -378,7 +387,7 @@ def render_hyd_breakdown():
                                     key='gold_wt_h',
                                     value=st.session_state['ss_gold_wt_h'],
                                     on_change=update_hyd_breakdown,
-                                    args=("gold_wt",))
+                                    args=("gold_wt", 0))
         
     try:
         gold_wt_h = float(st.session_state['ss_gold_wt_h'])
@@ -395,22 +404,28 @@ def render_hyd_breakdown():
         # stone selection box
         with col1:
             options = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire','Pearl', 'Coral', 
-                       'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
+                       'Navratna', 'Cubic Zirconia', 'South Sea Pearls', 'Other/All stones']
             index = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Pearl', 'Coral', 
-                     'Navratna', 'Cubic Zirconia', 'Color Stone', 'South Sea Pearls', 'Other/All stones']
-            hyd_stone = st.selectbox("Select Stone", 
-                                options = options,
-                                index = index.index(st.session_state['hyd_stones_data'][i]['hyd_stone']),
-                                key = f'hyd_stone_{i}')
-            st.session_state['hyd_stones_data'][i]['hyd_stone'] = hyd_stone
+                     'Navratna', 'Cubic Zirconia', 'South Sea Pearls', 'Other/All stones']
+            st.selectbox("Select Stone", 
+                            options = options,
+                            index = index.index(st.session_state['ss_hyd_stones'][i]['hyd_stone']),
+                            key = f'hyd_stone_{i}',
+                            on_change=update_hyd_breakdown,
+                            args=("hyd_stone", i))
 
         # stone carat
         with col2:
-            hyd_ct = st.number_input("Stone carat",
-                                     value=st.session_state['hyd_stones_data'][i]['hyd_ct'],
-                                     min_value=0.0,
-                                     key=f'hyd_ct_{i}')
-            st.session_state['hyd_stones_data'][i]['hyd_ct'] = round(hyd_ct, 2)
+            st.text_input("Stone carat",
+                            key=f'hyd_ct_{i}',
+                            value=st.session_state['ss_hyd_stones'][i]['hyd_ct'],
+                            on_change=update_hyd_breakdown,
+                            args=("hyd_ct", i))
+            
+            try:
+                float(st.session_state['ss_hyd_stones'][i]['hyd_ct'])
+            except ValueError:
+                invalid_input()
 
         # delete button
         with col3:
@@ -492,7 +507,7 @@ def render_hyd_breakdown():
                 val = pdf_hyd_bd(item_code_h, 
                                  price_h, 
                                  gold_wt_h, 
-                                 st.session_state['hyd_stones_data'])
+                                 st.session_state['ss_hyd_stones'][:st.session_state['hyd_stones_count']])
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
@@ -508,27 +523,49 @@ def render_ant_breakdown():
         # Initialize session state for tracking the widgets and their values
     if 'ant_stones_count' not in st.session_state:
         st.session_state['ant_stones_count'] = 1  # Start with at least one widget
-    if 'ant_stones_data' not in st.session_state:
-        st.session_state['ant_stones_data'] = [{
-            'ant_stone': 'Polki Diamond',
-            'ant_ct': 0.0
-        }]  # Start with initial data for one widget
+
+    # intializing sessions states for all the fields
+    if 'ss_item_code_a' not in st.session_state:
+        st.session_state['ss_item_code_a'] = ''
+    if 'ss_price_a' not in st.session_state:
+        st.session_state['ss_price_a'] = 0
+    if 'ss_gold_wt_a' not in st.session_state:
+        st.session_state['ss_gold_wt_a'] = 0.0
+    if 'ss_ant_stones' not in st.session_state:
+        st.session_state['ss_ant_stones'] = [{'ant_stone': 'Ruby', 'ant_ct': 0} for _ in range(10)]
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
         item_code_a = st.text_input("Item code",
-                                    key='item_code_a')
+                                    key='item_code_a',
+                                    value=st.session_state['ss_item_code_a'],
+                                    on_change=update_ant_breakdown,
+                                    args=("item_code", 0))
     
     with col2:
-        price_a = st.number_input("Price",
-                                  min_value=0,
-                                  key='price_a')
+        price_a = st.text_input("Price",
+                                key='price_a',
+                                value=st.session_state['ss_price_a'],
+                                on_change=update_ant_breakdown,
+                                args=("price", 0))
+        
+    try:
+        price_a = float(st.session_state['ss_price_a'])
+    except ValueError:
+        invalid_input()
 
     with col3:
-        gold_wt_a = st.number_input("Gross Gold Weight in grams",
-                                    min_value=0.0,
-                                    key='gold_wt_a')
+        gold_wt_a = st.text_input("Gross Gold Weight in grams",
+                                  key='gold_wt_a',
+                                  value=st.session_state['ss_gold_wt_a'],
+                                  on_change=update_ant_breakdown,
+                                  args=("gold_wt", 0))
+        
+    try:
+        gold_wt_a = float(st.session_state['ss_gold_wt_a'])
+    except ValueError:
+        invalid_input()
 
     st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
                 unsafe_allow_html=True)
@@ -541,24 +578,30 @@ def render_ant_breakdown():
         # stone selection box
         with col1:
             options = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                       'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
+                       'Coral', 'Navaratna', 'Cubic Zirconia', 'Other/All stones']
             index = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                     'Coral', 'Navaratna', 'Cubic Zirconia', 'Color Stone', 'Other/All stones']
-            ant_stone = st.selectbox("Select Stone", 
-                                options = options,
-                                index = index.index(st.session_state['ant_stones_data'][i]['ant_stone']),
-                                key = f'ant_stone_{i}')
-            st.session_state['ant_stones_data'][i]['ant_stone'] = ant_stone
+                     'Coral', 'Navaratna', 'Cubic Zirconia', 'Other/All stones']
+            st.selectbox("Select Stone", 
+                            options = options,
+                            index = index.index(st.session_state['ss_ant_stones'][i]['ant_stone']),
+                            key = f'ant_stone_{i}',
+                            on_change=update_ant_breakdown,
+                            args=("ant_stone", i))
 
-        # gold weight box
+        # stone carat
         with col2:
-            ant_ct = st.number_input("Stone carat",
-                                    value=st.session_state['ant_stones_data'][i]['ant_ct'],
-                                    key=f'ant_ct_{i}',
-                                    min_value=0.0)
-            st.session_state['ant_stones_data'][i]['ant_ct'] = ant_ct
+            st.text_input("Stone carat",
+                          value=st.session_state['ss_ant_stones'][i]['ant_ct'],
+                          key=f'ant_ct_{i}',
+                          on_change=update_ant_breakdown,
+                          args=("ant_ct", i))
+            
+            try:
+                float(st.session_state['ss_ant_stones'][i]['ant_ct'])
+            except ValueError:
+                invalid_input()
 
-        # gold karat dropdown
+        # delete option
         with col3:
             with stylable_container(
                 key=f'delete_ant_{i}',
@@ -614,7 +657,6 @@ def render_ant_breakdown():
                               args=('ant',),
                               key='add_ant')
 
-
     view_pdf = False
 
     # Generate button 
@@ -638,7 +680,7 @@ def render_ant_breakdown():
                 val = pdf_ant_bd(item_code_a, 
                                 price_a, 
                                 gold_wt_a, 
-                                st.session_state['ant_stones_data'])
+                                st.session_state['ss_ant_stones'][:st.session_state['ant_stones_count']])
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
