@@ -124,11 +124,17 @@ def render_gold_scrap():
         }]  # Start with initial data for one widget
     if 'show_calc' not in st.session_state:
         st.session_state['show_calc'] = False
+    if 'ref_cost' not in st.session_state:
+        st.session_state['ref_cost'] = False
     
-    colm1, colm2= st.columns([3, 3], vertical_alignment="bottom")
+    colm1, colm2, colm3= st.columns([3, 1.5, 1.5], vertical_alignment="bottom")
     with colm1: 
         st.write("### Scrap Gold Purchase")
     with colm2:
+        st.session_state['ref_cost'] = st.checkbox("Remove Refinery Cost",
+                                                    value=st.session_state['ref_cost'],
+                                                    disabled=False)
+    with colm3:
         st.session_state['show_calc'] = st.checkbox("Show Formula",
                                                     value=st.session_state['show_calc'],
                                                     disabled=True)
@@ -263,7 +269,8 @@ def render_gold_scrap():
         if st.button("Generate", key="generate"):
             with st.spinner('Preparing Report!'):
                 val = pdf_scrap_gold(st.session_state['scrap_gold_data'], 
-                                     st.session_state['show_calc'])
+                                     st.session_state['show_calc'],
+                                     st.session_state['ref_cost'])
                 if val == 'kitco_down':
                     return kitco_down()
             view_pdf = True
