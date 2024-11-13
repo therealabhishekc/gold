@@ -390,7 +390,7 @@ def render_hyd_breakdown():
         invalid_input()
 
     with col3:
-        gold_wt_h = st.text_input("Gross Gold Weight in grams",
+        gold_wt_h = st.text_input("Gross Weight in grams",
                                     key='gold_wt_h',
                                     value=st.session_state['ss_gold_wt_h'],
                                     on_change=update_hyd_breakdown,
@@ -401,7 +401,7 @@ def render_hyd_breakdown():
     except ValueError:
         invalid_input()
 
-    st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
+    st.markdown("<h4 style='font-size:18px;'>Gem Stone Details</h4>", 
                 unsafe_allow_html=True)
     # Display and update the widgets
     for i in range(st.session_state['hyd_stones_count']):
@@ -414,7 +414,7 @@ def render_hyd_breakdown():
                        'Navratna', 'Cubic Zirconia', 'South Sea Pearls', 'Other/All stones']
             index = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Pearl', 'Coral', 
                      'Navratna', 'Cubic Zirconia', 'South Sea Pearls', 'Other/All stones']
-            st.selectbox("Select Stone", 
+            st.selectbox("Select Gem Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_hyd_stones'][i]['hyd_stone']),
                             key = f'hyd_stone_{i}',
@@ -423,7 +423,7 @@ def render_hyd_breakdown():
 
         # stone carat
         with col2:
-            st.text_input("Stone carat",
+            st.text_input("Gem Stone Carat",
                             key=f'hyd_ct_{i}',
                             value=st.session_state['ss_hyd_stones'][i]['hyd_ct'],
                             on_change=update_hyd_breakdown,
@@ -563,7 +563,7 @@ def render_ant_breakdown():
         invalid_input()
 
     with col3:
-        gold_wt_a = st.text_input("Gross Gold Weight in grams",
+        gold_wt_a = st.text_input("Gross Weight in grams",
                                   key='gold_wt_a',
                                   value=st.session_state['ss_gold_wt_a'],
                                   on_change=update_ant_breakdown,
@@ -574,7 +574,7 @@ def render_ant_breakdown():
     except ValueError:
         invalid_input()
 
-    st.markdown("<h4 style='font-size:18px;'>Stone Details</h4>", 
+    st.markdown("<h4 style='font-size:18px;'>Gem Stone Details</h4>", 
                 unsafe_allow_html=True)
 
     # Display and update the widgets
@@ -588,7 +588,7 @@ def render_ant_breakdown():
                        'Coral', 'Navaratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
             index = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
                      'Coral', 'Navaratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
-            st.selectbox("Select Stone", 
+            st.selectbox("Select Gem Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_ant_stones'][i]['ant_stone']),
                             key = f'ant_stone_{i}',
@@ -597,7 +597,7 @@ def render_ant_breakdown():
 
         # stone carat
         with col2:
-            st.text_input("Stone carat",
+            st.text_input("Gem Stone Carat",
                           value=st.session_state['ss_ant_stones'][i]['ant_ct'],
                           key=f'ant_ct_{i}',
                           on_change=update_ant_breakdown,

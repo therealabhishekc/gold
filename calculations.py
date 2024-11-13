@@ -61,26 +61,26 @@ def get_profit(s, min_value=8.99, max_value=9.21):
 
 
 # hyderabadi breakdown calculations
-# def hyd_bd(price, net_wt, total_stone_ct, gold_22k):
-#     price = float(price)
-#     price_pre_tax = round(price / 1.0825)
-#     price_duty = round(price_pre_tax * 0.065)
-#     price_gold = round(net_wt * gold_22k)
+def hyd_bd_v1(price, net_wt, total_stone_ct, gold_22k):
+    price = float(price)
+    price_pre_tax = round(price / 1.0825)
+    price_duty = round(price_pre_tax * 0.065)
+    price_gold = round(net_wt * gold_22k)
 
-#     profit = 8.51
-#     while True:
-#         price_stones = price_pre_tax - price_gold - price_duty - (2 * (profit/100) * price_pre_tax)
-#         price_per_carat = price_stones/total_stone_ct
-#         if price_per_carat < 25:
-#             price_stones = round(price_stones)
-#             break
-#         else:
-#             profit += 0.05 
+    profit = 8.51
+    while True:
+        price_stones = price_pre_tax - price_gold - price_duty - (2 * (profit/100) * price_pre_tax)
+        price_per_carat = price_stones/total_stone_ct
+        if price_per_carat < 25:
+            price_stones = round(price_stones)
+            break
+        else:
+            profit += 0.05 
 
-#     price_labor = round((profit * price_pre_tax)/100)
-#     price_profit = price_pre_tax - price_gold - price_duty - price_stones - price_labor
+    price_labor = round((profit * price_pre_tax)/100)
+    price_profit = price_pre_tax - price_gold - price_duty - price_stones - price_labor
 
-#     return price_gold, price_stones, price_labor, price_profit, price_duty, price_pre_tax
+    return price_gold, price_stones, price_labor, price_profit, price_duty, price_pre_tax
 
 
 # custom error class

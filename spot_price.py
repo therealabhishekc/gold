@@ -122,5 +122,3 @@ def get_price():
     current_date = datetime.now(time_zone).strftime("%B %d, %Y")
 
     return round(ounce_price, 2), gram_price, current_time, current_date
-
-print(get_price())
