@@ -3,3 +3,4 @@ PyPDF2
 beautifulsoup4
 streamlit-option-menu
 streamlit_extras
+streamlit_pdf_viewer
