@@ -5,3 +5,4 @@ streamlit-option-menu
 streamlit_extras
 streamlit_pdf_viewer
 streamlit_js_eval
+user_agents
