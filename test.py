@@ -517,9 +517,17 @@
 
 import streamlit as st
 from streamlit_js_eval import streamlit_js_eval, get_user_agent
+from user_agents import parse
 
-# Run JavaScript to get the user-agent with a label
-user_agent = get_user_agent()
+# Retrieve the user agent
+user_agent_str = get_user_agent()
+
+# Parse the user agent string
+user_agent = parse(user_agent_str)
+
+# Extract browser information
+browser_name = user_agent.browser.family
+browser_version = user_agent.browser.version_string
 
 # Display the result
-st.write(f"You are using: {user_agent}")
+st.write(f"You are using: {browser_name} version {browser_version}")
