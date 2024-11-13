@@ -3,6 +3,7 @@ import streamlit.components.v1 as html
 from streamlit_option_menu import option_menu
 import base64
 from streamlit_pdf_viewer import pdf_viewer
+from browser_details import get_browser
 from render_page import render_gold_breakdown, render_gold_scrap, render_dia_breakdown, render_ant_breakdown, render_hyd_breakdown
 
 # page setup
@@ -28,26 +29,30 @@ def displayPDF(file):
 
     st.write()
 
-    pdf_viewer('output.pdf', 
-               width=750,
-               render_text=True)
-    # # Opening file from file path
-    # with open(file, "rb") as f:
-    #     base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+    browser = get_browser()
 
-    # #Embedding PDF in HTML and centering it
-    # pdf_display = f'''
-    # <div style="display: flex; justify-content: center;">
-    #     <iframe
-    #         src="data:application/pdf;base64,{base64_pdf}#zoom=145" 
-    #         width="1300" 
-    #         height="1020" 
-    #         type="application/pdf">
-    #     </iframe>
-    # </div>
-    # '''
-    # # Displaying File
-    # st.markdown(pdf_display, unsafe_allow_html=True)
+    if browser in ('Chrome', 'Edge'):
+        pdf_viewer('output.pdf', 
+                width=750,
+                render_text=True)
+    else:
+        # Opening file from file path
+        with open(file, "rb") as f:
+            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+
+        #Embedding PDF in HTML and centering it
+        pdf_display = f'''
+        <div style="display: flex; justify-content: center;">
+            <iframe
+                src="data:application/pdf;base64,{base64_pdf}#zoom=145" 
+                width="1300" 
+                height="1020" 
+                type="application/pdf">
+            </iframe>
+        </div>
+        '''
+        # Displaying File
+        st.markdown(pdf_display, unsafe_allow_html=True)
 
 
 # Function to render the content on each page
