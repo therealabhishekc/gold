@@ -5,7 +5,7 @@ from calculations import scrap_gold, gold_bd, hyd_bd, ant_bd, CustomErrorBD
 
 
 # Function to generate the Scrap gold purhcase PDF
-def pdf_scrap_gold(data, show_calc, ref_cost):
+def pdf_scrap_gold(data, show_calc, ref_cost, gold_calc):
 
     #Read the existing PDF
     reader = PdfReader("template.pdf")
@@ -103,14 +103,14 @@ def pdf_scrap_gold(data, show_calc, ref_cost):
     pdf.set_font("Helvetica", size=9)
     # Add table rows
     for item in data:
-        wt, kt, place = item['gold_wt'], item['gold_kt'], item['gold_pur_place']
+        wt, kt, place = float(item['gold_wt']) - float(item['gold_reduc']), item['gold_kt'], gold_calc
         cash, trade, marker = scrap_gold(gp, wt, kt, place, ref_cost)
         total_cash += cash
         total_trade += trade
         pdf.cell(38, 8, item['desc']+marker, border=1, align='C')
         pdf.cell(38, 8, str(wt), border=1, align='C')
         pdf.cell(38, 8, str(kt), border=1, align='C')
-        if ref_cost:
+        if ref_cost == 'Exclude':
             pdf.cell(38, 8, "-", border=1, align='C')
         else:
             pdf.cell(38, 8, "$"+str(cash), border=1, align='C')
@@ -120,7 +120,7 @@ def pdf_scrap_gold(data, show_calc, ref_cost):
     pdf.set_font("Helvetica", "BI", size=10)
     pdf.cell(76, 8)        
     pdf.cell(38, 8, txt=f"Total", align='C', border=0)
-    if ref_cost:
+    if ref_cost == 'Exclude':
         pdf.cell(38, 8, txt=f"-", align='C', border=0)
     else:
         pdf.cell(38, 8, txt=f"${total_cash}", align='C', border=0)

@@ -10,7 +10,7 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place, ref_cost):
         marker = " " 
 
     else:
-        if gold_pur_place == "Govindji's":
+        if gold_pur_place == "0.916":
             price = gold_24k * (gold_kt/24)
             marker = "*"
 
@@ -19,7 +19,7 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place, ref_cost):
             price = price_22k * (gold_kt/22)
             marker = ""
 
-    if ref_cost:
+    if ref_cost == 'Exclude':
         cash = price 
         trade = price 
     else:

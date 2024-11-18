@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as html
 from streamlit_option_menu import option_menu
 import base64
 from streamlit_pdf_viewer import pdf_viewer
@@ -32,9 +31,11 @@ def displayPDF(file):
     browser = get_browser()
 
     if browser in ('Chrome', 'Edge'):
-        pdf_viewer('output.pdf', 
-                width=750,
-                render_text=True)
+        with open(file, "rb") as f:
+            binary_data = f.read()
+            pdf_viewer(binary_data, 
+                    width=1150,
+                    render_text=True)
     else:
         # Opening file from file path
         with open(file, "rb") as f:
@@ -152,8 +153,8 @@ def main():
         if view_pdf:
             st.link_button(
                 "View PDF",
-                #url=f"http://localhost:8501/?output={view_pdf}"
-                url=f"https://govindjis.streamlit.app/?output={view_pdf}"
+                url=f"http://localhost:8501/?output={view_pdf}"
+                #url=f"https://govindjis.streamlit.app/?output={view_pdf}"
             )
 
 

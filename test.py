@@ -515,19 +515,25 @@
 # st.write(f"Current value of y: {st.session_state.y}")
 
 
+# Get the browser details
+# import streamlit as st
+# from streamlit_js_eval import get_user_agent
+# from user_agents import parse
+
+# # Retrieve the user agent
+# user_agent_str = get_user_agent()
+
+# # Parse the user agent string
+# user_agent = parse(user_agent_str)
+
+# # Extract browser information
+# browser_name = user_agent.browser.family
+# browser_version = user_agent.browser.version_string
+
+# # Display the result
+# st.write(f"You are using: {browser_name} version {browser_version}")
+
 import streamlit as st
-from streamlit_js_eval import streamlit_js_eval, get_user_agent
-from user_agents import parse
 
-# Retrieve the user agent
-user_agent_str = get_user_agent()
-
-# Parse the user agent string
-user_agent = parse(user_agent_str)
-
-# Extract browser information
-browser_name = user_agent.browser.family
-browser_version = user_agent.browser.version_string
-
-# Display the result
-st.write(f"You are using: {browser_name} version {browser_version}")
+values = st.slider("Select a range of values", 0.0, 100.0, 50.0)
+st.write("Values:", values)

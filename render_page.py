@@ -29,9 +29,10 @@ def add_callback(var):
         st.session_state['scrap_gold_count'] += 1
         st.session_state['scrap_gold_data'].append({
             'desc': '',
-            'gold_wt': 0.00,
+            'gold_wt': 0.0,
+            'gold_reduc': 0.0,
             'gold_kt': '10K',
-            'gold_pur_place' : "Govindji's"
+            #'gold_pur_place' : "Govindji's"
         })
     elif var == 'hyd':
         st.session_state['hyd_stones_count'] += 1
@@ -62,10 +63,12 @@ def update_scrap_gold(i, field):
         st.session_state['scrap_gold_data'][i]['desc'] = st.session_state[f'desc_{i}']
     elif field == 'gold_wt':
         st.session_state['scrap_gold_data'][i]['gold_wt'] = st.session_state[f'gold_wt_{i}']
+    elif field == 'gold_reduc':
+        st.session_state['scrap_gold_data'][i]['gold_reduc'] = st.session_state[f'gold_reduc_{i}']
     elif field == 'gold_kt':
         st.session_state['scrap_gold_data'][i]['gold_kt'] = st.session_state[f'gold_kt_{i}']
-    elif field == 'gold_pur_place':
-        st.session_state['scrap_gold_data'][i]['gold_pur_place'] = st.session_state[f'gold_pur_place_{i}']
+    # elif field == 'gold_pur_place':
+    #     st.session_state['scrap_gold_data'][i]['gold_pur_place'] = st.session_state[f'gold_pur_place_{i}']
 
 
 def update_gold_breakdown(field):
@@ -109,6 +112,19 @@ def update_ant_breakdown(field, i):
             invalid_input()
 
 
+def update_dia_breakdown(field, i):
+    if field == 'dia_ppc':
+        st.session_state['ss_dia_ppc_d'] = st.session_state['dia_ppc_d']
+    elif field == "item_code":
+        st.session_state['ss_item_code_d'] = st.session_state['item_code_d']
+    elif field == "price":
+        st.session_state['ss_price_d'] = st.session_state['price_d']
+    elif field == "gold_wt":
+        st.session_state['ss_gold_wt_d'] = st.session_state['gold_wt_d']
+    elif field == 'dia_ct':
+        st.session_state['ss_dia_ct_d'] = st.session_state['dia_ct_d']
+
+
 # rendering the actual page
 def render_gold_scrap():
     
@@ -118,28 +134,51 @@ def render_gold_scrap():
     if 'scrap_gold_data' not in st.session_state:
         st.session_state['scrap_gold_data'] = [{
             'desc': '',
-            'gold_wt': 0.00,
+            'gold_wt': 0.0,
+            'gold_reduc': 0.0,
             'gold_kt': '10K',
-            'gold_pur_place' : "Govindji's"
+            #'gold_pur_place' : "Govindji's"
         }]  # Start with initial data for one widget
     if 'show_calc' not in st.session_state:
         st.session_state['show_calc'] = False
     if 'ref_cost' not in st.session_state:
-        st.session_state['ref_cost'] = False
+        st.session_state['ref_cost'] = 'Exclude'
+    if 'gold_calc' not in st.session_state:
+        st.session_state['gold_calc'] = '0.916'
     
     colm1, colm2, colm3= st.columns([3, 1.5, 1.5], vertical_alignment="bottom")
     with colm1: 
         st.write("### Scrap Gold Purchase")
-    with colm2:
-        st.session_state['ref_cost'] = st.checkbox("Remove Refinery Cost",
-                                                    value=st.session_state['ref_cost'],
-                                                    disabled=False)
+    # with colm2:
+    #     st.session_state['ref_cost'] = st.checkbox("Remove Refinery Cost",
+    #                                                 value=st.session_state['ref_cost'],
+    #                                                 disabled=False)
     with colm3:
         st.session_state['show_calc'] = st.checkbox("Show Formula",
                                                     value=st.session_state['show_calc'],
                                                     disabled=True)
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
+    # global options
+    coln1, coln2 = st.columns([3, 3], vertical_alignment='center')
+    # refinery cost
+    with coln1:
+        ref_options = ['Exclude', 'Include']
+        st.session_state['ref_cost'] = st.segmented_control("Refinery Cost",
+                                                            options = ref_options,
+                                                            selection_mode = 'single',
+                                                            default=st.session_state['ref_cost'])
+
+    # gold calculation
+    with coln2:
+        gold_options = ['0.916', '0.80']
+        st.session_state['gold_calc'] = st.segmented_control("Gold Calculation",
+                                                            options = gold_options,
+                                                            selection_mode = 'single',
+                                                            default=st.session_state['gold_calc'])
+
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True)
 
     # Display and update the widgets
     for i in range(st.session_state['scrap_gold_count']):
@@ -174,7 +213,7 @@ def render_gold_scrap():
                                             vertical_alignment="bottom")
         # description box
         with col1:
-            st.text_input("Description",
+            st.text_input("Description (optional)",
                             value=st.session_state['scrap_gold_data'][i]['desc'],
                             key=f'desc_{i}',
                             on_change=update_scrap_gold,
@@ -189,12 +228,25 @@ def render_gold_scrap():
                             args=(i, 'gold_wt'))
             
         try:
-            val = float(st.session_state['scrap_gold_data'][i]['gold_wt'])
+            float(st.session_state['scrap_gold_data'][i]['gold_wt'])
+        except ValueError:
+            invalid_input()
+
+        # reductions
+        with col3:
+            st.text_input("Reduction in grams",
+                            value=st.session_state['scrap_gold_data'][i]['gold_reduc'],
+                            key=f'gold_reduc_{i}',
+                            on_change=update_scrap_gold,
+                            args=(i, 'gold_reduc'))
+            
+        try:
+            float(st.session_state['scrap_gold_data'][i]['gold_reduc'])
         except ValueError:
             invalid_input()
 
         # gold karat dropdown
-        with col3:
+        with col4:
             st.selectbox("Select Gold Karat", 
                             options = ["10K", "14K", "18K", "21K", "22K", "24K"],
                             index = ["10K", "14K", "18K", "21K", "22K", "24K"].index(st.session_state['scrap_gold_data'][i]['gold_kt']),
@@ -202,14 +254,14 @@ def render_gold_scrap():
                             on_change=update_scrap_gold,
                             args=(i, 'gold_kt'))
 
-        # jewellery purchase dropdown
-        with col4:
-            st.selectbox("Gold Purchased at?", 
-                            options = ["Govindji's", "Other jeweller"],
-                            index = ["Govindji's", "Other jeweller"].index(st.session_state['scrap_gold_data'][i]['gold_pur_place']),
-                            key = f'gold_pur_place_{i}',
-                            on_change=update_scrap_gold,
-                            args=(i, 'gold_pur_place'))
+        # # jewellery purchase dropdown
+        # with col4:
+        #     st.selectbox("Gold Purchased at?", 
+        #                     options = ["Govindji's", "Other jeweller"],
+        #                     index = ["Govindji's", "Other jeweller"].index(st.session_state['scrap_gold_data'][i]['gold_pur_place']),
+        #                     key = f'gold_pur_place_{i}',
+        #                     on_change=update_scrap_gold,
+        #                     args=(i, 'gold_pur_place'))
 
 
         # Divider
@@ -270,7 +322,8 @@ def render_gold_scrap():
             with st.spinner('Preparing Report!'):
                 val = pdf_scrap_gold(st.session_state['scrap_gold_data'], 
                                      st.session_state['show_calc'],
-                                     st.session_state['ref_cost'])
+                                     st.session_state['ref_cost'],
+                                     st.session_state['gold_calc'])
                 if val == 'kitco_down':
                     return kitco_down()
             view_pdf = True
@@ -291,7 +344,7 @@ def render_gold_breakdown():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        item_code_g = st.text_input("Item code", 
+        item_code_g = st.text_input("Item code (optional)", 
                                     key='item_code_g',
                                     value=st.session_state['ss_item_code_g'],
                                     on_change=update_gold_breakdown,
@@ -366,12 +419,12 @@ def render_hyd_breakdown():
     if 'ss_gold_wt_h' not in st.session_state:
         st.session_state['ss_gold_wt_h'] = 0.0
     if 'ss_hyd_stones' not in st.session_state:
-        st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': 0} for _ in range(10)]
+        st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': 0.0} for _ in range(10)]
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code_h = st.text_input("Item code",
+        item_code_h = st.text_input("Item code (optional)",
                                     key='item_code_h',
                                     value=st.session_state['ss_item_code_h'],
                                     on_change=update_hyd_breakdown,
@@ -527,7 +580,7 @@ def render_ant_breakdown():
     st.write("#### Antique Jewelry Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-        # Initialize session state for tracking the widgets and their values
+    # Initialize session state for tracking the widgets and their values
     if 'ant_stones_count' not in st.session_state:
         st.session_state['ant_stones_count'] = 1  # Start with at least one widget
 
@@ -539,12 +592,12 @@ def render_ant_breakdown():
     if 'ss_gold_wt_a' not in st.session_state:
         st.session_state['ss_gold_wt_a'] = 0.0
     if 'ss_ant_stones' not in st.session_state:
-        st.session_state['ss_ant_stones'] = [{'ant_stone': 'Ruby', 'ant_ct': 0} for _ in range(10)]
+        st.session_state['ss_ant_stones'] = [{'ant_stone': 'Polki Diamond', 'ant_ct': 0.0} for _ in range(10)]
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code_a = st.text_input("Item code",
+        item_code_a = st.text_input("Item code (optional)",
                                     key='item_code_a',
                                     value=st.session_state['ss_item_code_a'],
                                     on_change=update_ant_breakdown,
@@ -700,21 +753,83 @@ def render_dia_breakdown():
     st.write("#### Diamond Jewelry Breakdown")
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    # Use columns to place text inputs side by side
-    col1, col2 = st.columns(2)
+    # Initialize session state for tracking the widgets and their values
+    if 'ant_stones_count' not in st.session_state:
+        st.session_state['ant_stones_count'] = 1  # Start with at least one widget
+
+    # intializing sessions states for all the fields
+    if 'ss_dia_ppc_d' not in st.session_state:
+        st.session_state['ss_dia_ppc_d'] = 790
+    if 'ss_item_code_d' not in st.session_state:
+        st.session_state['ss_item_code_d'] = ''
+    if 'ss_price_d' not in st.session_state:
+        st.session_state['ss_price_d'] = 0
+    if 'ss_gold_wt_d' not in st.session_state:
+        st.session_state['ss_gold_wt_d'] = 0.0
+    if 'ss_dia_ct_d' not in st.session_state:
+        st.session_state['ss_dia_ct_d'] = 0.0
+    if 'ss_dia_stones' not in st.session_state:
+        st.session_state['ss_dia_stones'] = [{'dia_stone': 'Ruby', 'dia_stone_ct': 0} for _ in range(10)]
+
+    # diamond price per carat
+    st.slider("Diamond Per Carat Price", 
+              min_value=500, 
+              max_value=1300,
+              step=10, 
+              key='dia_ppc_d',
+              value=st.session_state['ss_dia_ppc_d'],
+              on_change=update_dia_breakdown,
+              args=('dia_ppc', 0))
+    
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+    
+    # other columns
+    col1, col2 = st.columns([3, 3])
 
     with col1:
-        options = ["10K", "14K", "18K", "21K", "22K", "24K"]
-        gold_kt = st.selectbox("Select Gold Karat", options)
-
+        item_code_d = st.text_input("Item code (optional)",
+                                    key='item_code_d',
+                                    value=st.session_state['ss_item_code_d'],
+                                    on_change=update_dia_breakdown,
+                                    args=("item_code", 0))
+    
     with col2:
-        options = ["Govindji's", "Other jeweller"]
-        gold_pur_place = st.selectbox("Where was the gold purchased?", options)
+        price_d = st.text_input("Price",
+                                key='price_d',
+                                value=st.session_state['ss_price_d'],
+                                on_change=update_dia_breakdown,
+                                args=("price", 0))
+        
+    try:
+        price_d = float(st.session_state['ss_price_d'])
+    except ValueError:
+        invalid_input()
 
-    col11, _ = st.columns(2)
+    col3, col4 = st.columns([3, 3])
 
-    with col11:
-        gold_wt = st.text_input("Enter Gold Weight in grams")
+    with col3:
+        gold_wt_d = st.text_input("Gross Weight in grams",
+                                  key='gold_wt_d',
+                                  value=st.session_state['ss_gold_wt_d'],
+                                  on_change=update_dia_breakdown,
+                                  args=("gold_wt", 0))
+        
+    try:
+        gold_wt_d = float(st.session_state['ss_gold_wt_d'])
+    except ValueError:
+        invalid_input()
+
+    with col4:
+        dia_ct_d = st.text_input("Diamond Carat Weight",
+                                  key='dia_ct_d',
+                                  value=st.session_state['ss_dia_ct_d'],
+                                  on_change=update_dia_breakdown,
+                                  args=("dia_ct", 0))
+        
+    try:
+        dia_ct_d = float(st.session_state['ss_dia_ct_d'])
+    except ValueError:
+        invalid_input()
 
     view_pdf = False
 
