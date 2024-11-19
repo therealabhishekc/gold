@@ -105,7 +105,7 @@ def main():
         if 'selected_option' not in st.session_state:
             st.session_state.selected_option = 0
 
-        options_list = ["Scrap\nGold", "Gold\nBreakdown", "Hyderabadi\nBreakdown", "Antique\nBreakdown", "Diamond\nBreakdown"]
+        options_list = ["Scrap Gold\nPurchase", "Gold\nBreakdown", "Hyderabadi\nBreakdown", "Antique\nBreakdown", "Diamond\nBreakdown"]
 
         selected3 = option_menu(
             menu_title=None,

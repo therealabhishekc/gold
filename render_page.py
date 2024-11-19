@@ -40,7 +40,7 @@ def add_callback(var):
     elif var == 'ant':
         st.session_state['ant_stones_count'] += 1
     elif var == 'dia':
-        pass
+        st.session_state['dia_stones_count'] += 1
 
 
 def del_callback(index, var):
@@ -59,7 +59,10 @@ def del_callback(index, var):
             st.session_state['ss_ant_stones'].pop(index)
             st.session_state['ss_ant_stones'].append({'ant_stone': 'Polki Diamond', 'ant_ct': 0.0})
     elif var == 'dia':
-        pass
+        if st.session_state['dia_stones_count'] > 0:
+            st.session_state['dia_stones_count'] -= 1
+            st.session_state['ss_dia_stones'].pop(index)
+            st.session_state['ss_dia_stones'].append({'dia_stone': 'Polki Diamond', 'dia_ct': 0.0})
 
 
 # updating the session state of the sections
@@ -128,6 +131,13 @@ def update_dia_breakdown(field, i):
         st.session_state['ss_gold_wt_d'] = st.session_state['gold_wt_d']
     elif field == 'dia_ct':
         st.session_state['ss_dia_ct_d'] = st.session_state['dia_ct_d']
+    elif field == "dia_stone":
+        st.session_state['ss_dia_stones'][i]['dia_stone'] = st.session_state[f'dia_stone_{i}']
+    elif field == "dia_stone_ct":
+        try:
+            st.session_state['ss_dia_stones'][i]['dia_stone_ct'] = float(st.session_state[f'dia_stone_ct_{i}'])
+        except ValueError:
+            invalid_input()
 
 
 # rendering the actual page
@@ -459,6 +469,8 @@ def render_hyd_breakdown():
     except ValueError:
         invalid_input()
 
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
     st.markdown("<h4 style='font-size:18px;'>Gem Stone Details</h4>", 
                 unsafe_allow_html=True)
     # Display and update the widgets
@@ -632,6 +644,8 @@ def render_ant_breakdown():
     except ValueError:
         invalid_input()
 
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
     st.markdown("<h4 style='font-size:18px;'>Gem Stone Details</h4>", 
                 unsafe_allow_html=True)
 
@@ -759,12 +773,12 @@ def render_dia_breakdown():
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # Initialize session state for tracking the widgets and their values
-    if 'ant_stones_count' not in st.session_state:
-        st.session_state['ant_stones_count'] = 1  # Start with at least one widget
+    if 'dia_stones_count' not in st.session_state:
+        st.session_state['dia_stones_count'] = 0  # Start with at least one widget
 
     # intializing sessions states for all the fields
-    if 'ss_dia_ppc_d' not in st.session_state:
-        st.session_state['ss_dia_ppc_d'] = 790
+    # if 'ss_dia_ppc_d' not in st.session_state:
+    #     st.session_state['ss_dia_ppc_d'] = 795
     if 'ss_item_code_d' not in st.session_state:
         st.session_state['ss_item_code_d'] = ''
     if 'ss_price_d' not in st.session_state:
@@ -774,15 +788,15 @@ def render_dia_breakdown():
     if 'ss_dia_ct_d' not in st.session_state:
         st.session_state['ss_dia_ct_d'] = 0.0
     if 'ss_dia_stones' not in st.session_state:
-        st.session_state['ss_dia_stones'] = [{'dia_stone': 'Ruby', 'dia_stone_ct': 0} for _ in range(10)]
+        st.session_state['ss_dia_stones'] = [{'dia_stone': 'Ruby', 'dia_stone_ct': 0} for _ in range(50)]
 
     # diamond price per carat
-    st.slider("Diamond Per Carat Price", 
-              min_value=495, 
-              max_value=1295,
-              step=5, 
-              key='dia_ppc_d',
-              value=795)
+    dia_ct_d = st.slider("Diamond Per Carat Price", 
+                        min_value=495, 
+                        max_value=1295,
+                        step=5, 
+                        key='dia_ppc_d',
+                        value=795)
     
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
     
@@ -833,6 +847,99 @@ def render_dia_breakdown():
         dia_ct_d = float(st.session_state['ss_dia_ct_d'])
     except ValueError:
         invalid_input()
+
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
+    st.markdown("<h4 style='font-size:18px;'>Gem Stone Details</h4>", 
+                unsafe_allow_html=True)
+
+    # Display and update the widgets
+    for i in range(st.session_state['dia_stones_count']):
+
+        # Use columns to place text inputs side by side
+        col1, col2, col3, _ = st.columns([3,3,1.5,1.5], vertical_alignment="bottom")
+
+        # stone selection box
+        with col1:
+            options = ['Polki Diamond', 'Diamond','Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
+                       'South Sea Pearls', 'Coral', 'Navratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
+            index = ['Polki Diamond', 'Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
+                     'South Sea Pearls', 'Coral', 'Navratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
+            st.selectbox("Select Gem Stone", 
+                            options = options,
+                            index = index.index(st.session_state['ss_dia_stones'][i]['dia_stone']),
+                            key = f'dia_stone_{i}',
+                            on_change=update_dia_breakdown,
+                            args=("dia_stone", i))
+            
+        # stone carat
+        with col2:
+            st.text_input("Gem Stone Carat",
+                          value=st.session_state['ss_dia_stones'][i]['dia_stone_ct'],
+                          key=f'dia_stone_ct_{i}',
+                          on_change=update_dia_breakdown,
+                          args=("dia_stone_ct", i))
+            
+            try:
+                float(st.session_state['ss_dia_stones'][i]['dia_stone_ct'])
+            except ValueError:
+                invalid_input()
+
+        # delete option
+        with col3:
+            with stylable_container(
+                key=f'delete_ant_{i}',
+                css_styles="""
+                    button{
+                        background: linear-gradient(to left, #FF0000, #FF2C2C);
+                        color: white;
+                        border-radius: 7px;
+                        height: 35px !important;
+                        min-height: 40px !important;
+                        max-height: 40px !important;
+                        width: 100%;
+                    }
+                    """
+            ):
+                if st.session_state['dia_stones_count'] > 0:     
+                    st.button("Delete",
+                              key=f'delete_dia_{i}',
+                              on_click=del_callback,
+                              args=(i, 'dia'))
+
+    # Button to trigger adding of widgets
+    with stylable_container(
+                    key='add',
+                    css_styles="""
+                        button{
+                            background: linear-gradient(to right, #434343 , #000000 );;
+                            color: white;
+                            border-radius: 7px;
+                            height: 50px !important;
+                            min-height: 35px !important;
+                            max-height: 35px !important;
+                            width: 100%;
+                        }
+                        """
+                ):
+            _, col, _ = st.columns([2, 1.2, 2])
+            with col:
+                with stylable_container(
+                    key="container_with_border",
+                    css_styles=r"""
+                        button p:before {
+                            font-family: 'Font Awesome 5 Free';
+                            content: '\2b';  /* Plus sign */
+                            display: inline-block;
+                            padding-right: 10px;
+                            vertical-align: top;
+                        }
+                        """,
+                ):
+                    st.button("Add Gems",
+                              on_click=add_callback,
+                              args=('dia',),
+                              key='add_dia')
 
     view_pdf = False
 
