@@ -180,7 +180,7 @@ def initial_stone_price(stones):
                     'Sapphire':13,
                     'Pearl':3.0,
                     'Coral':5.0,
-                    'Navratna':14.0,
+                    'Navratna':13.0,
                     'Cubic Zirconia':3.0,
                     'South Sea Pearls':14.0,
                     'Ruby/Emerald': 11.0,
@@ -258,16 +258,20 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
 
 
 # antique breakdown calculations
-def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct):
+def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct):
 
     # the easy part
     price = float(price)
     price_pre_tax = round(price / 1.0825)
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(net_wt * gold_22k)
-    price_polki = 0
+    price_polki, price_dia, price_total_dia = 0, 0, 0
     if polki_flag:
         price_polki = round(polki_ct * 295)
+    if dia_flag:
+        price_dia = round(dia_ct * 495)
+
+    price_total_dia = price_polki + price_dia
 
     # initial profit
     profit_perc = random_profit(item_code)
@@ -282,7 +286,7 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct):
     while True:
         s_price = get_stones_price(stones, price_stones)
         price_profit = round(profit_perc*price_pre_tax/100)
-        rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_polki
+        rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_total_dia
         if rem>0:
             if profit_perc < 10.99:
                 profit_perc += 0.01
@@ -294,7 +298,7 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct):
         else:
             break
     
-    remaining = price_pre_tax - price_gold - s_price - price_duty - price_polki
+    remaining = price_pre_tax - price_gold - s_price - price_duty - price_total_dia
     temp = round(remaining//2)
 
     if remaining % 2 == 0:
@@ -302,4 +306,4 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct):
     else:
         price_labor, price_profit = temp+1, temp
 
-    return price_gold, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax, price_polki
+    return price_gold, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax, price_total_dia

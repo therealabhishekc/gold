@@ -585,12 +585,17 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     stones = {}
     polki_flag = False
     polki_ct = 0
+    dia_flag = True
+    dia_ct = 0
     
     # go through each stone 
     for stone in ant_stones:
         if stone['ant_stone'] == 'Polki Diamond':
             polki_flag = True
             polki_ct = stone['ant_ct']
+        elif stone['ant_stone'] == 'Diamond':
+            dia_flag = True
+            dia_ct = stone['ant_ct']
         else:
             stones[stone['ant_stone']] = stone['ant_ct']
             total_stone_ct += stone['ant_ct']
@@ -598,10 +603,15 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     total_stone_ct = round(total_stone_ct, 2)
 
     total_stone_wt = round(total_stone_ct/5, 2)
+    
+    deduction = 0
+
     if polki_flag:
-        net_wt = gross_wt - total_stone_wt - round(polki_ct/5, 2)
-    else:
-        net_wt = gross_wt - total_stone_wt
+        deduction += round(polki_ct / 5, 2)
+    if dia_flag:
+        deduction += round(dia_ct / 5, 2)
+
+    net_wt = gross_wt - total_stone_wt - deduction
 
     try:
         op, gp, time, date = get_price()
@@ -610,8 +620,8 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     gold_22k = round(gp*0.93, 2)
 
     try:
-        price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax, price_polki = \
-            ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct)
+        price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax, price_dia = \
+            ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct)
     except CustomErrorBD as e:
         return "no_calc"
     
@@ -661,12 +671,14 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     pdf.ln(2)
 
     pdf.set_font(family="Helvetica", style="B", size=10)
-    pdf.cell(50, 6, txt=f"Gross weight: {gross_wt} grams", border=0, ln=True)
+    pdf.cell(50, 6, txt=f"Gross weight: {gross_wt} grams", border=0, ln=1)
     pdf.ln(1.5)
-    pdf.cell(65, 6, txt=f"Total Gems weight: {total_stone_wt} grams", border=0)
-    pdf.cell(65, 6, txt=f"Net Gold weight: {round(net_wt, 2)} grams", border=0)
+    pdf.cell(60, 6, txt=f"Total Gems weight: {total_stone_wt} grams", border=0)
+    pdf.cell(60, 6, txt=f"Net Gold weight: {round(net_wt, 2)} grams", border=0)
     if polki_flag:
-        pdf.cell(65, 6, txt=f"Polki Diamond Carat: {round(polki_ct, 2)} ct", border=0)
+        pdf.cell(30, 6, txt=f"Polki Dia: {round(polki_ct, 2)} ct", border=0, ln=0)
+    if dia_flag:
+        pdf.cell(30, 6, txt=f"Daimond: {round(dia_ct, 2)} ct", )
 
     pdf.ln(5)
 
@@ -678,15 +690,24 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     for stone in stones.keys():
         pdf.set_font(family="Helvetica", style="", size=7)
         pdf.cell(20, 5, txt=f"{stone} : ", border=0, align='R')
-        pdf.cell(12, 5, txt=f"{stones[stone]}ct", border=0, align='L')
-        pdf.cell(33, 5, txt=f"PPC: ${price_per_stone[stone]}", border=0, align='L')
+        pdf.cell(10, 5, txt=f"{stones[stone]}ct", border=0, align='L')
+        pdf.cell(30, 5, txt=f"PPC: ${price_per_stone[stone]}", border=0, align='L')
         if cnt<2:
             pdf.set_font(family="Helvetica", style="I", size=7)
-            pdf.cell(65, 5, txt=f"{formula[cnt]}", border=0)
+            pdf.cell(60, 5, txt=f"{formula[cnt]}", border=0)
             cnt += 1
             if polki_flag and cnt == 1:
                 pdf.set_font(family="Helvetica", style="BI", size=7)
-                pdf.cell(65, 5, txt=f"Polki Diamond/ct: $295", border=0)
+                pdf.cell(30, 5, txt=f"Per Carat: $295", border=0)
+            if polki_flag and cnt == 2:
+                pdf.set_font(family="Helvetica", style="BI", size=7)
+                pdf.cell(30, 5, txt=f"Total: ${round(polki_ct * 295)}", border=0)
+            if dia_flag and cnt == 1:
+                pdf.set_font(family="Helvetica", style="BI", size=7)
+                pdf.cell(30, 5, txt=f"Per Carat: $495", border=0)
+            if dia_flag and cnt == 2:
+                pdf.set_font(family="Helvetica", style="BI", size=7)
+                pdf.cell(30, 5, txt=f"Total: ${round(dia_ct * 495)}", border=0)
         pdf.ln(2.8)
 
     pdf.set_font(family="Helvetica", style="BI", size=7)
@@ -713,9 +734,9 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     pdf.cell(22, 8, txt=f"Margin", border=True, align='C')
     if polki_flag:
         pdf.cell(8, 8)
-        pdf.cell(22, 8, txt=f"Polki Dia", border=True, align='C')
+        pdf.cell(22, 8, txt=f"Diamonds", border=True, align='C')
     pdf.cell(8, 8)
-    pdf.cell(22, 8, txt=f"Duty", border=True, align='C', ln=True)
+    pdf.cell(22, 8, txt=f"Duty", border=True, align='C', ln=1)
     
     #actual values
     pdf.cell(22, 7, txt=f"${price_gold}", border=True, align='C')
@@ -727,7 +748,7 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     pdf.cell(22, 7, txt=f"${price_profit}", border=True, align='C')
     if polki_flag:
         pdf.cell(8, 8)
-        pdf.cell(22, 8, txt=f"${price_polki}", border=True, align='C')
+        pdf.cell(22, 8, txt=f"${price_dia}", border=True, align='C')
     pdf.cell(8, 7)
     pdf.cell(22, 7, txt=f"${price_duty}", border=True, align='C', ln=1)
 

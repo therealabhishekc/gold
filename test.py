@@ -516,28 +516,46 @@
 
 
 #Get the browser details
-import streamlit as st
-from streamlit_js_eval import get_user_agent
-from user_agents import parse
+# import streamlit as st
+# from streamlit_js_eval import get_user_agent
+# from user_agents import parse
 
-# Retrieve the user agent
+# # Retrieve the user agent
 
+# print('#############################################################################')
+# # Parse the user agent string
+# try:
+#     user_agent_str = get_user_agent()
+#     user_agent = parse(user_agent_str)
+# except Exception as e:
+#     val = e
+# print(user_agent_str)
 
-# Parse the user agent string
-try:
-    user_agent_str = get_user_agent()
-    user_agent = parse(user_agent_str)
-except Exception as e:
-    val = e
-
-# Extract browser information
-browser_name = user_agent.browser.family
-browser_version = user_agent.browser.version_string
-
+# # Extract browser information
+# browser_name = user_agent.browser.family
+# browser_version = user_agent.browser.version_string
+# print('****************************************************************************')
 # Display the result
-st.write(user_agent_str)
-st.write(user_agent)
-st.write(f"You are using: {browser_name} version {browser_version}")
+# st.write(user_agent_str)
+# st.write(user_agent)
+# st.write(f"You are using: {browser_name} version {browser_version}")
+
+
+import streamlit as st
+from browser_detection import browser_detection_engine
+
+def get():
+    st.session_state['browser'] = browser_detection_engine(singleRun=False)
+
+# Retrieve the browser info from session state
+get()
+
+# Display the browser info (for debugging)
+st.write('**************************************')
+st.write(st.session_state['browser']['name']) 
+
+
+
 
 
 

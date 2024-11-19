@@ -1,6 +1,7 @@
 import streamlit as st
 from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd, pdf_hyd_bd, pdf_ant_bd
 from streamlit_extras.stylable_container import stylable_container
+import time
 
 @st.dialog("Weight less than 10 grams")
 def ten_below():
@@ -50,9 +51,13 @@ def del_callback(index, var):
     elif var == 'hyd':
         if st.session_state['hyd_stones_count'] > 1:
             st.session_state['hyd_stones_count'] -= 1
+            st.session_state['ss_hyd_stones'].pop(index)
+            st.session_state['ss_hyd_stones'].append({'hyd_stone': 'Ruby', 'hyd_ct': 0.0})
     elif var == 'ant':
         if st.session_state['ant_stones_count'] > 1:
             st.session_state['ant_stones_count'] -= 1
+            st.session_state['ss_ant_stones'].pop(index)
+            st.session_state['ss_ant_stones'].append({'ant_stone': 'Polki Diamond', 'ant_ct': 0.0})
     elif var == 'dia':
         pass
 
@@ -419,7 +424,7 @@ def render_hyd_breakdown():
     if 'ss_gold_wt_h' not in st.session_state:
         st.session_state['ss_gold_wt_h'] = 0.0
     if 'ss_hyd_stones' not in st.session_state:
-        st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': 0.0} for _ in range(10)]
+        st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': 0.0} for _ in range(50)]
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
@@ -592,7 +597,7 @@ def render_ant_breakdown():
     if 'ss_gold_wt_a' not in st.session_state:
         st.session_state['ss_gold_wt_a'] = 0.0
     if 'ss_ant_stones' not in st.session_state:
-        st.session_state['ss_ant_stones'] = [{'ant_stone': 'Polki Diamond', 'ant_ct': 0.0} for _ in range(10)]
+        st.session_state['ss_ant_stones'] = [{'ant_stone': 'Polki Diamond', 'ant_ct': 0.0} for _ in range(50)]
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
@@ -637,10 +642,10 @@ def render_ant_breakdown():
         col1, col2, col3, _ = st.columns([3,3,1.5,1.5], vertical_alignment="bottom")
         # stone selection box
         with col1:
-            options = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                       'Coral', 'Navaratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
-            index = ['Polki Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                     'Coral', 'Navaratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
+            options = ['Polki Diamond', 'Diamond','Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
+                       'South Sea Pearls', 'Coral', 'Navratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
+            index = ['Polki Diamond', 'Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
+                     'South Sea Pearls', 'Coral', 'Navratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
             st.selectbox("Select Gem Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_ant_stones'][i]['ant_stone']),
@@ -773,13 +778,11 @@ def render_dia_breakdown():
 
     # diamond price per carat
     st.slider("Diamond Per Carat Price", 
-              min_value=500, 
-              max_value=1300,
-              step=10, 
+              min_value=495, 
+              max_value=1295,
+              step=5, 
               key='dia_ppc_d',
-              value=st.session_state['ss_dia_ppc_d'],
-              on_change=update_dia_breakdown,
-              args=('dia_ppc', 0))
+              value=795)
     
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
     
