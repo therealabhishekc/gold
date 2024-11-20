@@ -92,7 +92,7 @@ def main():
             st.image("images/logo.png")
             hide_img_fs = '''
             <style>
-            button[title="View fullscreen"]{
+            button[aria-label="Fullscreen"]{
                 visibility: hidden;}
             </style>
             '''

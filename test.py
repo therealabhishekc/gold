@@ -541,25 +541,48 @@
 # st.write(f"You are using: {browser_name} version {browser_version}")
 
 
-import streamlit as st
-from browser_detection import browser_detection_engine
-
-def get():
-    st.session_state['browser'] = browser_detection_engine(singleRun=False)
-
-# Retrieve the browser info from session state
-get()
-
-# Display the browser info (for debugging)
-st.write('**************************************')
-st.write(st.session_state['browser']['name']) 
-
-
-
-
-
-
 # import streamlit as st
+# from browser_detection import browser_detection_engine
 
-# values = st.slider("Select a range of values", 0.0, 100.0, 50.0)
-# st.write("Values:", values)
+# def get():
+#     st.session_state['browser'] = browser_detection_engine(singleRun=False)
+
+# # Retrieve the browser info from session state
+# get()
+
+# # Display the browser info (for debugging)
+# st.write('**************************************')
+# st.write(st.session_state['browser']['name']) 
+
+
+
+
+
+
+import streamlit as st
+
+# Add a clickable icon with custom CSS
+st.markdown(
+    """
+    <style>
+    .icon-button {
+        display: inline-block;
+        background: #ffffff;
+        color: white;
+        padding: 10px;
+        border-radius: 50%;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        line-height: 20px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    </style>
+    <div class="icon-button" onclick="window.open('https://www.google.com', '_blank')">
+        🔗
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+

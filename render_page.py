@@ -1,28 +1,28 @@
 import streamlit as st
 from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd, pdf_hyd_bd, pdf_ant_bd
 from streamlit_extras.stylable_container import stylable_container
-import time
+from dialog import ten_below, kitco_down, no_calc, invalid_input
 
-@st.dialog("Weight less than 10 grams")
-def ten_below():
-    st.warning("Any jewelry piece less than 10 grams is sold at \"PIECE PRICE\".")
-    st.info("Please talk with the Manager before proceeding.")
-
-
-@st.dialog("No Response from kitco.com")
-def kitco_down():
-    st.warning("Kitco.com is not responding. Unable to fetch gold prices.")
+# @st.dialog("Weight less than 10 grams")
+# def ten_below():
+#     st.warning("Any jewelry piece less than 10 grams is sold at \"PIECE PRICE\".")
+#     st.info("Please talk with the Manager before proceeding.")
 
 
-@st.dialog("Unable to Calculate")
-def no_calc():
-    st.warning("Price Per Carat and the Profit Margin is exceeding predefined limits.")
-    st.info("Please ask the manager for the breakdown.")
+# @st.dialog("No Response from kitco.com")
+# def kitco_down():
+#     st.warning("Kitco.com is not responding. Unable to fetch gold prices.")
 
 
-@st.dialog("Invalid Input")
-def invalid_input():
-    st.error("Please enter a valid Numeric Value")
+# @st.dialog("Unable to Calculate")
+# def no_calc():
+#     st.warning("Price Per Carat and the Profit Margin is exceeding predefined limits.")
+#     st.info("Please ask the manager for the breakdown.")
+
+
+# @st.dialog("Invalid Input")
+# def invalid_input():
+#     st.error("Please enter a valid Numeric Value")
 
 
 def add_callback(var):
@@ -791,12 +791,16 @@ def render_dia_breakdown():
         st.session_state['ss_dia_stones'] = [{'dia_stone': 'Ruby', 'dia_stone_ct': 0} for _ in range(50)]
 
     # diamond price per carat
-    dia_ct_d = st.slider("Diamond Per Carat Price", 
+    st.markdown("<h4 style='font-size:18px;'>Diamond Price Per Carat</h4>", 
+                unsafe_allow_html=True)
+    dia_ct_d = st.slider("Diamond Price Per Carat", 
                         min_value=495, 
-                        max_value=1295,
+                        max_value=1495,
                         step=5, 
                         key='dia_ppc_d',
-                        value=795)
+                        value=795,
+                        label_visibility='collapsed',
+                        format='$%d')
     
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
     
