@@ -1,30 +1,10 @@
 import streamlit as st
 from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd, pdf_hyd_bd, pdf_ant_bd
 from streamlit_extras.stylable_container import stylable_container
-from dialog import ten_below, kitco_down, no_calc, invalid_input
-
-# @st.dialog("Weight less than 10 grams")
-# def ten_below():
-#     st.warning("Any jewelry piece less than 10 grams is sold at \"PIECE PRICE\".")
-#     st.info("Please talk with the Manager before proceeding.")
+from dialog import ten_below, kitco_down, no_calc, invalid_input, dialog_scrap_gold, dialog_gold_bd, dialog_hyd_bd, dialog_ant_bd, dialog_dia_bd
 
 
-# @st.dialog("No Response from kitco.com")
-# def kitco_down():
-#     st.warning("Kitco.com is not responding. Unable to fetch gold prices.")
-
-
-# @st.dialog("Unable to Calculate")
-# def no_calc():
-#     st.warning("Price Per Carat and the Profit Margin is exceeding predefined limits.")
-#     st.info("Please ask the manager for the breakdown.")
-
-
-# @st.dialog("Invalid Input")
-# def invalid_input():
-#     st.error("Please enter a valid Numeric Value")
-
-
+# functions to add and remove widgets
 def add_callback(var):
     if var == 'scrap_gold':
         st.session_state['scrap_gold_count'] += 1
@@ -153,7 +133,7 @@ def render_gold_scrap():
             'gold_reduc': 0.0,
             'gold_kt': '10K',
             #'gold_pur_place' : "Govindji's"
-        }]  # Start with initial data for one widget
+        }] 
     if 'show_calc' not in st.session_state:
         st.session_state['show_calc'] = False
     if 'ref_cost' not in st.session_state:
@@ -161,22 +141,37 @@ def render_gold_scrap():
     if 'gold_calc' not in st.session_state:
         st.session_state['gold_calc'] = '0.916'
     
-    colm1, colm2, colm3= st.columns([3, 1.5, 1.5], vertical_alignment="bottom")
+    colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
     with colm1: 
         st.write("### Scrap Gold Purchase")
-    # with colm2:
-    #     st.session_state['ref_cost'] = st.checkbox("Remove Refinery Cost",
-    #                                                 value=st.session_state['ref_cost'],
-    #                                                 disabled=False)
-    with colm3:
-        st.session_state['show_calc'] = st.checkbox("Show Formula",
-                                                    value=st.session_state['show_calc'],
-                                                    disabled=True)
+        
+    with colm2:
+        with stylable_container(
+            key='help',
+            css_styles="""
+                button{
+                    background: white;
+                    color: black;
+                    border-radius: 20px;
+                    height: 50px !important;
+                    min-height: 35px !important;
+                    max-height: 35px !important;
+                    display: block;
+                    margin-left: auto; 
+                    margin-right: 0;
+                    border: none;
+                }
+                """
+            ):
+            if st.button("", key="help", icon=":material/help:"):
+                dialog_scrap_gold()
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # global options
-    coln1, coln2 = st.columns([3, 3], vertical_alignment='center')
+    coln1, coln2, coln3 = st.columns([2.5, 2.5, 2], 
+                                     gap='large',
+                                     vertical_alignment='center')
     # refinery cost
     with coln1:
         ref_options = ['Exclude', 'Include']
@@ -192,6 +187,12 @@ def render_gold_scrap():
                                                             options = gold_options,
                                                             selection_mode = 'single',
                                                             default=st.session_state['gold_calc'])
+        
+    # show calculation
+    with coln3:
+        st.session_state['show_calc'] = st.checkbox("Show Formula",
+                                                    value=st.session_state['show_calc'],
+                                                    disabled=True)
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True)
 
@@ -288,7 +289,7 @@ def render_gold_scrap():
                     key='add',
                     css_styles="""
                         button{
-                            background: linear-gradient(to right, #434343 , #000000 );;
+                            background: linear-gradient(to right, #434343, #000000);
                             color: white;
                             border-radius: 7px;
                             height: 50px !important;
@@ -324,12 +325,15 @@ def render_gold_scrap():
             key='generate',
             css_styles="""
                 button{
-                    background: linear-gradient(to right, #005C97 , #363795 );
+                    background: linear-gradient(to right, #005C97 , #363795);
                     color: white;
                     border-radius: 7px;
                     height: 50px !important;
                     min-height: 35px !important;
                     max-height: 35px !important;
+                    display: block;
+                    margin-left: 0; 
+                    margin-right: auto;
                 }
                 """
         ):
@@ -346,7 +350,32 @@ def render_gold_scrap():
          
 
 def render_gold_breakdown():
-    st.write("#### Gold Jewelry Breakdown")
+    
+    colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
+    with colm1: 
+        st.write("### Gold Jewelry Breakdown")
+        
+    with colm2:
+        with stylable_container(
+            key='help',
+            css_styles="""
+                button{
+                    background: white;
+                    color: black;
+                    border-radius: 20px;
+                    height: 50px !important;
+                    min-height: 35px !important;
+                    max-height: 35px !important;
+                    display: block;
+                    margin-left: auto; 
+                    margin-right: 0;
+                    border: none;
+                }
+                """
+            ):
+            if st.button("", key="help", icon=":material/help:"):
+                dialog_gold_bd()
+
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     if 'ss_item_code_g' not in st.session_state:
@@ -419,7 +448,32 @@ def render_gold_breakdown():
 
 
 def render_hyd_breakdown():
-    st.write("#### Hyderabadi Jewelry Breakdown")
+    
+    colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
+    with colm1: 
+        st.write("### Hyderabadi Jewelry Breakdown")
+        
+    with colm2:
+        with stylable_container(
+            key='help',
+            css_styles="""
+                button{
+                    background: white;
+                    color: black;
+                    border-radius: 20px;
+                    height: 50px !important;
+                    min-height: 35px !important;
+                    max-height: 35px !important;
+                    display: block;
+                    margin-left: auto; 
+                    margin-right: 0;
+                    border: none;
+                }
+                """
+            ):
+            if st.button("", key="help", icon=":material/help:"):
+                dialog_hyd_bd()
+
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
         # Initialize session state for tracking the widgets and their values
@@ -594,7 +648,32 @@ def render_hyd_breakdown():
 
 
 def render_ant_breakdown():
-    st.write("#### Antique Jewelry Breakdown")
+    
+    colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
+    with colm1: 
+        st.write("### Antique Jewelry Breakdown")
+        
+    with colm2:
+        with stylable_container(
+            key='help',
+            css_styles="""
+                button{
+                    background: white;
+                    color: black;
+                    border-radius: 20px;
+                    height: 50px !important;
+                    min-height: 35px !important;
+                    max-height: 35px !important;
+                    display: block;
+                    margin-left: auto; 
+                    margin-right: 0;
+                    border: none;
+                }
+                """
+            ):
+            if st.button("", key="help", icon=":material/help:"):
+                dialog_ant_bd()
+
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # Initialize session state for tracking the widgets and their values
@@ -769,7 +848,32 @@ def render_ant_breakdown():
 
 
 def render_dia_breakdown():
-    st.write("#### Diamond Jewelry Breakdown")
+    
+    colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
+    with colm1: 
+        st.write("### Diamond Jewelry Breakdown")
+        
+    with colm2:
+        with stylable_container(
+            key='help',
+            css_styles="""
+                button{
+                    background: white;
+                    color: black;
+                    border-radius: 20px;
+                    height: 50px !important;
+                    min-height: 35px !important;
+                    max-height: 35px !important;
+                    display: block;
+                    margin-left: auto; 
+                    margin-right: 0;
+                    border: none;
+                }
+                """
+            ):
+            if st.button("", key="help", icon=":material/help:"):
+                dialog_dia_bd()
+
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # Initialize session state for tracking the widgets and their values

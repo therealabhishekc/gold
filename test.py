@@ -556,33 +556,52 @@
 
 
 
+# import streamlit as st
 
-
+# left, middle, right = st.columns(3)
+# if left.button("Plain button", use_container_width=True):
+#     left.markdown("You clicked the plain button.")
+# if middle.button("", icon="😃", use_container_width=True):
+#     middle.markdown("You clicked the emoji button.")
+# if right.button("Material button", icon=":material/help:", use_container_width=True):
+#     right.markdown("You clicked the Material button.")
 
 import streamlit as st
 
-# Add a clickable icon with custom CSS
-st.markdown(
-    """
-    <style>
-    .icon-button {
-        display: inline-block;
-        background: #ffffff;
-        color: white;
-        padding: 10px;
-        border-radius: 50%;
-        text-align: center;
-        width: 40px;
-        height: 40px;
-        line-height: 20px;
-        font-size: 20px;
-        cursor: pointer;
-    }
-    </style>
-    <div class="icon-button" onclick="window.open('https://www.google.com', '_blank')">
-        🔗
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# Create columns with specified widths
+colm1, colm2, colm3 = st.columns([3, 3, 3], gap="medium", vertical_alignment='center')
+
+# Add content to the first column
+with colm1:
+    st.write("### Scrap Gold Purchase")
+
+# Add an invisible spacer in the second column for alignment
+with colm2:
+    st.write("hello")  # Leave blank to create spacing
+
+# Add the checkbox in the third column aligned to the right
+with colm3:
+    # Use Markdown with custom CSS to align the checkbox to the right
+    st.markdown(
+        """
+        <style>
+            .stCheckbox {
+                display: flex;
+                justify-content: flex-end;
+                align-items: right;
+                height: 100%;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Streamlit native checkbox to handle the state (for interaction purposes)
+    show_formula = st.checkbox("Show Formula", key="show_calc", value=st.session_state.get('show_calc', False), disabled=False)
+
+# Check the checkbox state and display the result
+if show_formula:
+    st.write("The checkbox is checked.")
+else:
+    st.write("The checkbox is unchecked.")
 

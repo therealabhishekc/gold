@@ -21,3 +21,28 @@ def no_calc():
 @st.dialog("Invalid Input")
 def invalid_input():
     st.error("Please enter a valid Numeric Value")
+
+
+@st.dialog("How to use?", width='large')
+def dialog_scrap_gold():
+    st.write("to be updated sg")
+
+
+@st.dialog("How to use?", width='large')
+def dialog_gold_bd():
+    st.write("to be updated gbd")
+
+
+@st.dialog("How to use?", width='large')
+def dialog_hyd_bd():
+    st.write("to be updated hbd")
+
+
+@st.dialog("How to use?", width='large')
+def dialog_ant_bd():
+    st.write("to be updated abd")
+
+
+@st.dialog("How to use?", width='large')
+def dialog_dia_bd():
+    st.write("to be updated dbd")
