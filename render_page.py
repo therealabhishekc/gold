@@ -1,5 +1,5 @@
 import streamlit as st
-from generate_pdf import sample_pdf, pdf_scrap_gold, pdf_gold_bd, pdf_hyd_bd, pdf_ant_bd
+from generate_pdf import *
 from streamlit_extras.stylable_container import stylable_container
 from dialog import ten_below, kitco_down, no_calc, invalid_input, dialog_scrap_gold, dialog_gold_bd, dialog_hyd_bd, dialog_ant_bd, dialog_dia_bd
 
@@ -892,12 +892,12 @@ def render_dia_breakdown():
     if 'ss_dia_ct_d' not in st.session_state:
         st.session_state['ss_dia_ct_d'] = 0.0
     if 'ss_dia_stones' not in st.session_state:
-        st.session_state['ss_dia_stones'] = [{'dia_stone': 'Ruby', 'dia_stone_ct': 0} for _ in range(50)]
+        st.session_state['ss_dia_stones'] = [{'dia_stone': 'Colored Stone', 'dia_stone_ct': 0} for _ in range(50)]
 
     # diamond price per carat
     st.markdown("<h4 style='font-size:18px;'>Diamond Price Per Carat</h4>", 
                 unsafe_allow_html=True)
-    dia_ct_d = st.slider("Diamond Price Per Carat", 
+    dia_ct_price_d = st.slider("Diamond Price Per Carat", 
                         min_value=495, 
                         max_value=1495,
                         step=5, 
@@ -969,10 +969,10 @@ def render_dia_breakdown():
 
         # stone selection box
         with col1:
-            options = ['Polki Diamond', 'Diamond','Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                       'South Sea Pearls', 'Coral', 'Navratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
-            index = ['Polki Diamond', 'Diamond', 'Ruby', 'Emerald', 'Ruby/Emerald', 'Pearl', 
-                     'South Sea Pearls', 'Coral', 'Navratna', 'Cubic Zirconia', 'Kundan', 'Other/All stones']
+            options = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby', 'Emerald', 'Navratna', 'Coral',
+                       'Tanzanite', 'Turquoise', 'Other/All stones'] 
+            index = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby_dia', 'Emerald_dia', 'Navratna_dia', 'Coral_dia',
+                     'Tanzanite', 'Turquoise', 'Other/All stones_dia']
             st.selectbox("Select Gem Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_dia_stones'][i]['dia_stone']),
@@ -1066,6 +1066,11 @@ def render_dia_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            sample_pdf(st.session_state['scrap_gold_data'], 'gold_pur_place', 'gold_wt', "")
+            pdf_dia_bd(dia_ct_price_d, 
+                       item_code_d, 
+                       price_d, 
+                       gold_wt_d, 
+                       dia_ct_d, 
+                       st.session_state['ss_dia_stones'][:st.session_state['dia_stones_count']])
             view_pdf = True
     return view_pdf

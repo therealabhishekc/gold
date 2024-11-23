@@ -566,42 +566,64 @@
 # if right.button("Material button", icon=":material/help:", use_container_width=True):
 #     right.markdown("You clicked the Material button.")
 
+
+
+
+
+# import streamlit as st
+
+# # Create columns with specified widths
+# colm1, colm2, colm3 = st.columns([3, 3, 3], gap="medium", vertical_alignment='center')
+
+# # Add content to the first column
+# with colm1:
+#     st.write("### Scrap Gold Purchase")
+
+# # Add an invisible spacer in the second column for alignment
+# with colm2:
+#     st.write("hello")  # Leave blank to create spacing
+
+# # Add the checkbox in the third column aligned to the right
+# with colm3:
+#     # Use Markdown with custom CSS to align the checkbox to the right
+#     st.markdown(
+#         """
+#         <style>
+#             .stCheckbox {
+#                 display: flex;
+#                 justify-content: flex-end;
+#                 align-items: right;
+#                 height: 100%;
+#             }
+#         </style>
+#         """,
+#         unsafe_allow_html=True
+#     )
+
+#     # Streamlit native checkbox to handle the state (for interaction purposes)
+#     show_formula = st.checkbox("Show Formula", key="show_calc", value=st.session_state.get('show_calc', False), disabled=False)
+
+# # Check the checkbox state and display the result
+# if show_formula:
+#     st.write("The checkbox is checked.")
+# else:
+#     st.write("The checkbox is unchecked.")
+
+
+
 import streamlit as st
 
-# Create columns with specified widths
-colm1, colm2, colm3 = st.columns([3, 3, 3], gap="medium", vertical_alignment='center')
-
-# Add content to the first column
-with colm1:
-    st.write("### Scrap Gold Purchase")
-
-# Add an invisible spacer in the second column for alignment
-with colm2:
-    st.write("hello")  # Leave blank to create spacing
-
-# Add the checkbox in the third column aligned to the right
-with colm3:
-    # Use Markdown with custom CSS to align the checkbox to the right
-    st.markdown(
-        """
-        <style>
-            .stCheckbox {
-                display: flex;
-                justify-content: flex-end;
-                align-items: right;
-                height: 100%;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # Streamlit native checkbox to handle the state (for interaction purposes)
-    show_formula = st.checkbox("Show Formula", key="show_calc", value=st.session_state.get('show_calc', False), disabled=False)
-
-# Check the checkbox state and display the result
-if show_formula:
-    st.write("The checkbox is checked.")
-else:
-    st.write("The checkbox is unchecked.")
-
+# Display the sanitized content in an iframe-like component
+st.markdown(
+    f"""<iframe src="//stream.crichd.sc/update/bt2.php" 
+        width="100%" 
+        height="500px" 
+        marginheight="0" 
+        marginwidth="0" 
+        scrolling="no" 
+        frameborder="0" 
+        allowfullscreen  
+        allow="encrypted-media">
+    </iframe>""",
+    unsafe_allow_html=True
+)
