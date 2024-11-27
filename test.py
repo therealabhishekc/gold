@@ -615,15 +615,6 @@ import streamlit as st
 
 # Display the sanitized content in an iframe-like component
 st.markdown(
-    f"""<iframe src="//stream.crichd.sc/update/bt2.php" 
-        width="100%" 
-        height="500px" 
-        marginheight="0" 
-        marginwidth="0" 
-        scrolling="no" 
-        frameborder="0" 
-        allowfullscreen  
-        allow="encrypted-media">
-    </iframe>""",
+    f"""<iframe src="//stream.crichd.sc/update/bt1.php" width="100%" height="900px" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen  allow="encrypted-media"></iframe>""",
     unsafe_allow_html=True
 )

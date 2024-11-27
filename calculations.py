@@ -32,19 +32,21 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place, ref_cost):
 
 
 # gold breakdown calculations
-def gold_bd(price, gold_wt, gold_22k):
+def gold_bd(item_code, price, gold_wt, gold_22k):
     price, gold_wt = float(price), float(gold_wt)
     price_pre_tax = round(price / 1.0825)
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(gold_wt * gold_22k)
 
     remaining = price_pre_tax - price_gold - price_duty
-    temp = round(remaining//2)
 
-    if remaining % 2 == 0:
-        price_labor, price_profit = temp, temp
-    else:
-        price_labor, price_profit = temp+1, temp
+    price_labor, price_profit = calc_labor_profit(item_code, remaining, price_pre_tax)
+    # temp = round(remaining//2)
+
+    # if remaining % 2 == 0:
+    #     price_labor, price_profit = temp, temp
+    # else:
+    #     price_labor, price_profit = temp+1, temp
     
     return price_gold, price_labor, price_profit, price_duty, price_pre_tax
 
@@ -89,14 +91,14 @@ class CustomErrorBD(Exception):
 
 
 # gets profit bases on the itemcode
-def random_profit(s, min_value=8.99, max_value=9.16):
+def random_percentage(s, min_value=8.99, max_value=9.16):
     '''
     s: item code
     '''
     hash_value = hash(s.upper())
     normalized_value = float(hash_value)
     scaled_value = min_value + (normalized_value % (max_value - min_value))
-    return round(scaled_value,2)
+    return round(scaled_value,3)
 
 
 # calculates the total stone price
@@ -128,21 +130,22 @@ def inc_stones_price(price_stones, condition):
              'Kundan': 'kun',
              'Colored Stone': 'cs',
              'Blue/Pink Sapphire': 'bps', 
-             'Ruby_dia': 'rby_dia', 
-             'Emerald_dia': 'emd_dia', 
-             'Navratna_dia': 'nav_dia', 
-             'Coral_dia': 'crl_dia',
+             'Ruby-D': 'rby_dia', 
+             'Emerald-D': 'emd_dia', 
+             'Navratna-D': 'nav_dia', 
+             'Coral-D': 'crl_dia',
              'Tanzanite': 'tan', 
              'Turquoise': 'tur', 
-             'Other/All stones_dia': 'oth_dia',
+             'Other/All stones-D': 'oth_dia',
              'Other/All stones': 'oth'}
     for stone in price_stones.keys():
         code = abbre[stone]
         if code in condition:
             continue
-        if stone in ('Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 
-                     'Navratna', 'South Sea Pearls', 'Other/All stones'):
-            inc = random.uniform(0.08, 0.12)
+        if stone in ('Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Blue/Pink Sapphire', 'Ruby-D',
+                     'Emerald-D', 'Navratna-D', 'Coral-D', 'Tanzanite', 'Turquoise',
+                     'Navratna', 'South Sea Pearls', 'Other/All stones', 'Other/All stones-D'):
+            inc = random.uniform(0.12, 0.15)
         else:
             inc = random.uniform(0.04, 0.06)
         price_stones[stone] = round(price_stones[stone]+inc, 2)
@@ -169,7 +172,7 @@ def check_stones_price(price_stones):
             res.append('sph')
         if stone[0] == 'Navratna' and stone[1] > 29.00:
             res.append('nav')
-        if stone[0] == ('South Sea Pearls') and stone[1] > 25.00:
+        if stone[0] == ('South Sea Pearls') and stone[1] > 35.00:
             res.append('ssp')
         if stone[0] == ('Coral') and stone[1] > 15.0:
             res.append('crl')
@@ -181,19 +184,19 @@ def check_stones_price(price_stones):
             res.append('cs')
         if stone[0] == ('Blue/Pink Sapphire') and stone[1] > 250.0:
             res.append('bps')
-        if stone[0] == ('Ruby_dia') and stone[1] > 98.0:
+        if stone[0] == ('Ruby-D') and stone[1] > 98.0:
             res.append('rby_dia')
-        if stone[0] == ('Emerald_dia') and stone[1] > 98.0:
+        if stone[0] == ('Emerald-D') and stone[1] > 98.0:
             res.append('emd_dia')
-        if stone[0] == ('Navratna_dia') and stone[1] > 98.0:
+        if stone[0] == ('Navratna-D') and stone[1] > 98.0:
             res.append('nav_dia')
-        if stone[0] == ('Coral_dia') and stone[1] > 98.0:
+        if stone[0] == ('Coral-D') and stone[1] > 98.0:
             res.append('crl_dia')
         if stone[0] == ('Tanzanite') and stone[1] > 250.0:
             res.append('tan')
         if stone[0] == ('Turquoise') and stone[1] > 250.0:
             res.append('tur')
-        if stone[0] == ('Other/All stones_dia') and stone[1] > 98.0:
+        if stone[0] == ('Other/All stones-D') and stone[1] > 98.0:
             res.append('oth_dia')
         if stone[0] == ('Other/All stones') and stone[1] > 29.0:
             res.append('oth')
@@ -204,23 +207,23 @@ def check_stones_price(price_stones):
 def initial_stone_price(stones):
     price_stones = {'Ruby':11.0,
                     'Emerald':11.0,
-                    'Sapphire':13,
+                    'Sapphire':12.0,
                     'Pearl':3.0,
                     'Coral':5.0,
-                    'Navratna':13.0,
+                    'Navratna':12.0,
                     'Cubic Zirconia':3.0,
-                    'South Sea Pearls':14.0,
+                    'South Sea Pearls':11.0,
                     'Ruby/Emerald': 11.0,
                     'Kundan': 8.0,
                     'Colored Stone': 9,
                     'Blue/Pink Sapphire': 29, 
-                    'Ruby_dia': 21, 
-                    'Emerald_dia': 21, 
-                    'Navratna_dia': 21, 
-                    'Coral_dia': 21,
+                    'Ruby-D': 21, 
+                    'Emerald-D': 21, 
+                    'Navratna-D': 21, 
+                    'Coral-D': 21,
                     'Tanzanite': 29, 
                     'Turquoise': 29, 
-                    'Other/All stones_dia': 21,
+                    'Other/All stones-D': 21,
                     'Other/All stones': 11.0}
     init_stones = {}
     for stone in stones.keys():
@@ -243,18 +246,34 @@ def get_codes(stones):
              'Kundan': 'kun',
              'Colored Stone': 'cs',
              'Blue/Pink Sapphire': 'bps', 
-             'Ruby_dia': 'rby_dia', 
-             'Emerald_dia': 'emd_dia', 
-             'Navratna_dia': 'nav_dia', 
-             'Coral_dia': 'crl_dia',
+             'Ruby-D': 'rby_dia', 
+             'Emerald-D': 'emd_dia', 
+             'Navratna-D': 'nav_dia', 
+             'Coral-D': 'crl_dia',
              'Tanzanite': 'tan', 
              'Turquoise': 'tur', 
-             'Other/All stones_dia': 'oth_dia',
+             'Other/All stones-D': 'oth_dia',
              'Other/All stones': 'oth'}
     codes = set()
     for stone in stones.keys():
         codes.add(abbre[stone])
     return len(codes)
+
+
+# Calculates labor and profit 
+def calc_labor_profit(item_code, remaining, total):
+    x = random_percentage(item_code, 0.004, 0.006)
+
+    # Calculate the difference (d)
+    d = x * total
+
+    # Calculate margin
+    margin = (remaining - d) / 2
+
+    # Calculate labor
+    labor = remaining - margin
+
+    return round(labor), round(margin)
 
 
 # hyderabadi breakdown calculations
@@ -267,7 +286,7 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
     price_gold = round(net_wt * gold_22k)
 
     # initial profit
-    profit_perc = random_profit(item_code)
+    profit_perc = random_percentage(item_code)
     
     # initializing stones value
     price_stones = initial_stone_price(stones)
@@ -292,12 +311,14 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
             break
     
     remaining = price_pre_tax - price_gold - s_price - price_duty
-    temp = round(remaining//2)
+    
+    price_labor, price_profit = calc_labor_profit(item_code, remaining, price_pre_tax)
+    # temp = round(remaining//2)
 
-    if remaining % 2 == 0:
-        price_labor, price_profit = temp, temp
-    else:
-        price_labor, price_profit = temp+1, temp
+    # if remaining % 2 == 0:
+    #     price_labor, price_profit = temp, temp
+    # else:
+    #     price_labor, price_profit = temp+1, temp
 
     return price_gold, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax
 
@@ -319,7 +340,7 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
     price_total_dia = price_polki + price_dia
 
     # initial profit
-    profit_perc = random_profit(item_code)
+    profit_perc = random_percentage(item_code)
     
     # initializing stones value
     price_stones = initial_stone_price(stones)
@@ -344,12 +365,14 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
             break
     
     remaining = price_pre_tax - price_gold - s_price - price_duty - price_total_dia
-    temp = round(remaining//2)
 
-    if remaining % 2 == 0:
-        price_labor, price_profit = temp, temp
-    else:
-        price_labor, price_profit = temp+1, temp
+    price_labor, price_profit = calc_labor_profit(item_code, remaining, price_pre_tax)
+    # temp = round(remaining//2)
+
+    # if remaining % 2 == 0:
+    #     price_labor, price_profit = temp, temp
+    # else:
+    #     price_labor, price_profit = temp+1, temp
 
     return price_gold, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax, price_total_dia
 
@@ -368,7 +391,7 @@ def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gem
 
     if gems_flag:
         # initial profit
-        profit_perc = random_profit(item_code)
+        profit_perc = random_percentage(item_code)
         
         # initializing stones value
         price_stones = initial_stone_price(stones)
@@ -383,21 +406,18 @@ def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gem
             rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_dia
             if rem>0:
                 if profit_perc < 10.99:
-                    profit_perc += 0.01
+                    profit_perc += 0.007
                 condition = check_stones_price(price_stones)
                 if len(condition) < leng:
                     inc_stones_price(price_stones, condition)
-                if profit_perc > 10.99 and len(condition) == leng:
+                if profit_perc > 10.999 and len(condition) == leng:
+                    print(price_stones, profit_perc)
                     raise CustomErrorBD("Unable to calculate, exceeds limits")
             else:
                 break
     
     remaining = price_pre_tax - price_gold - s_price - price_duty - price_dia
-    temp = round(remaining//2)
 
-    if remaining % 2 == 0:
-        price_labor, price_profit = temp, temp
-    else:
-        price_labor, price_profit = temp+1, temp
+    price_labor, price_profit = calc_labor_profit(item_code, remaining, price_pre_tax)
 
     return price_gold, price_dia, price_stones, s_price, price_labor, price_profit, price_duty, price_pre_tax

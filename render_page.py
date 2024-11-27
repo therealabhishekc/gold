@@ -1,7 +1,7 @@
 import streamlit as st
 from generate_pdf import *
 from streamlit_extras.stylable_container import stylable_container
-from dialog import ten_below, kitco_down, no_calc, invalid_input, dialog_scrap_gold, dialog_gold_bd, dialog_hyd_bd, dialog_ant_bd, dialog_dia_bd
+from dialog import *
 
 
 # functions to add and remove widgets
@@ -400,11 +400,11 @@ def render_gold_breakdown():
                                 value=st.session_state['ss_price_g'],
                                 on_change=update_gold_breakdown,
                                 args=('price',))  
-
-    try:
-        price_g = float(st.session_state['ss_price_g'])
-    except ValueError:
-        invalid_input()
+    if price_g != "":
+        try:
+            price_g = float(st.session_state['ss_price_g'])
+        except ValueError:
+            invalid_input()
 
     with col3:
         gold_wt_g = st.text_input("Gross Gold Weight in grams",
@@ -413,10 +413,11 @@ def render_gold_breakdown():
                                     on_change=update_gold_breakdown,
                                     args=('gold_wt',))
 
-    try:
-        gold_wt_g = float(st.session_state['ss_gold_wt_g'])
-    except ValueError:
-        invalid_input()
+    if gold_wt_g != "":
+        try:
+            gold_wt_g = float(st.session_state['ss_gold_wt_g'])
+        except ValueError:
+            invalid_input()
 
     view_pdf = False
 
@@ -443,6 +444,8 @@ def render_gold_breakdown():
                 val = pdf_gold_bd(item_code_g, price_g, gold_wt_g)
                 if val == 'kitco_down':
                     return kitco_down()
+                if val == "no_calc":
+                    return no_calc()
             view_pdf = True
     return view_pdf
 
@@ -506,10 +509,11 @@ def render_hyd_breakdown():
                                 on_change=update_hyd_breakdown,
                                 args=("price", 0))
 
-    try:
-        price_h = float(st.session_state['ss_price_h'])
-    except ValueError:
-        invalid_input()
+    if price_h != "":
+        try:
+            price_h = float(st.session_state['ss_price_h'])
+        except ValueError:
+            invalid_input()
 
     with col3:
         gold_wt_h = st.text_input("Gross Weight in grams",
@@ -517,11 +521,12 @@ def render_hyd_breakdown():
                                     value=st.session_state['ss_gold_wt_h'],
                                     on_change=update_hyd_breakdown,
                                     args=("gold_wt", 0))
-        
-    try:
-        gold_wt_h = float(st.session_state['ss_gold_wt_h'])
-    except ValueError:
-        invalid_input()
+
+    if gold_wt_h != "":   
+        try:
+            gold_wt_h = float(st.session_state['ss_gold_wt_h'])
+        except ValueError:
+            invalid_input()
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
@@ -705,11 +710,12 @@ def render_ant_breakdown():
                                 value=st.session_state['ss_price_a'],
                                 on_change=update_ant_breakdown,
                                 args=("price", 0))
-        
-    try:
-        price_a = float(st.session_state['ss_price_a'])
-    except ValueError:
-        invalid_input()
+
+    if price_a != "":
+        try:
+            price_a = float(st.session_state['ss_price_a'])
+        except ValueError:
+            invalid_input()
 
     with col3:
         gold_wt_a = st.text_input("Gross Weight in grams",
@@ -717,11 +723,12 @@ def render_ant_breakdown():
                                   value=st.session_state['ss_gold_wt_a'],
                                   on_change=update_ant_breakdown,
                                   args=("gold_wt", 0))
-        
-    try:
-        gold_wt_a = float(st.session_state['ss_gold_wt_a'])
-    except ValueError:
-        invalid_input()
+
+    if gold_wt_a != "":
+        try:
+            gold_wt_a = float(st.session_state['ss_gold_wt_a'])
+        except ValueError:
+            invalid_input()
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
@@ -924,11 +931,12 @@ def render_dia_breakdown():
                                 value=st.session_state['ss_price_d'],
                                 on_change=update_dia_breakdown,
                                 args=("price", 0))
-        
-    try:
-        price_d = float(st.session_state['ss_price_d'])
-    except ValueError:
-        invalid_input()
+    
+    if price_d != "":
+        try:
+            price_d = float(st.session_state['ss_price_d'])
+        except ValueError:
+            invalid_input()
 
     col3, col4 = st.columns([3, 3])
 
@@ -938,11 +946,12 @@ def render_dia_breakdown():
                                   value=st.session_state['ss_gold_wt_d'],
                                   on_change=update_dia_breakdown,
                                   args=("gold_wt", 0))
-        
-    try:
-        gold_wt_d = float(st.session_state['ss_gold_wt_d'])
-    except ValueError:
-        invalid_input()
+
+    if gold_wt_d != "":    
+        try:
+            gold_wt_d = float(st.session_state['ss_gold_wt_d'])
+        except ValueError:
+            invalid_input()
 
     with col4:
         dia_ct_d = st.text_input("Diamond Carat Weight",
@@ -950,11 +959,12 @@ def render_dia_breakdown():
                                   value=st.session_state['ss_dia_ct_d'],
                                   on_change=update_dia_breakdown,
                                   args=("dia_ct", 0))
-        
-    try:
-        dia_ct_d = float(st.session_state['ss_dia_ct_d'])
-    except ValueError:
-        invalid_input()
+
+    if dia_ct_d != "":    
+        try:
+            dia_ct_d = float(st.session_state['ss_dia_ct_d'])
+        except ValueError:
+            invalid_input()
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
@@ -969,10 +979,10 @@ def render_dia_breakdown():
 
         # stone selection box
         with col1:
-            options = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby', 'Emerald', 'Navratna', 'Coral',
-                       'Tanzanite', 'Turquoise', 'Other/All stones'] 
-            index = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby_dia', 'Emerald_dia', 'Navratna_dia', 'Coral_dia',
-                     'Tanzanite', 'Turquoise', 'Other/All stones_dia']
+            options = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby-D', 'Emerald-D', 'Navratna-D', 'Coral-D',
+                       'South Sea Pearls', 'Tanzanite', 'Turquoise', 'Other/All stones-D'] 
+            index = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby-D', 'Emerald-D', 'Navratna-D', 'Coral-D',
+                     'South Sea Pearls', 'Tanzanite', 'Turquoise', 'Other/All stones-D']
             st.selectbox("Select Gem Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_dia_stones'][i]['dia_stone']),
@@ -988,10 +998,10 @@ def render_dia_breakdown():
                           on_change=update_dia_breakdown,
                           args=("dia_stone_ct", i))
             
-            try:
-                float(st.session_state['ss_dia_stones'][i]['dia_stone_ct'])
-            except ValueError:
-                invalid_input()
+            # try:
+            #     float(st.session_state['ss_dia_stones'][i]['dia_stone_ct'])
+            # except ValueError:
+            #     invalid_input()
 
         # delete option
         with col3:
@@ -1066,11 +1076,18 @@ def render_dia_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
-            pdf_dia_bd(dia_ct_price_d, 
-                       item_code_d, 
-                       price_d, 
-                       gold_wt_d, 
-                       dia_ct_d, 
-                       st.session_state['ss_dia_stones'][:st.session_state['dia_stones_count']])
+            if price_d == "" or gold_wt_d == "" or dia_ct_d == "":
+                missing_value()
+                return
+            val = pdf_dia_bd(dia_ct_price_d, 
+                            item_code_d, 
+                            price_d, 
+                            gold_wt_d, 
+                            dia_ct_d, 
+                            st.session_state['ss_dia_stones'][:st.session_state['dia_stones_count']])
+            if val == 'kitco_down':
+                return kitco_down()
+            if val == "no_calc":
+                return no_calc()
             view_pdf = True
     return view_pdf

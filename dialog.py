@@ -23,6 +23,11 @@ def invalid_input():
     st.error("Please enter a valid Numeric Value")
 
 
+@st.dialog("Missing Value")
+def missing_value():
+    st.warning("Please enter all the details before generating the report.")
+
+
 @st.dialog("How to use?", width='large')
 def dialog_scrap_gold():
     st.write("to be updated sg")
