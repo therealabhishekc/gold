@@ -8,6 +8,9 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place, ref_cost):
         cash = gold_24k * 0.97
         trade = gold_24k
         marker = " " 
+        return (round(cash * float(gold_wt)), 
+                round(trade * float(gold_wt)), 
+                marker)
 
     else:
         if gold_pur_place == "0.916":

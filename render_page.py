@@ -229,7 +229,7 @@ def render_gold_scrap():
                                             vertical_alignment="bottom")
         # description box
         with col1:
-            st.text_input("Description (optional)",
+            st.text_input("Description",
                             value=st.session_state['scrap_gold_data'][i]['desc'],
                             key=f'desc_{i}',
                             on_change=update_scrap_gold,
@@ -237,7 +237,7 @@ def render_gold_scrap():
 
         # gold weight box
         with col2:
-            st.text_input("Gold Weight in grams",
+            st.text_input("Gross Weight in grams",
                             value=st.session_state['scrap_gold_data'][i]['gold_wt'],
                             key=f'gold_wt_{i}',
                             on_change=update_scrap_gold,
@@ -263,7 +263,7 @@ def render_gold_scrap():
 
         # gold karat dropdown
         with col4:
-            st.selectbox("Select Gold Karat", 
+            st.selectbox("Gold Karat", 
                             options = ["10K", "14K", "18K", "21K", "22K", "24K"],
                             index = ["10K", "14K", "18K", "21K", "22K", "24K"].index(st.session_state['scrap_gold_data'][i]['gold_kt']),
                             key = f'gold_kt_{i}',
@@ -339,6 +339,7 @@ def render_gold_scrap():
         ):
         if st.button("Generate", key="generate"):
             with st.spinner('Preparing Report!'):
+                kitco_down()
                 val = pdf_scrap_gold(st.session_state['scrap_gold_data'], 
                                      st.session_state['show_calc'],
                                      st.session_state['ref_cost'],
@@ -388,7 +389,7 @@ def render_gold_breakdown():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        item_code_g = st.text_input("Item code (optional)", 
+        item_code_g = st.text_input("Item code", 
                                     key='item_code_g',
                                     value=st.session_state['ss_item_code_g'],
                                     on_change=update_gold_breakdown,
@@ -407,7 +408,7 @@ def render_gold_breakdown():
             invalid_input()
 
     with col3:
-        gold_wt_g = st.text_input("Gross Gold Weight in grams",
+        gold_wt_g = st.text_input("Gross Weight in grams",
                                     key='gold_wt_g',
                                     value=st.session_state['ss_gold_wt_g'],
                                     on_change=update_gold_breakdown,
@@ -496,7 +497,7 @@ def render_hyd_breakdown():
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code_h = st.text_input("Item code (optional)",
+        item_code_h = st.text_input("Item code",
                                     key='item_code_h',
                                     value=st.session_state['ss_item_code_h'],
                                     on_change=update_hyd_breakdown,
@@ -543,7 +544,7 @@ def render_hyd_breakdown():
                        'Navratna', 'Cubic Zirconia', 'South Sea Pearls', 'Other/All stones']
             index = ['Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Pearl', 'Coral', 
                      'Navratna', 'Cubic Zirconia', 'South Sea Pearls', 'Other/All stones']
-            st.selectbox("Select Gem Stone", 
+            st.selectbox("Gem Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_hyd_stones'][i]['hyd_stone']),
                             key = f'hyd_stone_{i}',
