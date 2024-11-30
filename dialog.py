@@ -82,11 +82,11 @@ def dialog_scrap_gold():
     st.markdown("- **Invalid Input**: Appears when an invalid value is entered into a numerical field.")
     _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img1:
-        st.image("images\invalid_input.png")
+        st.image("images/invalid_input.png")
     st.markdown("- **No Response**: Appears when kitco.com is offline.")
     _, img2, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img2:
-        st.image("images\iresponse_no.png")
+        st.image("images/iresponse_no.png")
 
     st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
 
