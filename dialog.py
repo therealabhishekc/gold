@@ -126,7 +126,7 @@ def dialog_gold_bd():
                  This warning ensures the salesperson is aware of higher labor and margin costs.")
     _, img0, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img0:
-        st.image("images\less_than_10.png")
+        st.image("images/less_than_10.png")
 
     st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
 
@@ -135,12 +135,12 @@ def dialog_gold_bd():
     st.markdown("- **Invalid Input**: Appears when an invalid value is entered into a numerical field.")
     _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img1:
-        st.image("images\invalid_input.png")
+        st.image("images/invalid_input.png")
     
     st.markdown("- **No Response**: Appears when kitco.com is offline.")
     _, img2, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img2:
-        st.image("images\iresponse_no.png")
+        st.image("images/iresponse_no.png")
     
     # st.markdown("- **Unable to Calculate**: Appears when the algorithm fails to compute the margin and \
     #             stone price due to predefined limits in the algorithm.")
@@ -196,7 +196,7 @@ def dialog_hyd_bd():
                  This warning ensures the salesperson is aware of higher labor and margin costs.")
     _, img0, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img0:
-        st.image("images\less_than_10.png")
+        st.image("images/less_than_10.png")
 
     st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
 
@@ -205,18 +205,18 @@ def dialog_hyd_bd():
     st.markdown("- **Invalid Input**: Appears when an invalid value is entered into a numerical field.")
     _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img1:
-        st.image("images\invalid_input.png")
+        st.image("images/invalid_input.png")
     
     st.markdown("- **No Response**: Appears when kitco.com is offline.")
     _, img2, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img2:
-        st.image("images\iresponse_no.png")
+        st.image("images/iresponse_no.png")
     
     st.markdown("- **Unable to Calculate**: Appears when the algorithm fails to compute the margin and \
                 stone price due to predefined limits in the algorithm.")
     _, img3, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img3:
-        st.image("images\calc_no.png")
+        st.image("images/calc_no.png")
 
     st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
 
