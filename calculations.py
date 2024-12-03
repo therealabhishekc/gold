@@ -414,7 +414,6 @@ def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gem
                 if len(condition) < leng:
                     inc_stones_price(price_stones, condition)
                 if profit_perc > 10.999 and len(condition) == leng:
-                    print(price_stones, profit_perc)
                     raise CustomErrorBD("Unable to calculate, exceeds limits")
             else:
                 break

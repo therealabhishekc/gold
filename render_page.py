@@ -339,7 +339,6 @@ def render_gold_scrap():
         ):
         if st.button("Generate", key="generate"):
             with st.spinner('Preparing Report!'):
-                kitco_down()
                 val = pdf_scrap_gold(st.session_state['scrap_gold_data'], 
                                      st.session_state['show_calc'],
                                      st.session_state['ref_cost'],
@@ -699,7 +698,7 @@ def render_ant_breakdown():
     col1, col2, col3 = st.columns([3, 3, 3])
 
     with col1:
-        item_code_a = st.text_input("Item code (optional)",
+        item_code_a = st.text_input("Item code",
                                     key='item_code_a',
                                     value=st.session_state['ss_item_code_a'],
                                     on_change=update_ant_breakdown,
