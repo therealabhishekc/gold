@@ -904,6 +904,8 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones):
             pdf.cell(20, 5, txt=dia_details[i][0], border=0, align='R')
             pdf.cell(45, 5, txt=dia_details[i][1], border=0, align='L')
         if gems_flag and i < len(stones):
+            if i >= 2:
+                 pdf.cell(65, 5, txt=f"", border=0, align='R')
             stone, stone_ct = next((pair for j, pair in enumerate(stones.items()) if j == i), None)
             pdf.cell(20, 5, txt=f"{stone} : ", border=0, align='R')
             pdf.cell(12, 5, txt=f"{stone_ct}ct", border=0, align='L')
@@ -914,9 +916,9 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones):
             pdf.cell(33, 5, txt=f"         ${price_stones}", border=0, align='L')
             continue
         if gems_flag and i == len(stones):
-            pdf.cell(20, 5, txt=f"Total Carat : ", border=0, align='R')
+            pdf.cell(85, 5, txt=f"Total Carat : ", border=0, align='R')
             pdf.cell(12, 5, txt=f"{total_stone_ct}ct", border=0, align='L')
-            pdf.cell(33, 5, txt=f"         ${price_stones}", border=0, align='L')
+            pdf.cell(33, 5, txt=f"          ${price_stones}", border=0, align='L')
         if i < 2:
             pdf.cell(65, 5, txt=formula[i], border=0, align='L')
         pdf.ln(2.8)

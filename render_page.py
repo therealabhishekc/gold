@@ -919,7 +919,7 @@ def render_dia_breakdown():
     col1, col2 = st.columns([3, 3])
 
     with col1:
-        item_code_d = st.text_input("Item code (optional)",
+        item_code_d = st.text_input("Item code",
                                     key='item_code_d',
                                     value=st.session_state['ss_item_code_d'],
                                     on_change=update_dia_breakdown,
@@ -980,9 +980,9 @@ def render_dia_breakdown():
         # stone selection box
         with col1:
             options = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby-D', 'Emerald-D', 'Navratna-D', 'Coral-D',
-                       'South Sea Pearls', 'Tanzanite', 'Turquoise', 'Other/All stones-D'] 
+                       'South Sea Pearls', 'Tanzanite', 'Turquoise', 'Tourmaline', 'Other/All stones-D'] 
             index = ['Colored Stone', 'Blue/Pink Sapphire', 'Ruby-D', 'Emerald-D', 'Navratna-D', 'Coral-D',
-                     'South Sea Pearls', 'Tanzanite', 'Turquoise', 'Other/All stones-D']
+                     'South Sea Pearls', 'Tanzanite', 'Turquoise', 'Tourmaline', 'Other/All stones-D']
             st.selectbox("Select Gem Stone", 
                             options = options,
                             index = index.index(st.session_state['ss_dia_stones'][i]['dia_stone']),

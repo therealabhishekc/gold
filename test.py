@@ -411,7 +411,7 @@
 #     pdf.add_page()
 
 #     # set background color (RGB format)
-#     pdf.set_fill_color(198, 234, 211)  # Light blue background color
+#     pdf.set_fill_color(228, 252, 236)  # Light blue background color
 #     pdf.rect(0, 0, 210, 148, 'F')  # Fills the entire A5 landscape page
 
 #     # set font (font, styles(B, U, I, BU, ''))
@@ -426,7 +426,7 @@
 #     pdf.ln(11)
 #     pdf.cell(65, 3, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", border=0, align="R")
 #     pdf.cell(60, 3, txt=f"", border=0, align="C")
-#     pdf.cell(65, 3, txt=f"Phone: 972-231 6776   www.govindjis.com", border=0, align="L")
+#     pdf.cell(65, 3, txt=f"Phone: 972-231-6776   www.govindjis.com", border=0, align="L")
 
 #     # Draw line
 #     start_x = 10   
@@ -450,7 +450,7 @@
 #     pdf.add_page()
 
 #     # set background color (RGB format)
-#     pdf.set_fill_color(198, 234, 211)  # Light blue background color
+#     pdf.set_fill_color(198, 234, 211)  # Light green background color
 #     pdf.rect(0, 0, 297, 210, 'F')  # Fills the entire A4 landscape page
 
 #     # set font (font, styles(B, U, I, BU, ''))
@@ -464,7 +464,7 @@
 #     pdf.ln(15)  # Increased line spacing for A4
 #     pdf.cell(100, 5, txt=f"4646 Dubai Way Suite 100   Frisco, TX 75034", border=0, align="R")
 #     pdf.cell(80, 5, txt=f"", border=0, align="C")
-#     pdf.cell(100, 5, txt=f"Phone: 972-231 6776   www.govindjis.com", border=0, align="L")
+#     pdf.cell(100, 5, txt=f"Phone: 972-231-6776   www.govindjis.com", border=0, align="L")
 
 #     # Draw line
 #     start_x = 10  # Starting x-position of the line
@@ -610,11 +610,25 @@
 #     st.write("The checkbox is unchecked.")
 
 
+from streamlit_js_eval import get_user_agent
+from user_agents import parse
 
-import streamlit as st
+def get_browser():
+    # Retrieve the user agent
+    user_agent_str = get_user_agent()
 
-# Display the sanitized content in an iframe-like component
-st.markdown(
-    f"""<iframe src="//stream.crichd.sc/update/bt1.php" width="100%" height="900px" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen  allow="encrypted-media"></iframe>""",
-    unsafe_allow_html=True
-)
+    # Debugging: Check what is being returned
+    if not user_agent_str:
+        raise ValueError("get_user_agent() returned None. Ensure the function is being called correctly in Streamlit.")
+
+    print(f"User agent string: {user_agent_str}")
+
+    # Parse the user agent string
+    user_agent = parse(user_agent_str)
+
+    # Extract browser information
+    browser_name = user_agent.browser.family
+
+    return browser_name
+
+get_browser()

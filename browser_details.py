@@ -1,4 +1,3 @@
-import streamlit as st
 from streamlit_js_eval import get_user_agent
 from user_agents import parse
 

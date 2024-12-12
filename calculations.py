@@ -139,6 +139,7 @@ def inc_stones_price(price_stones, condition):
              'Coral-D': 'crl_dia',
              'Tanzanite': 'tan', 
              'Turquoise': 'tur', 
+             'Tourmaline': 'tor',
              'Other/All stones-D': 'oth_dia',
              'Other/All stones': 'oth'}
     for stone in price_stones.keys():
@@ -146,7 +147,7 @@ def inc_stones_price(price_stones, condition):
         if code in condition:
             continue
         if stone in ('Ruby', 'Emerald', 'Ruby/Emerald', 'Sapphire', 'Blue/Pink Sapphire', 'Ruby-D',
-                     'Emerald-D', 'Navratna-D', 'Coral-D', 'Tanzanite', 'Turquoise',
+                     'Emerald-D', 'Navratna-D', 'Coral-D', 'Tanzanite', 'Turquoise', 'Tourmaline',
                      'Navratna', 'South Sea Pearls', 'Other/All stones', 'Other/All stones-D'):
             inc = random.uniform(0.12, 0.15)
         else:
@@ -199,6 +200,8 @@ def check_stones_price(price_stones):
             res.append('tan')
         if stone[0] == ('Turquoise') and stone[1] > 250.0:
             res.append('tur')
+        if stone[0] == ('Tourmaline') and stone[1] > 250.0:
+            res.append('tor')
         if stone[0] == ('Other/All stones-D') and stone[1] > 98.0:
             res.append('oth_dia')
         if stone[0] == ('Other/All stones') and stone[1] > 29.0:
@@ -226,6 +229,7 @@ def initial_stone_price(stones):
                     'Coral-D': 21,
                     'Tanzanite': 29, 
                     'Turquoise': 29, 
+                    'Tourmaline': 29, 
                     'Other/All stones-D': 21,
                     'Other/All stones': 11.0}
     init_stones = {}
@@ -255,6 +259,7 @@ def get_codes(stones):
              'Coral-D': 'crl_dia',
              'Tanzanite': 'tan', 
              'Turquoise': 'tur', 
+             'Tourmaline': 'tor',
              'Other/All stones-D': 'oth_dia',
              'Other/All stones': 'oth'}
     codes = set()
