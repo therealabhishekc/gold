@@ -3,6 +3,7 @@ from streamlit_option_menu import option_menu
 import base64
 from streamlit_pdf_viewer import pdf_viewer
 from browser_details import get_browser
+
 from render_page import render_gold_breakdown, render_gold_scrap, render_dia_breakdown, render_ant_breakdown, render_hyd_breakdown
 
 # page setup
@@ -22,13 +23,16 @@ def load_css(css_file):
 
 def displayPDF(file):
 
+    # get browser details
+    browser = get_browser()
+
+    st.markdown("### Breakdown Report")
+
     # download button
     with open(file, "rb") as f:
         st.download_button("Download Report", f, file, key='download_pdf')
 
     st.write()
-
-    browser = get_browser()
 
     if browser in ('Chrome', 'Edge'):
         with open(file, "rb") as f:

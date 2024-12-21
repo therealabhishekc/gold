@@ -136,6 +136,11 @@ def dialog_gold_bd():
     _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img1:
         st.image("images/invalid_input.png")
+
+    st.markdown("- **Misssing Value**: Appears when a required field is not filled out before generating the report.")
+    _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
+    with img1:
+        st.image("images/missing_val.png")
     
     st.markdown("- **No Response**: Appears when kitco.com is offline.")
     _, img2, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
@@ -210,6 +215,11 @@ def dialog_hyd_bd():
     _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img1:
         st.image("images/invalid_input.png")
+
+    st.markdown("- **Misssing Value**: Appears when a required field is not filled out before generating the report.")
+    _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
+    with img1:
+        st.image("images/missing_val.png")
     
     st.markdown("- **No Response**: Appears when kitco.com is offline.")
     _, img2, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
@@ -286,6 +296,11 @@ def dialog_ant_bd():
     _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img1:
         st.image("images/invalid_input.png")
+
+    st.markdown("- **Misssing Value**: Appears when a required field is not filled out before generating the report.")
+    _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
+    with img1:
+        st.image("images/missing_val.png")
     
     st.markdown("- **No Response**: Appears when kitco.com is offline.")
     _, img2, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
@@ -364,6 +379,11 @@ def dialog_dia_bd():
     _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
     with img1:
         st.image("images/invalid_input.png")
+
+    st.markdown("- **Misssing Value**: Appears when a required field is not filled out before generating the report.")
+    _, img1, _ = st.columns([1, 2, 1], vertical_alignment="bottom")
+    with img1:
+        st.image("images/missing_val.png")
     
     st.markdown("- **No Response**: Appears when kitco.com is offline.")
     _, img2, _ = st.columns([1, 2, 1], vertical_alignment="bottom")

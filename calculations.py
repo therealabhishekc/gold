@@ -1,3 +1,48 @@
+#############################################################################################
+#############################################################################################
+
+# ------------------- SCARP GOLD PURCHACE -------------------
+
+# amount to deducted for cash value
+CASH_VALUE_REDUCTION = 5.5 
+
+# amount to deducted for trade-in value
+TRADE_VALUE_REDUCTION = 4.5
+
+# ------------------- HYDERABADI BREAKDOWN -------------------
+
+# maximum profit/labor percentage for the hydrabadi sets
+MAX_HYDRA_PROFIT = 10.99
+
+# ------------------- ANTIQUE BREAKDOWN ----------------------
+
+# maximum profit/labor percentage for the antique sets
+MAX_ANT_PROFIT = 10.99
+
+# antique polki diamonds price per carat
+ANT_POLKI_PPC = 295
+
+# antique diamonds price per carat
+ANT_DIAMOND_PPC = 495
+
+# ------------------- DIAMOND BREAKDOWN ----------------------
+
+# maximum profit/labor percentage for the diamond sets
+MAX_DIA_PROFIT = 16.99
+
+#############################################################################################
+#############################################################################################
+
+# ********* DO NOT CHANGE ANYTHING BELOW *********
+# ********* DO NOT CHANGE ANYTHING BELOW *********
+# ********* DO NOT CHANGE ANYTHING BELOW *********
+# ********* DO NOT CHANGE ANYTHING BELOW *********
+# ********* DO NOT CHANGE ANYTHING BELOW *********
+
+#############################################################################################
+#############################################################################################
+
+
 import random
 
 # scrap gold calculations
@@ -26,8 +71,8 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place, ref_cost):
         cash = price 
         trade = price 
     else:
-        cash = price - 5.5
-        trade = price - 4.5
+        cash = price - CASH_VALUE_REDUCTION
+        trade = price - TRADE_VALUE_REDUCTION
 
     return (round(cash * float(gold_wt)), 
             round(trade * float(gold_wt)), 
@@ -308,12 +353,12 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
         price_profit = round(profit_perc*price_pre_tax/100)
         rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2)
         if rem>0:
-            if profit_perc < 10.99:
+            if profit_perc < MAX_HYDRA_PROFIT:
                 profit_perc += 0.01
             condition = check_stones_price(price_stones)
             if len(condition) < leng:
                 inc_stones_price(price_stones, condition)
-            if profit_perc > 10.99 and len(condition) == leng:
+            if profit_perc > MAX_HYDRA_PROFIT and len(condition) == leng:
                 raise CustomErrorBD("Unable to calculate, exceeds limits")
         else:
             break
@@ -341,9 +386,9 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
     price_gold = round(net_wt * gold_22k)
     price_polki, price_dia, price_total_dia = 0, 0, 0
     if polki_flag:
-        price_polki = round(polki_ct * 295)
+        price_polki = round(polki_ct * ANT_POLKI_PPC)
     if dia_flag:
-        price_dia = round(dia_ct * 495)
+        price_dia = round(dia_ct * ANT_DIAMOND_PPC)
 
     price_total_dia = price_polki + price_dia
 
@@ -362,12 +407,12 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
         price_profit = round(profit_perc*price_pre_tax/100)
         rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_total_dia
         if rem>0:
-            if profit_perc < 10.99:
+            if profit_perc < MAX_ANT_PROFIT:
                 profit_perc += 0.01
             condition = check_stones_price(price_stones)
             if len(condition) < leng:
                 inc_stones_price(price_stones, condition)
-            if profit_perc > 10.99 and len(condition) == leng:
+            if profit_perc > MAX_ANT_PROFIT and len(condition) == leng:
                 raise CustomErrorBD("Unable to calculate, exceeds limits")
         else:
             break
@@ -413,12 +458,12 @@ def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gem
             price_profit = round(profit_perc*price_pre_tax/100)
             rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_dia
             if rem>0:
-                if profit_perc < 10.99:
+                if profit_perc < MAX_DIA_PROFIT:
                     profit_perc += 0.007
                 condition = check_stones_price(price_stones)
                 if len(condition) < leng:
                     inc_stones_price(price_stones, condition)
-                if profit_perc > 10.999 and len(condition) == leng:
+                if profit_perc > MAX_DIA_PROFIT and len(condition) == leng:
                     raise CustomErrorBD("Unable to calculate, exceeds limits")
             else:
                 break

@@ -55,6 +55,10 @@ def update_scrap_gold(i, field):
         st.session_state['scrap_gold_data'][i]['gold_reduc'] = st.session_state[f'gold_reduc_{i}']
     elif field == 'gold_kt':
         st.session_state['scrap_gold_data'][i]['gold_kt'] = st.session_state[f'gold_kt_{i}']
+    elif field == 'gold_calc':
+        st.session_state['gold_calc'] = st.session_state[f'gold_calc1']
+    elif field == 'ref_cost':
+        st.session_state['ref_cost'] = st.session_state[f'ref_cost1']
     # elif field == 'gold_pur_place':
     #     st.session_state['scrap_gold_data'][i]['gold_pur_place'] = st.session_state[f'gold_pur_place_{i}']
 
@@ -66,11 +70,15 @@ def update_gold_breakdown(field):
         st.session_state['ss_price_g'] = st.session_state['price_g']
     elif field == "gold_wt":
         st.session_state['ss_gold_wt_g'] = st.session_state['gold_wt_g']
+    elif field == "gb_perc":
+        st.session_state['ss_gb_perc'] = st.session_state['gb_perc']
 
 
 def update_hyd_breakdown(field, i):
     if field == "item_code":
         st.session_state['ss_item_code_h'] = st.session_state['item_code_h']
+    elif field == "hy_perc":
+        st.session_state['ss_hy_perc'] = st.session_state['hy_perc']
     elif field == "price":
         st.session_state['ss_price_h'] = st.session_state['price_h']
     elif field == "gold_wt":
@@ -87,6 +95,8 @@ def update_hyd_breakdown(field, i):
 def update_ant_breakdown(field, i):
     if field == "item_code":
         st.session_state['ss_item_code_a'] = st.session_state['item_code_a']
+    elif field == "an_perc":
+        st.session_state['ss_an_perc'] = st.session_state['an_perc']
     elif field == "price":
         st.session_state['ss_price_a'] = st.session_state['price_a']
     elif field == "gold_wt":
@@ -103,6 +113,8 @@ def update_ant_breakdown(field, i):
 def update_dia_breakdown(field, i):
     if field == 'dia_ppc':
         st.session_state['ss_dia_ppc_d'] = st.session_state['dia_ppc_d']
+    elif field == "di_perc":
+        st.session_state['ss_di_perc'] = st.session_state['di_perc']
     elif field == "item_code":
         st.session_state['ss_item_code_d'] = st.session_state['item_code_d']
     elif field == "price":
@@ -129,17 +141,17 @@ def render_gold_scrap():
     if 'scrap_gold_data' not in st.session_state:
         st.session_state['scrap_gold_data'] = [{
             'desc': '',
-            'gold_wt': 0.0,
-            'gold_reduc': 0.0,
+            'gold_wt': '',
+            'gold_reduc': '',
             'gold_kt': '10K',
             #'gold_pur_place' : "Govindji's"
         }] 
     if 'show_calc' not in st.session_state:
         st.session_state['show_calc'] = False
     if 'ref_cost' not in st.session_state:
-        st.session_state['ref_cost'] = 'Exclude'
+        st.session_state['ref_cost'] = 'Include'
     if 'gold_calc' not in st.session_state:
-        st.session_state['gold_calc'] = '0.916'
+        st.session_state['gold_calc'] = '0.80'
     
     colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
     with colm1: 
@@ -178,7 +190,10 @@ def render_gold_scrap():
         st.session_state['ref_cost'] = st.segmented_control("Refinery Cost",
                                                             options = ref_options,
                                                             selection_mode = 'single',
-                                                            default=st.session_state['ref_cost'])
+                                                            default=st.session_state['ref_cost'],
+                                                            key=f'ref_cost1',
+                                                            on_change=update_scrap_gold,
+                                                            args=(0, 'ref_cost'))
 
     # gold calculation
     with coln2:
@@ -186,7 +201,10 @@ def render_gold_scrap():
         st.session_state['gold_calc'] = st.segmented_control("Gold Calculation",
                                                             options = gold_options,
                                                             selection_mode = 'single',
-                                                            default=st.session_state['gold_calc'])
+                                                            default=st.session_state['gold_calc'],
+                                                            key=f'gold_calc1',
+                                                            on_change=update_scrap_gold,
+                                                            args=(0, 'gold_calc'))
         
     # show calculation
     with coln3:
@@ -242,11 +260,12 @@ def render_gold_scrap():
                             key=f'gold_wt_{i}',
                             on_change=update_scrap_gold,
                             args=(i, 'gold_wt'))
-            
-        try:
-            float(st.session_state['scrap_gold_data'][i]['gold_wt'])
-        except ValueError:
-            invalid_input()
+
+        if st.session_state['scrap_gold_data'][i]['gold_wt'] != "":    
+            try:
+                float(st.session_state['scrap_gold_data'][i]['gold_wt'])
+            except ValueError:
+                invalid_input()
 
         # reductions
         with col3:
@@ -255,11 +274,12 @@ def render_gold_scrap():
                             key=f'gold_reduc_{i}',
                             on_change=update_scrap_gold,
                             args=(i, 'gold_reduc'))
-            
-        try:
-            float(st.session_state['scrap_gold_data'][i]['gold_reduc'])
-        except ValueError:
-            invalid_input()
+        
+        if st.session_state['scrap_gold_data'][i]['gold_reduc'] != "":
+            try:
+                float(st.session_state['scrap_gold_data'][i]['gold_reduc'])
+            except ValueError:
+                invalid_input()
 
         # gold karat dropdown
         with col4:
@@ -351,6 +371,16 @@ def render_gold_scrap():
 
 def render_gold_breakdown():
     
+    # initializing the state variables
+    if 'ss_item_code_g' not in st.session_state:
+        st.session_state['ss_item_code_g'] = ''
+    if 'ss_price_g' not in st.session_state:
+        st.session_state['ss_price_g'] = ''
+    if 'ss_gold_wt_g' not in st.session_state:
+        st.session_state['ss_gold_wt_g'] = ''
+    if 'ss_gb_perc' not in st.session_state:
+        st.session_state['ss_gb_perc'] = False
+
     colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
     with colm1: 
         st.write("### Gold Jewelry Breakdown")
@@ -378,12 +408,13 @@ def render_gold_breakdown():
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    if 'ss_item_code_g' not in st.session_state:
-        st.session_state['ss_item_code_g'] = ''
-    if 'ss_price_g' not in st.session_state:
-        st.session_state['ss_price_g'] = 0
-    if 'ss_gold_wt_g' not in st.session_state:
-        st.session_state['ss_gold_wt_g'] = 0.0
+    st.session_state['ss_gb_perc'] = st.checkbox("Show Percentages",
+                                              value=st.session_state['ss_gb_perc'],
+                                              key='gb_perc',
+                                              on_change=update_gold_breakdown,
+                                              args=('gb_perc',))
+    
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
 
@@ -439,9 +470,12 @@ def render_gold_breakdown():
         ):
         if st.button("Generate", key="generate"):
             with st.spinner('Preparing Report!'):
+                if price_g == "" or gold_wt_g == "":
+                    missing_value()
+                    return
                 if gold_wt_g < 10.00:
                     ten_below()
-                val = pdf_gold_bd(item_code_g, price_g, gold_wt_g)
+                val = pdf_gold_bd(item_code_g, price_g, gold_wt_g, st.session_state['ss_gb_perc'])
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
@@ -477,8 +511,6 @@ def render_hyd_breakdown():
             if st.button("", key="help", icon=":material/help:"):
                 dialog_hyd_bd()
 
-    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
-
         # Initialize session state for tracking the widgets and their values
     if 'hyd_stones_count' not in st.session_state:
         st.session_state['hyd_stones_count'] = 1  # Start with at least one widget
@@ -487,11 +519,23 @@ def render_hyd_breakdown():
     if 'ss_item_code_h' not in st.session_state:
         st.session_state['ss_item_code_h'] = ''
     if 'ss_price_h' not in st.session_state:
-        st.session_state['ss_price_h'] = 0
+        st.session_state['ss_price_h'] = ''
     if 'ss_gold_wt_h' not in st.session_state:
-        st.session_state['ss_gold_wt_h'] = 0.0
+        st.session_state['ss_gold_wt_h'] = ''
     if 'ss_hyd_stones' not in st.session_state:
-        st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': 0.0} for _ in range(50)]
+        st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': ''} for _ in range(50)]
+    if 'ss_hy_perc' not in st.session_state:
+        st.session_state['ss_hy_perc'] = False
+
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
+    st.session_state['ss_hy_perc'] = st.checkbox("Show Percentages",
+                                              value=st.session_state['ss_hy_perc'],
+                                              key='hy_perc',
+                                              on_change=update_gold_breakdown,
+                                              args=('hy_perc',))
+    
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
@@ -558,10 +602,11 @@ def render_hyd_breakdown():
                             on_change=update_hyd_breakdown,
                             args=("hyd_ct", i))
             
-            try:
-                float(st.session_state['ss_hyd_stones'][i]['hyd_ct'])
-            except ValueError:
-                invalid_input()
+            if st.session_state['ss_hyd_stones'][i]['hyd_ct'] != "":
+                try:
+                    float(st.session_state['ss_hyd_stones'][i]['hyd_ct'])
+                except ValueError:
+                    invalid_input()
 
         # delete button
         with col3:
@@ -637,13 +682,17 @@ def render_hyd_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
+            if price_h == "" or gold_wt_h == "":
+                missing_value()
+                return
             if gold_wt_h < 10.00:
                 ten_below()
             with st.spinner('Preparing Report!'):
                 val = pdf_hyd_bd(item_code_h, 
                                  price_h, 
                                  gold_wt_h, 
-                                 st.session_state['ss_hyd_stones'][:st.session_state['hyd_stones_count']])
+                                 st.session_state['ss_hyd_stones'][:st.session_state['hyd_stones_count']],
+                                 st.session_state['ss_hy_perc'])
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
@@ -679,8 +728,6 @@ def render_ant_breakdown():
             if st.button("", key="help", icon=":material/help:"):
                 dialog_ant_bd()
 
-    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
-
     # Initialize session state for tracking the widgets and their values
     if 'ant_stones_count' not in st.session_state:
         st.session_state['ant_stones_count'] = 1  # Start with at least one widget
@@ -689,11 +736,23 @@ def render_ant_breakdown():
     if 'ss_item_code_a' not in st.session_state:
         st.session_state['ss_item_code_a'] = ''
     if 'ss_price_a' not in st.session_state:
-        st.session_state['ss_price_a'] = 0
+        st.session_state['ss_price_a'] = ''
     if 'ss_gold_wt_a' not in st.session_state:
-        st.session_state['ss_gold_wt_a'] = 0.0
+        st.session_state['ss_gold_wt_a'] = ''
     if 'ss_ant_stones' not in st.session_state:
-        st.session_state['ss_ant_stones'] = [{'ant_stone': 'Polki Diamond', 'ant_ct': 0.0} for _ in range(50)]
+        st.session_state['ss_ant_stones'] = [{'ant_stone': 'Polki Diamond', 'ant_ct': ''} for _ in range(50)]
+    if 'ss_an_perc' not in st.session_state:
+        st.session_state['ss_an_perc'] = False
+
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
+    st.session_state['ss_an_perc'] = st.checkbox("Show Percentages",
+                                              value=st.session_state['ss_an_perc'],
+                                              key='an_perc',
+                                              on_change=update_gold_breakdown,
+                                              args=('an_perc',))
+    
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     col1, col2, col3 = st.columns([3, 3, 3])
 
@@ -761,10 +820,11 @@ def render_ant_breakdown():
                           on_change=update_ant_breakdown,
                           args=("ant_ct", i))
             
-            try:
-                float(st.session_state['ss_ant_stones'][i]['ant_ct'])
-            except ValueError:
-                invalid_input()
+            if st.session_state['ss_ant_stones'][i]['ant_ct'] != "":
+                try:
+                    float(st.session_state['ss_ant_stones'][i]['ant_ct'])
+                except ValueError:
+                    invalid_input()
 
         # delete option
         with col3:
@@ -839,13 +899,17 @@ def render_ant_breakdown():
                 """
         ):
         if st.button("Generate", key="generate"):
+            if price_a == "" or gold_wt_a == "":
+                missing_value()
+                return
             if gold_wt_a < 10.00:
                 ten_below()
             with st.spinner('Preparing Report!'):
                 val = pdf_ant_bd(item_code_a, 
                                 price_a, 
                                 gold_wt_a, 
-                                st.session_state['ss_ant_stones'][:st.session_state['ant_stones_count']])
+                                st.session_state['ss_ant_stones'][:st.session_state['ant_stones_count']],
+                                st.session_state['ss_an_perc'])
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
@@ -881,25 +945,32 @@ def render_dia_breakdown():
             if st.button("", key="help", icon=":material/help:"):
                 dialog_dia_bd()
 
-    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
-
     # Initialize session state for tracking the widgets and their values
     if 'dia_stones_count' not in st.session_state:
         st.session_state['dia_stones_count'] = 0  # Start with at least one widget
 
-    # intializing sessions states for all the fields
-    # if 'ss_dia_ppc_d' not in st.session_state:
-    #     st.session_state['ss_dia_ppc_d'] = 795
     if 'ss_item_code_d' not in st.session_state:
         st.session_state['ss_item_code_d'] = ''
     if 'ss_price_d' not in st.session_state:
-        st.session_state['ss_price_d'] = 0
+        st.session_state['ss_price_d'] = ''
     if 'ss_gold_wt_d' not in st.session_state:
-        st.session_state['ss_gold_wt_d'] = 0.0
+        st.session_state['ss_gold_wt_d'] = ''
     if 'ss_dia_ct_d' not in st.session_state:
-        st.session_state['ss_dia_ct_d'] = 0.0
+        st.session_state['ss_dia_ct_d'] = ''
     if 'ss_dia_stones' not in st.session_state:
-        st.session_state['ss_dia_stones'] = [{'dia_stone': 'Colored Stone', 'dia_stone_ct': 0} for _ in range(50)]
+        st.session_state['ss_dia_stones'] = [{'dia_stone': 'Colored Stone', 'dia_stone_ct': ''} for _ in range(50)]
+    if 'ss_di_perc' not in st.session_state:
+        st.session_state['ss_di_perc'] = False
+
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
+
+    st.session_state['ss_di_perc'] = st.checkbox("Show Percentages",
+                                              value=st.session_state['ss_di_perc'],
+                                              key='di_perc',
+                                              on_change=update_gold_breakdown,
+                                              args=('di_perc',))
+    
+    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
     # diamond price per carat
     st.markdown("<h4 style='font-size:18px;'>Diamond Price Per Carat</h4>", 
@@ -1084,7 +1155,8 @@ def render_dia_breakdown():
                             price_d, 
                             gold_wt_d, 
                             dia_ct_d, 
-                            st.session_state['ss_dia_stones'][:st.session_state['dia_stones_count']])
+                            st.session_state['ss_dia_stones'][:st.session_state['dia_stones_count']],
+                            st.session_state['ss_di_perc'])
             if val == 'kitco_down':
                 return kitco_down()
             if val == "no_calc":

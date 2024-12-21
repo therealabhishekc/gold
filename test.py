@@ -610,25 +610,24 @@
 #     st.write("The checkbox is unchecked.")
 
 
+import streamlit as st
 from streamlit_js_eval import get_user_agent
 from user_agents import parse
 
-def get_browser():
+def main():
+    st.title("Get Browser Details")
+    
     # Retrieve the user agent
     user_agent_str = get_user_agent()
 
-    # Debugging: Check what is being returned
-    if not user_agent_str:
-        raise ValueError("get_user_agent() returned None. Ensure the function is being called correctly in Streamlit.")
+    if user_agent_str:
+        # Parse the user agent string
+        user_agent = parse(user_agent_str)
+        browser_name = user_agent.browser.family
+        print(browser_name)
+        #st.write(f"Browser: {browser_name}")
+    #else:
+        #st.warning("Failed to retrieve user agent. Ensure JavaScript is enabled.")
 
-    print(f"User agent string: {user_agent_str}")
-
-    # Parse the user agent string
-    user_agent = parse(user_agent_str)
-
-    # Extract browser information
-    browser_name = user_agent.browser.family
-
-    return browser_name
-
-get_browser()
+if __name__ == "__main__":
+    main()

@@ -149,7 +149,7 @@ def pdf_scrap_gold(data, show_calc, ref_cost, gold_calc):
 
 
 # Function to generate the gold breakdown PDF
-def pdf_gold_bd(item_code, price, gold_wt):
+def pdf_gold_bd(item_code, price, gold_wt, show_perc):
 
     #Read the existing PDF
     reader = PdfReader("template.pdf")
@@ -232,11 +232,12 @@ def pdf_gold_bd(item_code, price, gold_wt):
     lbr = round((price_labor/price_pre_tax)*100, 2)
     prf = round((price_profit/price_pre_tax)*100, 2)
     pdf.cell(35, 8)
-    pdf.cell(25, 8, txt=f"{lbr}%", border=0, align='C')
-    pdf.cell(10, 8)
-    pdf.cell(25, 8, txt=f"{prf}%", border=0, align='C')
-    pdf.cell(10, 8)
-    pdf.cell(25, 8, txt=f"6.5%", border=0, align='C')
+    if show_perc:
+        pdf.cell(25, 8, txt=f"{lbr}%", border=0, align='C')
+        pdf.cell(10, 8)
+        pdf.cell(25, 8, txt=f"{prf}%", border=0, align='C')
+        pdf.cell(10, 8)
+        pdf.cell(25, 8, txt=f"6.5%", border=0, align='C')
 
     pdf.ln(10)
 
@@ -273,7 +274,7 @@ def pdf_gold_bd(item_code, price, gold_wt):
 
 
 # Function to generate the gold breakdown PDF in A4 landscape mode
-def pdf_gold_bd_a4(item_code, price, gold_wt):
+def pdf_gold_bd_a4(item_code, price, gold_wt, show_perc):
 
     # Read the existing PDF
     reader = PdfReader("template.pdf")
@@ -398,7 +399,7 @@ def pdf_gold_bd_a4(item_code, price, gold_wt):
 
 
 # Function to generate the hyderabadi breakdown PDF
-def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
+def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc):
 
     total_stone_ct = 0
     stones = {}
@@ -538,11 +539,12 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
     pdf.cell(30, 7)
     pdf.cell(22, 7, txt=f"(Avg: {ppc}/ct)", border=0, align='C')
     pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"({lbr}%)", border=0, align='C')
-    pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
-    pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
+    if show_perc:
+        pdf.cell(22, 7, txt=f"({lbr}%)", border=0, align='C')
+        pdf.cell(8, 7)
+        pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
+        pdf.cell(8, 7)
+        pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
 
     pdf.ln(6)
     pdf.set_font(family="Helvetica", style="", size=8.5)
@@ -579,7 +581,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones):
 
 
 # Function to generate the antique breakdown PDF
-def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
+def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc):
 
     total_stone_ct = 0
     stones = {}
@@ -760,13 +762,14 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
     pdf.cell(30, 7)
     pdf.cell(22, 7, txt=f"(Avg: {ppc}/ct)", border=0, align='C')
     pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"({lbr}%)", border=0, align='C')
-    pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
-    if polki_flag:
-        pdf.cell(30, 8)
-    pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
+    if show_perc:
+        pdf.cell(22, 7, txt=f"({lbr}%)", border=0, align='C')
+        pdf.cell(8, 7)
+        pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
+        if polki_flag:
+            pdf.cell(30, 8)
+        pdf.cell(8, 7)
+        pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
 
     pdf.ln(6)
     pdf.set_font(family="Helvetica", style="", size=8.5)
@@ -803,7 +806,7 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones):
 
 
 # Function to generate the PDF
-def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones):
+def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones, show_perc):
     
     total_stone_ct = 0
     stones = {}
@@ -836,6 +839,7 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones):
     except CustomErrorBD as e:
         return "no_calc"
     
+    print(price_gold, price_dia, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax)
     #Read the existing PDF
     reader = PdfReader("template.pdf")
     writer = PdfWriter()
@@ -885,9 +889,9 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones):
     pdf.ln(1.5)
 
     # brief details
-    pdf.cell(65, 6, txt=f"Total Diamond weight: {total_dia_wt} grams")
     if gems_flag:
         pdf.cell(65, 6, txt=f"Total Gems weight: {total_stone_wt} grams", border=0)
+    pdf.cell(65, 6, txt=f"Total Diamond weight: {total_dia_wt} grams")
     pdf.cell(65, 6, txt=f"Net Gold weight: {round(net_wt, 2)} grams", border=0)
 
     pdf.ln(5)
@@ -897,31 +901,56 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones):
                "Total Gems Weight = Total Gems Carat / 5"]
     dia_details = [["Per carat :", f"${dia_ct_price}"],
                    ["Total carat :", f"{dia_ct} ct"]]
-
-    for i in range(max(2, len(stones)+1)):
+    gems_details = []
+    for st, ct in stones.items():
+        gems_details.append([st, f"{ct}ct"])
+    gems_details.append(["Total Carat", f"{total_stone_ct}ct"])
+    
+    max_range = max(len(gems_details), 2)
+    
+    for i in range(max_range):
         pdf.set_font(family="Helvetica", style="", size=7)
+        if gems_flag:
+            pdf.cell(20, 5, txt=f"{gems_details[i][0]} :", border=0, align='R')
+            pdf.cell(12, 5, txt=gems_details[i][1], border=0, align='L')
+            # if i >= len(dia_details):
+            st = gems_details[i][0]
+            if st == "Total Carat":
+                pdf.cell(33, 5, txt=f"         ${price_stones}", border=0, align='L')
+            else:
+                pdf.cell(33, 5, txt=f"PPC: ${price_per_stone[st]}", border=0, align='L')    
         if i < 2:
-            pdf.cell(20, 5, txt=dia_details[i][0], border=0, align='R')
-            pdf.cell(45, 5, txt=dia_details[i][1], border=0, align='L')
-        if gems_flag and i < len(stones):
-            if i >= 2:
-                 pdf.cell(65, 5, txt=f"", border=0, align='R')
-            stone, stone_ct = next((pair for j, pair in enumerate(stones.items()) if j == i), None)
-            pdf.cell(20, 5, txt=f"{stone} : ", border=0, align='R')
-            pdf.cell(12, 5, txt=f"{stone_ct}ct", border=0, align='L')
-            pdf.cell(33, 5, txt=f"PPC: ${price_per_stone[stone]}", border=0, align='L')
-        if gems_flag and i == len(stones) and i == 2:
-            pdf.cell(85, 5, txt=f"Total Carat : ", border=0, align='R')
-            pdf.cell(12, 5, txt=f"{total_stone_ct}ct", border=0, align='L')
-            pdf.cell(33, 5, txt=f"         ${price_stones}", border=0, align='L')
-            continue
-        if gems_flag and i == len(stones):
-            pdf.cell(85, 5, txt=f"Total Carat : ", border=0, align='R')
-            pdf.cell(12, 5, txt=f"{total_stone_ct}ct", border=0, align='L')
-            pdf.cell(33, 5, txt=f"          ${price_stones}", border=0, align='L')
+            pdf.cell(31, 5, txt=dia_details[i][0], border=0, align='R')
+            pdf.cell(34, 5, txt=dia_details[i][1], border=0, align='L')
         if i < 2:
             pdf.cell(65, 5, txt=formula[i], border=0, align='L')
         pdf.ln(2.8)
+
+    # for i in range(max(2, len(stones)+1)):
+    #     pdf.set_font(family="Helvetica", style="", size=7)
+    #     if i < 2:
+    #         pdf.cell(20, 5, txt=dia_details[i][0], border=0, align='R')
+    #         pdf.cell(45, 5, txt=dia_details[i][1], border=0, align='L')
+    #     if gems_flag and i < len(stones):
+    #         if i >= 2:
+    #              pdf.cell(65, 5, txt=f"", border=0, align='R')
+    #         stone, stone_ct = next((pair for j, pair in enumerate(stones.items()) if j == i), None)
+    #         pdf.cell(20, 5, txt=f"{stone} : ", border=0, align='R')
+    #         pdf.cell(12, 5, txt=f"{stone_ct}ct", border=0, align='L')
+    #         pdf.cell(33, 5, txt=f"PPC: ${price_per_stone[stone]}", border=0, align='L')
+    #     if gems_flag and i == len(stones) and i == 2:
+    #         pdf.cell(20, 5, txt=f"Total Carat : ", border=0, align='R')
+    #         pdf.cell(12, 5, txt=f"{total_stone_ct}ct", border=0, align='L')
+    #         pdf.cell(33, 5, txt=f"         ${price_stones}", border=0, align='L')
+    #         continue
+    #     if gems_flag and i == len(stones) and len(stones) > 1:
+    #         pdf.cell(85, 5, txt=f"Total Carat : ", border=0, align='R')
+    #         pdf.cell(12, 5, txt=f"{total_stone_ct}ct", border=0, align='L')
+    #         pdf.cell(33, 5, txt=f"          ${price_stones}", border=0, align='L')
+    #     if i < 2:
+    #         pdf.cell(65, 5, txt=formula[i], border=0, align='L')
+    #     pdf.ln(2.8)
+
     # for stone in stones.keys():
     #     pdf.set_font(family="Helvetica", style="", size=7)
     #     pdf.cell(20, 5, txt=f"{stone} : ", border=0, align='R')
@@ -986,11 +1015,12 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones):
         ppc = round(price_stones/total_stone_ct, 2)
         pdf.cell(22, 7, txt=f"(Avg PPC: {ppc}/ct)", border=0, align='C')
         pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"({lbr}%)", border=0, align='C')
-    pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
-    pdf.cell(8, 7)
-    pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
+    if show_perc:
+        pdf.cell(22, 7, txt=f"({lbr}%)", border=0, align='C')
+        pdf.cell(8, 7)
+        pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
+        pdf.cell(8, 7)
+        pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
 
     pdf.ln(6)
     pdf.set_font(family="Helvetica", style="", size=8.5)
