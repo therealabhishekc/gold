@@ -2,9 +2,8 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import base64
 from streamlit_pdf_viewer import pdf_viewer
-from browser_details import get_browser
-
-from render_page import render_gold_breakdown, render_gold_scrap, render_dia_breakdown, render_ant_breakdown, render_hyd_breakdown
+from helper.browser_details import get_browser
+from helper.render_page import render_gold_breakdown, render_gold_scrap, render_dia_breakdown, render_ant_breakdown, render_hyd_breakdown
 
 # page setup
 st.set_page_config(
@@ -26,7 +25,7 @@ def displayPDF(file):
     # get browser details
     browser = get_browser()
 
-    st.markdown("### Breakdown Report")
+    st.markdown("### Report")
 
     # download button
     with open(file, "rb") as f:
@@ -83,12 +82,12 @@ def on_change(key):
 def main():
 
     # Load the CSS file
-    load_css("styles.css")
+    load_css("styles/styles.css")
 
     output = st.query_params.get("output", None)
 
     if output:
-        displayPDF('output.pdf')
+        displayPDF('pdfs/output.pdf')
 
     else:
         _, col, _ = st.columns([4,3,4])
@@ -157,8 +156,8 @@ def main():
         if view_pdf:
             st.link_button(
                 "View PDF",
-                #url=f"http://localhost:8501/?output={view_pdf}"
-                url=f"https://govindjis.streamlit.app/?output={view_pdf}"
+                url=f"http://localhost:8501/?output={view_pdf}"
+                #url=f"https://govindjis.streamlit.app/?output={view_pdf}"
             )
 
 
