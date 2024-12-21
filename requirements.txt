@@ -1,8 +1,7 @@
-fpdf
-PyPDF2
-beautifulsoup4
-streamlit-option-menu
-streamlit_extras
-streamlit_pdf_viewer
-streamlit_js_eval
-user_agents
+fpdf==1.7.2
+PyPDF2==3.0.1  
+streamlit-option-menu==0.3.13
+streamlit_extras==0.4.7
+streamlit_pdf_viewer==0.0.19
+streamlit_js_eval==0.1.7
+user_agents==2.2.0
