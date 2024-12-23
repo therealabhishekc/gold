@@ -4,17 +4,17 @@ import streamlit as st
 @st.dialog("Weight less than 10 grams")
 def ten_below():
     st.warning("Any jewelry piece less than 10 grams is sold at \"PIECE PRICE\".")
-    st.info("Please talk with the Manager before proceeding.")
+    st.warning("The labor and margin would be higher than usual.")
 
 
 @st.dialog("No Response")
 def kitco_down():
-    st.warning("Kitco.com is not responding. Unable to fetch gold prices.")
+    st.error("Kitco.com is not responding. Unable to fetch gold prices.")
 
 
 @st.dialog("Unable to Calculate")
 def no_calc():
-    st.warning("The Price Per Carat OR the Profit Margin is exceeding predefined limits.")
+    st.error("The Price Per Carat OR the Profit Margin is exceeding predefined limits.")
     st.info("Please ask the manager for the breakdown.")
 
 
@@ -25,7 +25,7 @@ def invalid_input():
 
 @st.dialog("Missing Value")
 def missing_value():
-    st.warning("Please enter all the details before generating the report.")
+    st.error("Please enter all the details before generating the report.")
 
 
 @st.dialog("About | Scrap Gold Purchase", width='large')
@@ -104,6 +104,7 @@ def dialog_gold_bd():
 
     st.markdown("## Field Descriptions")
     st.markdown('''
+            - `Show Percentages` [checkbox]: _Required_. Displays the percentages for labor, margin, and duty when selected.
             - `Item Code` [text]: _Optional_. The item code as given on the tag.
             - `Price` [number]: _Required_. The final price from the iPad.
             - `Gross Weight` [number]: _Required_. The total weight of the jewelry piece.
@@ -169,6 +170,7 @@ def dialog_hyd_bd():
     st.markdown("## Field Descriptions")
     
     st.markdown('''
+            - `Show Percentages` [checkbox]: _Required_. Displays the percentages for labor, margin, and duty when selected.
             - `Item Code` [text]: _Optional_. The unique identifier as displayed on the tag. Providing \
                 the item code secures consistency in labor-profit distribution and gemstone pricing \
                 for each version.
@@ -248,6 +250,7 @@ def dialog_ant_bd():
     st.markdown("## Field Descriptions")
     
     st.markdown('''
+            - `Show Percentages` [checkbox]: _Required_. Displays the percentages for labor, margin, and duty when selected.
             - `Item Code` [text]: _Optional_. The unique identifier as displayed on the tag. Providing \
                 the item code secures consistency in labor-profit distribution and gemstone pricing \
                 for each version.
@@ -328,6 +331,7 @@ def dialog_dia_bd():
     st.markdown("## Field Descriptions")
     
     st.markdown('''
+            - `Show Percentages` [checkbox]: _Required_. Displays the percentages for labor, margin, and duty when selected.
             - `Diamond Price Per Carat` [slider]: _Required_. The estimated diamond price per carat for the \
                 given jewelry. Ask one of the managers to figure out the right price. Defaults to $795.
             - `Item Code` [text]: _Optional_. The unique identifier as displayed on the tag. Providing \

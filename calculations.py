@@ -12,11 +12,13 @@ TRADE_VALUE_REDUCTION = 4.5
 # ------------------- HYDERABADI BREAKDOWN -------------------
 
 # maximum profit/labor percentage for the hydrabadi sets
+# for sets less than 10 grams, it will be +5%
 MAX_HYDRA_PROFIT = 10.99
 
 # ------------------- ANTIQUE BREAKDOWN ----------------------
 
 # maximum profit/labor percentage for the antique sets
+# for sets less than 10 grams, it will be +5%
 MAX_ANT_PROFIT = 10.99
 
 # antique polki diamonds price per carat
@@ -28,6 +30,7 @@ ANT_DIAMOND_PPC = 495
 # ------------------- DIAMOND BREAKDOWN ----------------------
 
 # maximum profit/labor percentage for the diamond sets
+# for sets less than 10 grams, it will be +5%
 MAX_DIA_PROFIT = 16.99
 
 #############################################################################################
@@ -330,7 +333,11 @@ def calc_labor_profit(item_code, remaining, total):
 
 
 # hyderabadi breakdown calculations
-def hyd_bd(item_code, price, net_wt, gold_22k, stones):
+def hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag):
+
+    # setting profit increase
+    profit_inc = 0.025 if lt10_flag else 0.01
+    extra_profit = 5.0 if lt10_flag else 0
 
     # the easy part
     price = float(price)
@@ -353,12 +360,12 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
         price_profit = round(profit_perc*price_pre_tax/100)
         rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2)
         if rem>0:
-            if profit_perc < MAX_HYDRA_PROFIT:
-                profit_perc += 0.01
+            if profit_perc < (MAX_HYDRA_PROFIT + extra_profit):
+                profit_perc += profit_inc
             condition = check_stones_price(price_stones)
             if len(condition) < leng:
                 inc_stones_price(price_stones, condition)
-            if profit_perc > MAX_HYDRA_PROFIT and len(condition) == leng:
+            if profit_perc > (MAX_HYDRA_PROFIT + extra_profit) and len(condition) == leng:
                 raise CustomErrorBD("Unable to calculate, exceeds limits")
         else:
             break
@@ -377,7 +384,11 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones):
 
 
 # antique breakdown calculations
-def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct):
+def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct, lt10_flag):
+
+    # setting profit increase
+    profit_inc = 0.02 if lt10_flag else 0.01
+    extra_profit = 5.0 if lt10_flag else 0
 
     # the easy part
     price = float(price)
@@ -407,12 +418,12 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
         price_profit = round(profit_perc*price_pre_tax/100)
         rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_total_dia
         if rem>0:
-            if profit_perc < MAX_ANT_PROFIT:
-                profit_perc += 0.01
+            if profit_perc < (MAX_ANT_PROFIT + extra_profit):
+                profit_perc += profit_inc
             condition = check_stones_price(price_stones)
             if len(condition) < leng:
                 inc_stones_price(price_stones, condition)
-            if profit_perc > MAX_ANT_PROFIT and len(condition) == leng:
+            if profit_perc > (MAX_ANT_PROFIT + extra_profit) and len(condition) == leng:
                 raise CustomErrorBD("Unable to calculate, exceeds limits")
         else:
             break

@@ -614,20 +614,21 @@ import streamlit as st
 from streamlit_js_eval import get_user_agent
 from user_agents import parse
 
-def main():
-    st.title("Get Browser Details")
+def get_browser():
+    st.markdown("hello")
     
     # Retrieve the user agent
     user_agent_str = get_user_agent()
+    browser_name = ''
 
     if user_agent_str:
         # Parse the user agent string
         user_agent = parse(user_agent_str)
         browser_name = user_agent.browser.family
-        print(browser_name)
-        #st.write(f"Browser: {browser_name}")
-    #else:
-        #st.warning("Failed to retrieve user agent. Ensure JavaScript is enabled.")
+        st.write(browser_name)
+    else:
+        pass
+    return browser_name
 
-if __name__ == "__main__":
-    main()
+ans = get_browser()
+print(ans)

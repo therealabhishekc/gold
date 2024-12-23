@@ -683,8 +683,7 @@ def render_hyd_breakdown():
         ):
         if st.button("Generate", key="generate"):
             if price_h == "" or gold_wt_h == "":
-                missing_value()
-                return
+                return missing_value()
             if gold_wt_h < 10.00:
                 ten_below()
             with st.spinner('Preparing Report!'):

@@ -420,9 +420,11 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc):
         return "kitco_down"
     gold_22k = round(gp*0.93, 2)
 
+    lt10_flag = True if gross_wt < 10 else False
+
     try:
         price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
-            hyd_bd(item_code, price, net_wt, gold_22k, stones)
+            hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag)
     except CustomErrorBD as e:
         return "no_calc"
     
@@ -621,9 +623,11 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc):
         return "kitco_down"
     gold_22k = round(gp*0.93, 2)
 
+    lt10_flag = True if gross_wt < 10 else False
+
     try:
         price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax, price_dia = \
-            ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct)
+            ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct, lt10_flag)
     except CustomErrorBD as e:
         return "no_calc"
     
