@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import base64
+from datetime import datetime
 from streamlit_pdf_viewer import pdf_viewer
 from helper.browser_details import get_browser
 from helper.render_page import render_gold_breakdown, render_gold_scrap, render_dia_breakdown, render_ant_breakdown, render_hyd_breakdown
@@ -154,10 +155,14 @@ def main():
             view_pdf = render_page('dia_breakdown')
 
         if view_pdf:
+            # Get the timestamp
+            current_datetime = datetime.now()
+            current_timestamp = int(current_datetime.timestamp())
+
             st.link_button(
                 "View PDF",
-                #url=f"http://localhost:8501/?output={view_pdf}"
-                url=f"https://govindjis.streamlit.app/?output={view_pdf}"
+                #url=f"http://localhost:8501/?output={view_pdf}&id={current_timestamp}"
+                url=f"https://govindjis.streamlit.app/?output={view_pdf}&id={current_timestamp}"
             )
 
 
