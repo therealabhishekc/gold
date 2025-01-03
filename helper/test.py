@@ -610,25 +610,90 @@
 #     st.write("The checkbox is unchecked.")
 
 
-import streamlit as st
-from streamlit_js_eval import get_user_agent
-from user_agents import parse
+# import streamlit as st
+# from streamlit_js_eval import get_user_agent
+# from user_agents import parse
 
-def get_browser():
-    st.markdown("hello")
+# def get_browser():
+#     st.markdown("hello")
     
-    # Retrieve the user agent
-    user_agent_str = get_user_agent()
-    browser_name = ''
+#     # Retrieve the user agent
+#     user_agent_str = get_user_agent()
+#     browser_name = ''
 
-    if user_agent_str:
-        # Parse the user agent string
-        user_agent = parse(user_agent_str)
-        browser_name = user_agent.browser.family
-        st.write(browser_name)
-    else:
-        pass
-    return browser_name
+#     if user_agent_str:
+#         # Parse the user agent string
+#         user_agent = parse(user_agent_str)
+#         browser_name = user_agent.browser.family
+#         st.write(browser_name)
+#     else:
+#         pass
+#     return browser_name
 
-ans = get_browser()
-print(ans)
+# ans = get_browser()
+# print(ans)
+
+
+import streamlit as st
+import os
+
+# Streamlit app configuration
+st.set_page_config(page_title="PDF Renderer", layout="wide")
+
+# Define the path to your PDF file
+pdf_file = "pdfs/output.pdf"  # Replace with your PDF file name
+
+# Check if the file exists
+if not os.path.exists(pdf_file):
+    st.error("PDF file not found! Please place 'your_file.pdf' in the project directory.")
+else:
+    # Embed HTML for rendering the PDF using PDF.js
+    html_code = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+        <style>
+            canvas {{
+                border: 1px solid black;
+                width: 100%;
+            }}
+        </style>
+    </head>
+    <body>
+        <canvas id="pdfCanvas"></canvas>
+        <script>
+            pdfjsLib.GlobalWorkerOptions.workerSrc = "https://mozilla.github.io/pdf.js/build/pdf.worker.js";
+
+            const pdfUrl = "{pdf_file}";
+
+            pdfjsLib.getDocument(pdfUrl).promise.then((pdfDoc) => {{
+                pdfDoc.getPage(1).then((page) => {{
+                    console.log("Page loaded");
+
+                    const canvas = document.getElementById("pdfCanvas");
+                    const context = canvas.getContext("2d");
+
+                    const viewport = page.getViewport({{ scale: 1.5 }});
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    const renderContext = {{
+                        canvasContext: context,
+                        viewport: viewport,
+                    }};
+                    page.render(renderContext).promise.then(() => {{
+                        console.log("Page rendered");
+                    }});
+                }});
+            }}).catch((error) => {{
+                console.error("Error loading PDF:", error);
+            }});
+        </script>
+    </body>
+    </html>
+    """
+
+    # Render the HTML code in Streamlit
+    st.components.v1.html(html_code, height=600, scrolling=True)
+

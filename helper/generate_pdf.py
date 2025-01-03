@@ -39,7 +39,10 @@ def pdf_scrap_gold(data, show_calc, ref_cost, gold_calc):
 
     # Switch back to regular style for the rest of the text
     pdf.set_font(family="Helvetica", style="", size=9)
-    pdf.write(7, " per Troy Ounce")
+    pdf.write(7, " per Troy Ounce  ")
+
+    pdf.set_font(family="Helvetica", style="B", size=7)
+    pdf.cell(65, 8, f"{ref_cost} | {gold_calc}", border=0, align='R')
 
     pdf.ln(6)
 
@@ -837,9 +840,11 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones, show
         return "kitco_down"
     gold_18k = round(gp*0.78, 2)
 
+    lt10_flag = True if gold_wt < 10 else False
+
     try:
         price_gold, price_dia, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
-        dia_bd(item_code, price, net_wt, gold_18k, dia_ct_price, dia_ct, stones, gems_flag)
+        dia_bd(item_code, price, net_wt, gold_18k, dia_ct_price, dia_ct, stones, gems_flag, lt10_flag)
     except CustomErrorBD as e:
         return "no_calc"
     

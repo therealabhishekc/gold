@@ -408,7 +408,7 @@ def render_gold_breakdown():
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_gb_perc'] = st.checkbox("Show Percentages",
+    st.session_state['ss_gb_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
                                               value=st.session_state['ss_gb_perc'],
                                               key='gb_perc',
                                               on_change=update_gold_breakdown,
@@ -529,7 +529,7 @@ def render_hyd_breakdown():
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_hy_perc'] = st.checkbox("Show Percentages",
+    st.session_state['ss_hy_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
                                               value=st.session_state['ss_hy_perc'],
                                               key='hy_perc',
                                               on_change=update_gold_breakdown,
@@ -745,7 +745,7 @@ def render_ant_breakdown():
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_an_perc'] = st.checkbox("Show Percentages",
+    st.session_state['ss_an_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
                                               value=st.session_state['ss_an_perc'],
                                               key='an_perc',
                                               on_change=update_gold_breakdown,
@@ -963,7 +963,7 @@ def render_dia_breakdown():
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_di_perc'] = st.checkbox("Show Percentages",
+    st.session_state['ss_di_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
                                               value=st.session_state['ss_di_perc'],
                                               key='di_perc',
                                               on_change=update_gold_breakdown,

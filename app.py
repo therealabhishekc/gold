@@ -160,9 +160,9 @@ def main():
             current_timestamp = int(current_datetime.timestamp())
 
             st.link_button(
-                "View PDF",
-                #url=f"http://localhost:8501/?output={view_pdf}&id={current_timestamp}"
-                url=f"https://govindjis.streamlit.app/?output={view_pdf}&id={current_timestamp}"
+                "View Report",
+                url=f"http://localhost:8501/?output={view_pdf}&id={current_timestamp}"
+                #url=f"https://govindjis.streamlit.app/?output={view_pdf}&id={current_timestamp}"
             )
 
 

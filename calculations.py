@@ -442,8 +442,12 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
 
 
 # diamond breakdown calculations
-def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gems_flag):
+def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gems_flag, lt10_flag):
     
+    # setting profit increase
+    profit_inc = 0.01 if lt10_flag else 0.007
+    extra_profit = 7.0 if lt10_flag else 0
+
     # the easy part
     price = float(price)
     price_pre_tax = round(price / 1.0825)
@@ -469,8 +473,8 @@ def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gem
             price_profit = round(profit_perc*price_pre_tax/100)
             rem = price_pre_tax - price_gold - s_price - price_duty - (price_profit*2) - price_dia
             if rem>0:
-                if profit_perc < MAX_DIA_PROFIT:
-                    profit_perc += 0.007
+                if profit_perc < MAX_DIA_PROFIT + extra_profit:
+                    profit_perc += profit_inc
                 condition = check_stones_price(price_stones)
                 if len(condition) < leng:
                     inc_stones_price(price_stones, condition)
