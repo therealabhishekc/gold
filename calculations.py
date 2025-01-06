@@ -30,7 +30,7 @@ ANT_DIAMOND_PPC = 495
 # ------------------- DIAMOND BREAKDOWN ----------------------
 
 # maximum profit/labor percentage for the diamond sets
-# for sets less than 10 grams, it will be +5%
+# for sets less than 10 grams, it will be +7%
 MAX_DIA_PROFIT = 16.99
 
 #############################################################################################

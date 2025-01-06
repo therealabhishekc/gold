@@ -635,65 +635,23 @@
 
 
 import streamlit as st
-import os
 
-# Streamlit app configuration
-st.set_page_config(page_title="PDF Renderer", layout="wide")
+# Path to your PDF file (make sure the file exists and is accessible)
+pdf_file_path = (
+    "i94.pdf"  # Replace with your PDF file path or URL
+)
 
-# Define the path to your PDF file
-pdf_file = "pdfs/output.pdf"  # Replace with your PDF file name
+# Streamlit app
+st.title("Print PDF Exampleee")
 
-# Check if the file exists
-if not os.path.exists(pdf_file):
-    st.error("PDF file not found! Please place 'your_file.pdf' in the project directory.")
-else:
-    # Embed HTML for rendering the PDF using PDF.js
-    html_code = f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
-        <style>
-            canvas {{
-                border: 1px solid black;
-                width: 100%;
-            }}
-        </style>
-    </head>
-    <body>
-        <canvas id="pdfCanvas"></canvas>
-        <script>
-            pdfjsLib.GlobalWorkerOptions.workerSrc = "https://mozilla.github.io/pdf.js/build/pdf.worker.js";
-
-            const pdfUrl = "{pdf_file}";
-
-            pdfjsLib.getDocument(pdfUrl).promise.then((pdfDoc) => {{
-                pdfDoc.getPage(1).then((page) => {{
-                    console.log("Page loaded");
-
-                    const canvas = document.getElementById("pdfCanvas");
-                    const context = canvas.getContext("2d");
-
-                    const viewport = page.getViewport({{ scale: 1.5 }});
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-
-                    const renderContext = {{
-                        canvasContext: context,
-                        viewport: viewport,
-                    }};
-                    page.render(renderContext).promise.then(() => {{
-                        console.log("Page rendered");
-                    }});
-                }});
-            }}).catch((error) => {{
-                console.error("Error loading PDF:", error);
-            }});
-        </script>
-    </body>
-    </html>
+# Button to trigger the print dialog
+if st.button("Print PDF"):
+    # Embed the PDF in an iframe and trigger the print dialog
+    print_script = f"""
+    <script>
+        const pdfWindow = window.open('{pdf_file_path}', '_blank');
+    </script>
     """
-
-    # Render the HTML code in Streamlit
-    st.components.v1.html(html_code, height=600, scrolling=True)
+    # Inject the script into the Streamlit app
+    st.components.v1.html(print_script, height=0)
 
