@@ -637,9 +637,9 @@
 import streamlit as st
 
 # Path to your PDF file (make sure the file exists and is accessible)
-pdf_file_path = (
-    "i94.pdf"  # Replace with your PDF file path or URL
-)
+pdf_file_path = r"C:\Users\win10\Desktop\output.pdf"
+
+st.link_button("Go to gallery", "https://printjs.crabbly.com/")
 
 # Streamlit app
 st.title("Print PDF Exampleee")
