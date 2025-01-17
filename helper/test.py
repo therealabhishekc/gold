@@ -634,24 +634,44 @@
 # print(ans)
 
 
+# import requests
+# import json
+
+# zip_code = '78015'
+# api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+# response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+# if response.status_code == requests.codes.ok:
+#     json_string = response.text
+#     data = json.loads(json_string)
+#     print(data[0]["total_rate"])
+# else:
+#     print("Error:", response.status_code, response.text)
+
+
+import requests
 import streamlit as st
 
-# Path to your PDF file (make sure the file exists and is accessible)
-pdf_file_path = r"C:\Users\win10\Desktop\output.pdf"
+def get_location():
+    response = requests.get("https://ipinfo.io")
+    data = response.json()
+    location = data.get("loc", "Unknown").split(",")
+    return {
+        "city": data.get("city"),
+        "region": data.get("region"),
+        "country": data.get("country"),
+        "postal_code": data.get("postal", "Unknown"),
+        "latitude": location[0],
+        "longitude": location[1]
+    }
 
-st.link_button("Go to gallery", "https://printjs.crabbly.com/")
+# Streamlit UI to display the location info
+st.title("Location Info")
+location = get_location()
 
-# Streamlit app
-st.title("Print PDF Exampleee")
-
-# Button to trigger the print dialog
-if st.button("Print PDF"):
-    # Embed the PDF in an iframe and trigger the print dialog
-    print_script = f"""
-    <script>
-        const pdfWindow = window.open('{pdf_file_path}', '_blank');
-    </script>
-    """
-    # Inject the script into the Streamlit app
-    st.components.v1.html(print_script, height=0)
+st.write("City:", location["city"])
+st.write("Region:", location["region"])
+st.write("Country:", location["country"])
+st.write("Postal Code:", location["postal_code"])
+st.write("Latitude:", location["latitude"])
+st.write("Longitude:", location["longitude"])
 
