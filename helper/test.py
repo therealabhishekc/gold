@@ -637,8 +637,11 @@
 # import requests
 # import json
 
-# zip_code = '78015'
+# zip_code = '33503'
+# city = "Hillsborough County"
+# state = "Florida"
 # api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+# #api_url = 'https://api.api-ninjas.com/v1/salestax?city={}&state={}'.format(city, state)
 # response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
 # if response.status_code == requests.codes.ok:
 #     json_string = response.text
@@ -648,41 +651,48 @@
 #     print("Error:", response.status_code, response.text)
 
 
-# import requests
-# import streamlit as st
-
-# def get_location():
-#     ip_address = requests.get('https://api.ipify.org').text
-#     response = requests.get(f'https://ipinfo.io/{ip_address}/json')
-#     data = response.json()
-#     return data
-
-# print(get_location())
-# # Streamlit UI to display the location info
-# st.title("Location Info")
-# location = get_location()
-
-# st.write(location)
 
 
 import streamlit as st
-from streamlit_js_eval import streamlit_js_eval, copy_to_clipboard, create_share_link, get_geolocation
-import json
+from streamlit_js_eval import get_geolocation
+import geopy
+import time
 import requests
-
-st.write(f"User agent is _{streamlit_js_eval(js_expressions='window.navigator.userAgent', want_output = True, key = 'UA')}_")
+import json
 
 if st.checkbox("Check my location"):
     loc = get_geolocation()
     if loc:
         lat = loc['coords']['latitude']
         lon = loc['coords']['longitude']
-        api_url = 'https://api.api-ninjas.com/v1/reversegeocoding?lat={}&lon={}'.format(lat, lon)  
-        response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
-        if response.status_code == requests.codes.ok:
-            st.write(response.text)
-        else:
-            st.write("Error:", response.status_code, response.text)
+        geolocator = geopy.Nominatim(user_agent='my-test')
+
+        location = geolocator.reverse((lat, lon))
+
+        st.write("Zip code: ", location.raw['address']['postcode'])
+                
+        
+        
+        
+        # apiKey = '734581eb012c4a36b99a1de836050993'
+        # api_url = 'https://api.geoapify.com/v1/geocode/reverse?lat={}&lon={}&type=postcode&apiKey={}'.format(lat, lon, apiKey)
+        # response = requests.get(api_url)
+        # if response.status_code == requests.codes.ok:
+        #     json_string = response.text
+        #     data = json.loads(json_string)
+        #     st.write(data['features'][0]['properties']['postcode'])
+        # else:
+        #     st.write("Error:", response.status_code, response.text)
+        
+        
+        
+        
+        # api_url = 'https://api.api-ninjas.com/v1/reversegeocoding?lat={}&lon={}'.format(lat, lon)  
+        # response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+        # if response.status_code == requests.codes.ok:
+        #     st.write(response.text)
+        # else:
+        #     st.write("Error:", response.status_code, response.text)
 
     
 # import requests
