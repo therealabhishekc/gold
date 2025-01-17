@@ -641,7 +641,6 @@
 # city = "Hillsborough County"
 # state = "Florida"
 # api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
-# #api_url = 'https://api.api-ninjas.com/v1/salestax?city={}&state={}'.format(city, state)
 # response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
 # if response.status_code == requests.codes.ok:
 #     json_string = response.text
@@ -656,7 +655,6 @@
 import streamlit as st
 from streamlit_js_eval import get_geolocation
 import geopy
-import time
 import requests
 import json
 
@@ -670,7 +668,16 @@ if st.checkbox("Check my location"):
         location = geolocator.reverse((lat, lon))
 
         st.write("Zip code: ", location.raw['address']['postcode'])
-                
+        
+        zip_code = location.raw['address']['postcode']
+        api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+        response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+        if response.status_code == requests.codes.ok:
+            json_string = response.text
+            data = json.loads(json_string)
+            st.write("Sales tax:", data[0]["total_rate"])
+        else:
+            st.write("Error:", response.status_code, response.text)
         
         
         
