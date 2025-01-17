@@ -666,36 +666,33 @@
 
 
 import streamlit as st
+from streamlit_js_eval import streamlit_js_eval, copy_to_clipboard, create_share_link, get_geolocation
+import json
 import requests
 
-def get_user_location():
-    # Fetch user's IP using an external API (ipinfo.io)
-    ip_request = requests.get("https://api64.ipify.org?format=json")
-    ip_data = ip_request.json()
-    user_ip = ip_data.get("ip", "Unknown")
-    
-    # Get location details using the IP
-    location_request = requests.get(f"https://ipinfo.io/{user_ip}/json")
-    location_data = location_request.json()
-    
-    # Extract relevant details
-    city = location_data.get("city", "Unknown")
-    region = location_data.get("region", "Unknown")
-    country = location_data.get("country", "Unknown")
-    location = f"{city}, {region}, {country}"
-    
-    return user_ip, location
+st.write(f"User agent is _{streamlit_js_eval(js_expressions='window.navigator.userAgent', want_output = True, key = 'UA')}_")
 
-# Streamlit UI
-st.title("Find Your Location")
+if st.checkbox("Check my location"):
+    loc = get_geolocation()
+    if loc:
+        lat = loc['coords']['latitude']
+        lon = loc['coords']['longitude']
+        api_url = 'https://api.api-ninjas.com/v1/reversegeocoding?lat={}&lon={}'.format(lat, lon)  
+        response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+        if response.status_code == requests.codes.ok:
+            st.write(response.text)
+        else:
+            st.write("Error:", response.status_code, response.text)
 
-# Button to trigger location fetch
-if st.button("Get My Location"):
-    user_ip, location = get_user_location()
     
-    st.subheader("Your IP Address:")
-    st.code(user_ip)
-    
-    st.subheader("Your Location:")
-    st.write(location)
+# import requests
 
+# lat = 51.509865
+# lon = -0.118092
+# api_url = 'https://api.api-ninjas.com/v1/reversegeocoding?lat={}&lon={}'.format(lat, lon)
+
+# response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+# if response.status_code == requests.codes.ok:
+#     print(response.text)
+# else:
+#     print("Error:", response.status_code, response.text)
