@@ -648,18 +648,54 @@
 #     print("Error:", response.status_code, response.text)
 
 
-import requests
+# import requests
+# import streamlit as st
+
+# def get_location():
+#     ip_address = requests.get('https://api.ipify.org').text
+#     response = requests.get(f'https://ipinfo.io/{ip_address}/json')
+#     data = response.json()
+#     return data
+
+# print(get_location())
+# # Streamlit UI to display the location info
+# st.title("Location Info")
+# location = get_location()
+
+# st.write(location)
+
+
 import streamlit as st
+import requests
 
-def get_location():
-    ip_address = requests.get('https://api.ipify.org').text
-    response = requests.get(f'https://ipinfo.io/{ip_address}/json')
-    data = response.json()
-    return data
+def get_user_location():
+    # Fetch user's IP using an external API (ipinfo.io)
+    ip_request = requests.get("https://api64.ipify.org?format=json")
+    ip_data = ip_request.json()
+    user_ip = ip_data.get("ip", "Unknown")
+    
+    # Get location details using the IP
+    location_request = requests.get(f"https://ipinfo.io/{user_ip}/json")
+    location_data = location_request.json()
+    
+    # Extract relevant details
+    city = location_data.get("city", "Unknown")
+    region = location_data.get("region", "Unknown")
+    country = location_data.get("country", "Unknown")
+    location = f"{city}, {region}, {country}"
+    
+    return user_ip, location
 
-print(get_location())
-# Streamlit UI to display the location info
-st.title("Location Info")
-location = get_location()
+# Streamlit UI
+st.title("Find Your Location")
 
-st.write(location)
+# Button to trigger location fetch
+if st.button("Get My Location"):
+    user_ip, location = get_user_location()
+    
+    st.subheader("Your IP Address:")
+    st.code(user_ip)
+    
+    st.subheader("Your Location:")
+    st.write(location)
+
