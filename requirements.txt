@@ -5,3 +5,4 @@ streamlit_extras==0.4.7
 streamlit_pdf_viewer==0.0.19
 streamlit_js_eval==0.1.7
 user_agents==2.2.0
+geopy==2.4.1
