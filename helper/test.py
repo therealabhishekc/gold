@@ -652,26 +652,14 @@ import requests
 import streamlit as st
 
 def get_location():
-    response = requests.get("https://ipinfo.io")
+    ip_address = requests.get('https://api.ipify.org').text
+    response = requests.get(f'https://ipinfo.io/{ip_address}/json')
     data = response.json()
-    location = data.get("loc", "Unknown").split(",")
-    return {
-        "city": data.get("city"),
-        "region": data.get("region"),
-        "country": data.get("country"),
-        "postal_code": data.get("postal", "Unknown"),
-        "latitude": location[0],
-        "longitude": location[1]
-    }
+    return data
 
+print(get_location())
 # Streamlit UI to display the location info
 st.title("Location Info")
 location = get_location()
 
-st.write("City:", location["city"])
-st.write("Region:", location["region"])
-st.write("Country:", location["country"])
-st.write("Postal Code:", location["postal_code"])
-st.write("Latitude:", location["latitude"])
-st.write("Longitude:", location["longitude"])
-
+st.write(location)
