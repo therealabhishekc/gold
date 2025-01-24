@@ -2,6 +2,11 @@ import streamlit as st
 from helper.generate_pdf import *
 from streamlit_extras.stylable_container import stylable_container
 from helper.dialog import *
+from helper.tax_rate import *
+from streamlit_js_eval import get_geolocation
+import geopy
+import requests
+import json
 
 
 # functions to add and remove widgets
@@ -72,6 +77,8 @@ def update_gold_breakdown(field):
         st.session_state['ss_gold_wt_g'] = st.session_state['gold_wt_g']
     elif field == "gb_perc":
         st.session_state['ss_gb_perc'] = st.session_state['gb_perc']
+    elif field == "gb_loc":
+        st.session_state['ss_gb_loc'] = st.session_state['gb_loc']
 
 
 def update_hyd_breakdown(field, i):
@@ -90,6 +97,8 @@ def update_hyd_breakdown(field, i):
             st.session_state['ss_hyd_stones'][i]['hyd_ct'] = float(st.session_state[f'hyd_ct_{i}'])
         except ValueError:
             invalid_input()
+    elif field == "hy_loc":
+        st.session_state['ss_hy_loc'] = st.session_state['hy_loc']
 
 
 def update_ant_breakdown(field, i):
@@ -108,6 +117,8 @@ def update_ant_breakdown(field, i):
             st.session_state['ss_ant_stones'][i]['ant_ct'] = float(st.session_state[f'ant_ct_{i}'])
         except ValueError:
             invalid_input()
+    elif field == "an_loc":
+        st.session_state['ss_an_loc'] = st.session_state['an_loc']
 
 
 def update_dia_breakdown(field, i):
@@ -130,6 +141,8 @@ def update_dia_breakdown(field, i):
             st.session_state['ss_dia_stones'][i]['dia_stone_ct'] = float(st.session_state[f'dia_stone_ct_{i}'])
         except ValueError:
             invalid_input()
+    elif field == "di_loc":
+        st.session_state['ss_di_loc'] = st.session_state['di_loc']
 
 
 # rendering the actual page
@@ -380,6 +393,8 @@ def render_gold_breakdown():
         st.session_state['ss_gold_wt_g'] = ''
     if 'ss_gb_perc' not in st.session_state:
         st.session_state['ss_gb_perc'] = False
+    if 'ss_gb_loc' not in st.session_state:
+        st.session_state['ss_gb_loc'] = False
 
     colm1, colm2 = st.columns([3, 1], vertical_alignment="bottom")
     with colm1: 
@@ -408,13 +423,54 @@ def render_gold_breakdown():
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_gb_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
-                                              value=st.session_state['ss_gb_perc'],
-                                              key='gb_perc',
-                                              on_change=update_gold_breakdown,
-                                              args=('gb_perc',))
+    col01, col02, col03, col04 = st.columns([2, 1, 0.1, 1],
+                                     vertical_alignment='center')
+
+    with col01:
+        st.session_state['ss_gb_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
+                                                    value=st.session_state['ss_gb_perc'],
+                                                    key='gb_perc',
+                                                    on_change=update_gold_breakdown,
+                                                    args=('gb_perc',))
+        
+    with col02:
+        location = st.toggle("Enable Location",
+                             value=st.session_state['ss_gb_loc'],
+                             key='gb_loc',
+                             on_change=update_gold_breakdown,
+                             args=('gb_loc',))
+        
+    with col03:
+        tax_rate = 0
+        zip_code = 0
+        if location:
+            loc = get_geolocation()
+            if loc:
+                # extract coordinates
+                lat = loc['coords']['latitude']
+                lon = loc['coords']['longitude']
+
+                # extract zip code
+                geolocator = geopy.Nominatim(user_agent='gold')
+                location = geolocator.reverse((lat, lon))
+                zip_code = location.raw['address']['postcode']
+
+                # extarct the tax rates
+                api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+                response = requests.get(api_url, headers={'X-Api-Key': 
+                                                          'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+                if response.status_code == requests.codes.ok:
+                    json_string = response.text
+                    data = json.loads(json_string)
+                    tax_rate = data[0]["total_rate"]
+                else:
+                    pass
+
+    with col04: 
+        if zip_code != 0:
+            st.write(f":white_check_mark: Zip code: {zip_code}")
     
-    st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin: 2.5px 0;'>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
 
@@ -468,14 +524,20 @@ def render_gold_breakdown():
                 }
                 """
         ):
-        if st.button("Generate", key="generate"):
+        if st.button("Generate", key="generate"): 
+
             with st.spinner('Preparing Report!'):
+                # checking for missing values
                 if price_g == "" or gold_wt_g == "":
                     missing_value()
                     return
                 if gold_wt_g < 10.00:
-                    ten_below()
-                val = pdf_gold_bd(item_code_g, price_g, gold_wt_g, st.session_state['ss_gb_perc'])
+                    ten_below()  
+
+                val = pdf_gold_bd(item_code_g, price_g, gold_wt_g, 
+                                      st.session_state['ss_gb_perc'],
+                                      zip_code, tax_rate)
+                
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
@@ -526,14 +588,57 @@ def render_hyd_breakdown():
         st.session_state['ss_hyd_stones'] = [{'hyd_stone': 'Ruby', 'hyd_ct': ''} for _ in range(50)]
     if 'ss_hy_perc' not in st.session_state:
         st.session_state['ss_hy_perc'] = False
+    if 'ss_hy_loc' not in st.session_state:
+        st.session_state['ss_hy_loc'] = False
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_hy_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
-                                              value=st.session_state['ss_hy_perc'],
-                                              key='hy_perc',
-                                              on_change=update_gold_breakdown,
-                                              args=('hy_perc',))
+    col01, col02, col03, col04 = st.columns([2, 1, 0.1, 1],
+                                     vertical_alignment='center')
+
+    with col01:
+        st.session_state['ss_hy_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
+                                                value=st.session_state['ss_hy_perc'],
+                                                key='hy_perc',
+                                                on_change=update_gold_breakdown,
+                                                args=('hy_perc',))
+        
+    with col02:
+        location = st.toggle("Enable Location",
+                             value=st.session_state['ss_hy_loc'],
+                             key='hy_loc',
+                             on_change=update_gold_breakdown,
+                             args=('hy_loc',))
+        
+    with col03:
+        tax_rate = 0
+        zip_code = 0
+        if location:
+            loc = get_geolocation()
+            if loc:
+                # extract coordinates
+                lat = loc['coords']['latitude']
+                lon = loc['coords']['longitude']
+
+                # extract zip code
+                geolocator = geopy.Nominatim(user_agent='gold')
+                location = geolocator.reverse((lat, lon))
+                zip_code = location.raw['address']['postcode']
+
+                # extarct the tax rates
+                api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+                response = requests.get(api_url, headers={'X-Api-Key': 
+                                                          'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+                if response.status_code == requests.codes.ok:
+                    json_string = response.text
+                    data = json.loads(json_string)
+                    tax_rate = data[0]["total_rate"]
+                else:
+                    pass
+
+    with col04: 
+        if zip_code != 0:
+            st.write(f":white_check_mark: Zip code: {zip_code}")
     
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
@@ -691,7 +796,8 @@ def render_hyd_breakdown():
                                  price_h, 
                                  gold_wt_h, 
                                  st.session_state['ss_hyd_stones'][:st.session_state['hyd_stones_count']],
-                                 st.session_state['ss_hy_perc'])
+                                 st.session_state['ss_hy_perc'],
+                                 zip_code, tax_rate)
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
@@ -742,14 +848,57 @@ def render_ant_breakdown():
         st.session_state['ss_ant_stones'] = [{'ant_stone': 'Polki Diamond', 'ant_ct': ''} for _ in range(50)]
     if 'ss_an_perc' not in st.session_state:
         st.session_state['ss_an_perc'] = False
+    if 'ss_an_loc' not in st.session_state:
+        st.session_state['ss_an_loc'] = False
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_an_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
-                                              value=st.session_state['ss_an_perc'],
-                                              key='an_perc',
-                                              on_change=update_gold_breakdown,
-                                              args=('an_perc',))
+    col01, col02, col03, col04 = st.columns([2, 1, 0.1, 1],
+                                     vertical_alignment='center')
+
+    with col01:
+        st.session_state['ss_an_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
+                                                value=st.session_state['ss_an_perc'],
+                                                key='an_perc',
+                                                on_change=update_gold_breakdown,
+                                                args=('an_perc',))
+        
+    with col02:
+        location = st.toggle("Enable Location",
+                             value=st.session_state['ss_an_loc'],
+                             key='an_loc',
+                             on_change=update_gold_breakdown,
+                             args=('an_loc',))
+        
+    with col03:
+        tax_rate = 0
+        zip_code = 0
+        if location:
+            loc = get_geolocation()
+            if loc:
+                # extract coordinates
+                lat = loc['coords']['latitude']
+                lon = loc['coords']['longitude']
+
+                # extract zip code
+                geolocator = geopy.Nominatim(user_agent='gold')
+                location = geolocator.reverse((lat, lon))
+                zip_code = location.raw['address']['postcode']
+
+                # extarct the tax rates
+                api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+                response = requests.get(api_url, headers={'X-Api-Key': 
+                                                          'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+                if response.status_code == requests.codes.ok:
+                    json_string = response.text
+                    data = json.loads(json_string)
+                    tax_rate = data[0]["total_rate"]
+                else:
+                    pass
+
+    with col04: 
+        if zip_code != 0:
+            st.write(f":white_check_mark: Zip code: {zip_code}")
     
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
@@ -908,7 +1057,8 @@ def render_ant_breakdown():
                                 price_a, 
                                 gold_wt_a, 
                                 st.session_state['ss_ant_stones'][:st.session_state['ant_stones_count']],
-                                st.session_state['ss_an_perc'])
+                                st.session_state['ss_an_perc'],
+                                zip_code, tax_rate)
                 if val == 'kitco_down':
                     return kitco_down()
                 if val == "no_calc":
@@ -960,14 +1110,57 @@ def render_dia_breakdown():
         st.session_state['ss_dia_stones'] = [{'dia_stone': 'Colored Stone', 'dia_stone_ct': ''} for _ in range(50)]
     if 'ss_di_perc' not in st.session_state:
         st.session_state['ss_di_perc'] = False
+    if 'ss_di_loc' not in st.session_state:
+        st.session_state['ss_di_loc'] = False
 
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
-    st.session_state['ss_di_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
-                                              value=st.session_state['ss_di_perc'],
-                                              key='di_perc',
-                                              on_change=update_gold_breakdown,
-                                              args=('di_perc',))
+    col01, col02, col03, col04 = st.columns([2, 1, 0.1, 1],
+                                     vertical_alignment='center')
+
+    with col01:
+        st.session_state['ss_di_perc'] = st.checkbox("Show Percentages for Labor, Margin and Duty",
+                                                value=st.session_state['ss_di_perc'],
+                                                key='di_perc',
+                                                on_change=update_gold_breakdown,
+                                                args=('di_perc',))
+        
+    with col02:
+        location = st.toggle("Enable Location",
+                             value=st.session_state['ss_di_loc'],
+                             key='di_loc',
+                             on_change=update_gold_breakdown,
+                             args=('di_loc',))
+        
+    with col03:
+        tax_rate = 0
+        zip_code = 0
+        if location:
+            loc = get_geolocation()
+            if loc:
+                # extract coordinates
+                lat = loc['coords']['latitude']
+                lon = loc['coords']['longitude']
+
+                # extract zip code
+                geolocator = geopy.Nominatim(user_agent='gold')
+                location = geolocator.reverse((lat, lon))
+                zip_code = location.raw['address']['postcode']
+
+                # extarct the tax rates
+                api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+                response = requests.get(api_url, headers={'X-Api-Key': 
+                                                          'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+                if response.status_code == requests.codes.ok:
+                    json_string = response.text
+                    data = json.loads(json_string)
+                    tax_rate = data[0]["total_rate"]
+                else:
+                    pass
+
+    with col04: 
+        if zip_code != 0:
+            st.write(f":white_check_mark: Zip code: {zip_code}")
     
     st.markdown("<hr style='margin: 3px 0;'>", unsafe_allow_html=True) 
 
@@ -1067,12 +1260,7 @@ def render_dia_breakdown():
                           key=f'dia_stone_ct_{i}',
                           on_change=update_dia_breakdown,
                           args=("dia_stone_ct", i))
-            
-            # try:
-            #     float(st.session_state['ss_dia_stones'][i]['dia_stone_ct'])
-            # except ValueError:
-            #     invalid_input()
-
+        
         # delete option
         with col3:
             with stylable_container(
@@ -1155,7 +1343,8 @@ def render_dia_breakdown():
                             gold_wt_d, 
                             dia_ct_d, 
                             st.session_state['ss_dia_stones'][:st.session_state['dia_stones_count']],
-                            st.session_state['ss_di_perc'])
+                            st.session_state['ss_di_perc'],
+                            zip_code, tax_rate)
             if val == 'kitco_down':
                 return kitco_down()
             if val == "no_calc":

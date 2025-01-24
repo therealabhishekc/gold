@@ -152,7 +152,7 @@ def pdf_scrap_gold(data, show_calc, ref_cost, gold_calc):
 
 
 # Function to generate the gold breakdown PDF
-def pdf_gold_bd(item_code, price, gold_wt, show_perc):
+def pdf_gold_bd(item_code, price, gold_wt, show_perc, zip_code, tax_rate):
 
     #Read the existing PDF
     reader = PdfReader("pdfs/template.pdf")
@@ -219,7 +219,8 @@ def pdf_gold_bd(item_code, price, gold_wt, show_perc):
     pdf.cell(3, 10)
     pdf.cell(32, 10, txt=f"Duty", border=True, align='C', ln=True)
 
-    price_gold, price_labor, price_profit, price_duty, price_pre_tax = gold_bd(item_code, price, gold_wt, gold_22k)
+    price_gold, price_labor, price_profit, price_duty, price_pre_tax = \
+        gold_bd(item_code, price, gold_wt, gold_22k, tax_rate)
 
     #actual values
     pdf.cell(32, 10, txt=f"${price_gold}", border=True, align='C')
@@ -247,7 +248,8 @@ def pdf_gold_bd(item_code, price, gold_wt, show_perc):
     pdf.set_font(family="Helvetica", style="", size=12)
     pdf.cell(105, 8)
     pdf.cell(25, 8, txt=f"${price_pre_tax}", align='C', border=0)
-    pdf.cell(25, 8, txt=f"  +  Tax (8.25%)")
+    tax_rate = round(float(tax_rate) * 100, 2)
+    pdf.cell(25, 8, txt=f"  +  Tax ({tax_rate}%)")
 
     pdf.ln(13)
     pdf.set_font(family="Helvetica", style="B", size=18)
@@ -402,7 +404,7 @@ def pdf_gold_bd_a4(item_code, price, gold_wt, show_perc):
 
 
 # Function to generate the hyderabadi breakdown PDF
-def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc):
+def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc, zip_code, tax_rate):
 
     total_stone_ct = 0
     stones = {}
@@ -427,7 +429,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc):
 
     try:
         price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
-            hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag)
+            hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag, tax_rate)
     except CustomErrorBD as e:
         return "no_calc"
     
@@ -555,7 +557,8 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc):
     pdf.set_font(family="Helvetica", style="", size=8.5)
     pdf.cell(120, 7)
     pdf.cell(22, 7, txt=f"${price_pre_tax}", align='C', border=0)
-    pdf.cell(25, 7, txt=f"  +  Tax (8.25%)")
+    tax_rate = round(float(tax_rate) * 100, 2)
+    pdf.cell(25, 8, txt=f"  +  Tax ({tax_rate}%)")
 
     pdf.ln(8)
     pdf.set_font(family="Helvetica", style="B", size=10)
@@ -586,7 +589,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc):
 
 
 # Function to generate the antique breakdown PDF
-def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc):
+def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc, zip_code, tax_rate):
 
     total_stone_ct = 0
     stones = {}
@@ -630,7 +633,7 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc):
 
     try:
         price_gold, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax, price_dia = \
-            ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct, lt10_flag)
+            ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct, lt10_flag, tax_rate)
     except CustomErrorBD as e:
         return "no_calc"
     
@@ -782,7 +785,8 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc):
     pdf.set_font(family="Helvetica", style="", size=8.5)
     pdf.cell(120, 7)
     pdf.cell(22, 7, txt=f"${price_pre_tax}", align='C', border=0)
-    pdf.cell(25, 7, txt=f"  +  Tax (8.25%)")
+    tax_rate = round(float(tax_rate) * 100, 2)
+    pdf.cell(25, 8, txt=f"  +  Tax ({tax_rate}%)")
 
     pdf.ln(8)
     pdf.set_font(family="Helvetica", style="B", size=10)
@@ -813,7 +817,7 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc):
 
 
 # Function to generate the PDF
-def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones, show_perc):
+def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones, show_perc, zip_code, tax_rate):
     
     total_stone_ct = 0
     stones = {}
@@ -844,7 +848,7 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones, show
 
     try:
         price_gold, price_dia, price_per_stone, price_stones, price_labor, price_profit, price_duty, price_pre_tax = \
-        dia_bd(item_code, price, net_wt, gold_18k, dia_ct_price, dia_ct, stones, gems_flag, lt10_flag)
+        dia_bd(item_code, price, net_wt, gold_18k, dia_ct_price, dia_ct, stones, gems_flag, lt10_flag, tax_rate)
     except CustomErrorBD as e:
         return "no_calc"
     
@@ -1034,7 +1038,8 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones, show
     pdf.set_font(family="Helvetica", style="", size=8.5)
     pdf.cell(120, 7)
     pdf.cell(22, 7, txt=f"${price_pre_tax}", align='C', border=0)
-    pdf.cell(25, 7, txt=f"  +  Tax (8.25%)")
+    tax_rate = round(float(tax_rate) * 100, 2)
+    pdf.cell(25, 8, txt=f"  +  Tax ({tax_rate}%)")
 
     pdf.ln(8)
     pdf.set_font(family="Helvetica", style="B", size=10)

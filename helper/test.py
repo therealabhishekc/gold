@@ -651,14 +651,16 @@
 
 
 
-
+# # https://github.com/aghasemi/streamlit_js_eval/tree/master
+# # https://api-ninjas.com/api/salestax
 import streamlit as st
 from streamlit_js_eval import get_geolocation
 import geopy
 import requests
 import json
+import time
 
-if st.checkbox("Check my location"):
+def test():
     loc = get_geolocation()
     if loc:
         lat = loc['coords']['latitude']
@@ -666,7 +668,7 @@ if st.checkbox("Check my location"):
         geolocator = geopy.Nominatim(user_agent='my-test')
 
         location = geolocator.reverse((lat, lon))
-
+        #print(loc)
         st.write("Zip code: ", location.raw['address']['postcode'])
         
         zip_code = location.raw['address']['postcode']
@@ -676,30 +678,59 @@ if st.checkbox("Check my location"):
             json_string = response.text
             data = json.loads(json_string)
             st.write("Sales tax:", data[0]["total_rate"])
+            return data[0]["total_rate"], 'jijiji'
         else:
             st.write("Error:", response.status_code, response.text)
+print(test())
+
+
+# https://github.com/aghasemi/streamlit_js_eval/tree/master
+# https://api-ninjas.com/api/salestax
+
+# import streamlit as st
+# from streamlit_js_eval import get_geolocation
+# import geopy
+# import requests
+# import json
+
+
+# # custom error class
+# class TaxError(Exception):
+#     pass
+
+
+# def get_tax_rate():
+#     tax_rate = 0
+#     zip_code = 0
+    
+#     loc = get_geolocation()
+#     st.write('')
+#     print(loc)
+#     if loc:
+#         # extract coordinates
+#         lat = loc['coords']['latitude']
+#         lon = loc['coords']['longitude']
+
+#         # extract zip code
+#         geolocator = geopy.Nominatim(user_agent='my-test')
+#         location = geolocator.reverse((lat, lon))
+#         zip_code = location.raw['address']['postcode']
+
+#         # extarct the tax rates
+#         tax_rate = 0
+#         api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+#         response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+#         if response.status_code == requests.codes.ok:
+#             json_string = response.text
+#             data = json.loads(json_string)
+#             tax_rate = data[0]["total_rate"]
+#         else:
+#             return TaxError("tax error")
+#     return zip_code, tax_rate
+
+# get_tax_rate()
         
         
-        
-        # apiKey = '734581eb012c4a36b99a1de836050993'
-        # api_url = 'https://api.geoapify.com/v1/geocode/reverse?lat={}&lon={}&type=postcode&apiKey={}'.format(lat, lon, apiKey)
-        # response = requests.get(api_url)
-        # if response.status_code == requests.codes.ok:
-        #     json_string = response.text
-        #     data = json.loads(json_string)
-        #     st.write(data['features'][0]['properties']['postcode'])
-        # else:
-        #     st.write("Error:", response.status_code, response.text)
-        
-        
-        
-        
-        # api_url = 'https://api.api-ninjas.com/v1/reversegeocoding?lat={}&lon={}'.format(lat, lon)  
-        # response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
-        # if response.status_code == requests.codes.ok:
-        #     st.write(response.text)
-        # else:
-        #     st.write("Error:", response.status_code, response.text)
 
     
 # import requests
