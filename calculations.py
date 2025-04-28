@@ -83,9 +83,9 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place, ref_cost):
 
 
 # gold breakdown calculations
-def gold_bd(item_code, price, gold_wt, gold_22k):
+def gold_bd(item_code, price, gold_wt, gold_22k, tax_rate):
     price, gold_wt = float(price), float(gold_wt)
-    price_pre_tax = round(price / 1.0825)
+    price_pre_tax = round(price / (1 + float(tax_rate)))
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(gold_wt * gold_22k)
 
@@ -333,7 +333,7 @@ def calc_labor_profit(item_code, remaining, total):
 
 
 # hyderabadi breakdown calculations
-def hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag):
+def hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag, tax_rate):
 
     # setting profit increase
     profit_inc = 0.025 if lt10_flag else 0.01
@@ -341,7 +341,7 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag):
 
     # the easy part
     price = float(price)
-    price_pre_tax = round(price / 1.0825)
+    price_pre_tax = round(price / (1 + float(tax_rate)))
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(net_wt * gold_22k)
 
@@ -384,7 +384,7 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag):
 
 
 # antique breakdown calculations
-def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct, lt10_flag):
+def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia_flag, dia_ct, lt10_flag, tax_rate):
 
     # setting profit increase
     profit_inc = 0.02 if lt10_flag else 0.01
@@ -392,7 +392,7 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
 
     # the easy part
     price = float(price)
-    price_pre_tax = round(price / 1.0825)
+    price_pre_tax = round(price / (1 + float(tax_rate)))
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(net_wt * gold_22k)
     price_polki, price_dia, price_total_dia = 0, 0, 0
@@ -442,7 +442,7 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
 
 
 # diamond breakdown calculations
-def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gems_flag, lt10_flag):
+def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gems_flag, lt10_flag, tax_rate):
     
     # setting profit increase
     profit_inc = 0.01 if lt10_flag else 0.007
@@ -450,7 +450,7 @@ def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gem
 
     # the easy part
     price = float(price)
-    price_pre_tax = round(price / 1.0825)
+    price_pre_tax = round(price / (1 + float(tax_rate)))
     price_duty = round(price_pre_tax * 0.065)
     price_gold = round(net_wt * gold_22k)
     price_dia = round(float(dia_ct) * float(dia_ct_price))

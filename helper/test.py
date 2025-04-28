@@ -634,24 +634,113 @@
 # print(ans)
 
 
+# import requests
+# import json
+
+# zip_code = '33503'
+# city = "Hillsborough County"
+# state = "Florida"
+# api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+# response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+# if response.status_code == requests.codes.ok:
+#     json_string = response.text
+#     data = json.loads(json_string)
+#     print(data[0]["total_rate"])
+# else:
+#     print("Error:", response.status_code, response.text)
+
+
+
+# # https://github.com/aghasemi/streamlit_js_eval/tree/master
+# # https://api-ninjas.com/api/salestax
 import streamlit as st
+from streamlit_js_eval import get_geolocation
+import geopy
+import requests
+import json
+import time
 
-# Path to your PDF file (make sure the file exists and is accessible)
-pdf_file_path = (
-    "i94.pdf"  # Replace with your PDF file path or URL
-)
+def test():
+    loc = get_geolocation()
+    if loc:
+        lat = loc['coords']['latitude']
+        lon = loc['coords']['longitude']
+        geolocator = geopy.Nominatim(user_agent='my-test')
 
-# Streamlit app
-st.title("Print PDF Exampleee")
+        location = geolocator.reverse((lat, lon))
+        #print(loc)
+        st.write("Zip code: ", location.raw['address']['postcode'])
+        
+        zip_code = location.raw['address']['postcode']
+        api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+        response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+        if response.status_code == requests.codes.ok:
+            json_string = response.text
+            data = json.loads(json_string)
+            st.write("Sales tax:", data[0]["total_rate"])
+            return data[0]["total_rate"], 'jijiji'
+        else:
+            st.write("Error:", response.status_code, response.text)
+print(test())
 
-# Button to trigger the print dialog
-if st.button("Print PDF"):
-    # Embed the PDF in an iframe and trigger the print dialog
-    print_script = f"""
-    <script>
-        const pdfWindow = window.open('{pdf_file_path}', '_blank');
-    </script>
-    """
-    # Inject the script into the Streamlit app
-    st.components.v1.html(print_script, height=0)
 
+# https://github.com/aghasemi/streamlit_js_eval/tree/master
+# https://api-ninjas.com/api/salestax
+
+# import streamlit as st
+# from streamlit_js_eval import get_geolocation
+# import geopy
+# import requests
+# import json
+
+
+# # custom error class
+# class TaxError(Exception):
+#     pass
+
+
+# def get_tax_rate():
+#     tax_rate = 0
+#     zip_code = 0
+    
+#     loc = get_geolocation()
+#     st.write('')
+#     print(loc)
+#     if loc:
+#         # extract coordinates
+#         lat = loc['coords']['latitude']
+#         lon = loc['coords']['longitude']
+
+#         # extract zip code
+#         geolocator = geopy.Nominatim(user_agent='my-test')
+#         location = geolocator.reverse((lat, lon))
+#         zip_code = location.raw['address']['postcode']
+
+#         # extarct the tax rates
+#         tax_rate = 0
+#         api_url = 'https://api.api-ninjas.com/v1/salestax?zip_code={}'.format(zip_code)
+#         response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+#         if response.status_code == requests.codes.ok:
+#             json_string = response.text
+#             data = json.loads(json_string)
+#             tax_rate = data[0]["total_rate"]
+#         else:
+#             return TaxError("tax error")
+#     return zip_code, tax_rate
+
+# get_tax_rate()
+        
+        
+
+    
+# import requests
+
+# lat = 51.509865
+# lon = -0.118092
+# api_url = 'https://api.api-ninjas.com/v1/reversegeocoding?lat={}&lon={}'.format(lat, lon)
+
+# response = requests.get(api_url, headers={'X-Api-Key': 'sGhg355U0zFi6kLq5oJ6dw==cmIKqhUVUGtNjJGJ'})
+# if response.status_code == requests.codes.ok:
+#     print(response.text)
+# else:
+#     print("Error:", response.status_code, response.text)

@@ -162,7 +162,7 @@ def main():
             st.link_button(
                 "View Report",
                 #url=f"http://localhost:8501/?output={view_pdf}&id={current_timestamp}"
-                url=f"https://govindjis.streamlit.app/?output={view_pdf}&id={current_timestamp}"
+                url=f"https://showteam.streamlit.app/?output={view_pdf}&id={current_timestamp}"
             )
 
 
