@@ -240,7 +240,7 @@ def pdf_gold_bd(item_code, price, gold_wt, show_perc):
         pdf.cell(10, 8)
         pdf.cell(25, 8, txt=f"{prf}%", border=0, align='C')
         pdf.cell(10, 8)
-        pdf.cell(25, 8, txt=f"6.5%", border=0, align='C')
+        pdf.cell(25, 8, txt=f"16.5%", border=0, align='C')
 
     pdf.ln(10)
 
@@ -364,7 +364,7 @@ def pdf_gold_bd_a4(item_code, price, gold_wt, show_perc):
     pdf.cell(15, 10)
     pdf.cell(35, 10, txt=f"{prf}%", border=0, align='C')
     pdf.cell(15, 10)
-    pdf.cell(35, 10, txt=f"6.5%", border=0, align='C')
+    pdf.cell(35, 10, txt=f"16.5%", border=0, align='C')
 
     pdf.ln(12)
 
@@ -549,7 +549,7 @@ def pdf_hyd_bd(item_code, price, gross_wt, hyd_stones, show_perc):
         pdf.cell(8, 7)
         pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
         pdf.cell(8, 7)
-        pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
+        pdf.cell(22, 7, txt=f"(16.5%)", border=0, align='C')
 
     pdf.ln(6)
     pdf.set_font(family="Helvetica", style="", size=8.5)
@@ -776,7 +776,7 @@ def pdf_ant_bd(item_code, price, gross_wt, ant_stones, show_perc):
         if polki_flag:
             pdf.cell(30, 8)
         pdf.cell(8, 7)
-        pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
+        pdf.cell(22, 7, txt=f"(16.5%)", border=0, align='C')
 
     pdf.ln(6)
     pdf.set_font(family="Helvetica", style="", size=8.5)
@@ -1028,7 +1028,7 @@ def pdf_dia_bd(dia_ct_price, item_code, price, gold_wt, dia_ct, dia_stones, show
         pdf.cell(8, 7)
         pdf.cell(22, 7, txt=f"({prf}%)", border=0, align='C')
         pdf.cell(8, 7)
-        pdf.cell(22, 7, txt=f"(6.5%)", border=0, align='C')
+        pdf.cell(22, 7, txt=f"(16.5%)", border=0, align='C')
 
     pdf.ln(6)
     pdf.set_font(family="Helvetica", style="", size=8.5)

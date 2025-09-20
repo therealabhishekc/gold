@@ -1,6 +1,10 @@
 #############################################################################################
 #############################################################################################
 
+# ------------------- Duty charges -------------------
+
+DUTY_PERCENTAGE = 0.165  # 16.5% duty on the price before tax
+
 # ------------------- SCARP GOLD PURCHACE -------------------
 
 # amount to deducted for cash value
@@ -86,7 +90,7 @@ def scrap_gold(gold_24k, gold_wt, gold_kt, gold_pur_place, ref_cost):
 def gold_bd(item_code, price, gold_wt, gold_22k):
     price, gold_wt = float(price), float(gold_wt)
     price_pre_tax = round(price / 1.0825)
-    price_duty = round(price_pre_tax * 0.065)
+    price_duty = round(price_pre_tax * DUTY_PERCENTAGE)
     price_gold = round(gold_wt * gold_22k)
 
     remaining = price_pre_tax - price_gold - price_duty
@@ -342,7 +346,7 @@ def hyd_bd(item_code, price, net_wt, gold_22k, stones, lt10_flag):
     # the easy part
     price = float(price)
     price_pre_tax = round(price / 1.0825)
-    price_duty = round(price_pre_tax * 0.065)
+    price_duty = round(price_pre_tax * DUTY_PERCENTAGE)
     price_gold = round(net_wt * gold_22k)
 
     # initial profit
@@ -393,7 +397,7 @@ def ant_bd(item_code, price, net_wt, gold_22k, stones, polki_flag, polki_ct, dia
     # the easy part
     price = float(price)
     price_pre_tax = round(price / 1.0825)
-    price_duty = round(price_pre_tax * 0.065)
+    price_duty = round(price_pre_tax * DUTY_PERCENTAGE)
     price_gold = round(net_wt * gold_22k)
     price_polki, price_dia, price_total_dia = 0, 0, 0
     if polki_flag:
@@ -451,7 +455,7 @@ def dia_bd(item_code, price, net_wt, gold_22k, dia_ct_price, dia_ct, stones, gem
     # the easy part
     price = float(price)
     price_pre_tax = round(price / 1.0825)
-    price_duty = round(price_pre_tax * 0.065)
+    price_duty = round(price_pre_tax * DUTY_PERCENTAGE)
     price_gold = round(net_wt * gold_22k)
     price_dia = round(float(dia_ct) * float(dia_ct_price))
     s_price = 0
